@@ -165,84 +165,118 @@
           <div id="js-content" class="content-ll">
             
   
-    <article id="post-2021-03-01-Python(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-JavaSE-10-继承与抽象类" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/01/2021-03-01-Python(%E4%B8%80)/">Python基础一</a>
+      <a class="article-title" href="/2021/10/07/JavaSE-10-%E7%BB%A7%E6%89%BF%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB/">JavaSE-10-继承与抽象类</a>
     </h1>
   
 
         
-        <a href="/2021/03/01/2021-03-01-Python(%E4%B8%80)/" class="archive-article-date">
-  	<time datetime="2021-02-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-01</time>
+        <a href="/2021/10/07/JavaSE-10-%E7%BB%A7%E6%89%BF%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB/" class="archive-article-date">
+  	<time datetime="2021-10-07T15:06:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="本篇内容"><a href="#本篇内容" class="headerlink" title="本篇内容"></a>本篇内容</h1><p>Python介绍<br>发展史<br>模块初识<br>.pyc是个什么鬼？</p>
-<h2 id="Python介绍"><a href="#Python介绍" class="headerlink" title="Python介绍"></a>Python介绍</h2><p>  python的创始人为吉多·范罗苏姆（Guido van Rossum）。1989年的圣诞节期间，吉多·范罗苏姆为了在阿姆斯特丹打发时间，决心开发一个新的脚本解释程序，作为ABC语言的一种继承。</p>
-<p>  Python可以应用于众多领域，如：数据分析、组件集成、网络服务、图像处理、数值计算和科学计算等众多领域。目前业内几乎所有大中型互联网企业都在使用Python，如：Youtube、Dropbox、BT、Quora（中国知乎）、豆瓣、知乎、Google、Yahoo!、Facebook、NASA、百度、腾讯、汽车之家、美团等。</p>
-<p>  目前Python主要应用领域：</p>
-<pre><code>    云计算: 云计算最火的语言， 典型应用OpenStack
-    WEB开发: 众多优秀的WEB框架，众多大型网站均为Python开发，Youtube, Dropbox, 豆瓣。。。， 典型WEB框架有Django
-    科学运算、人工智能: 典型库NumPy, SciPy, Matplotlib, Enthought librarys,pandas
-    系统运维: 运维人员必备语言
-    金融：量化交易，金融分析，在金融工程领域，Python不但在用，且用的最多，而且重要性逐年提高。原因：作为动态语言的Python，语言结构清晰简单，库丰富，成熟稳定，科学计算和统计分析都很牛逼，生产效率远远高于c,c++,java,尤其擅长策略回测
-    图形GUI: PyQT, WxPython,TkInter
-</code></pre>
-<p>Python 是一门什么样的语言？<br>    先看优点<br>        1、Python的定位是“优雅”、“明确”、“简单”，所以Python程序看上去总是简单易懂，初学者学Python，不但入门容易，而且将来深入下去，可以编写那些非常非常复杂的程序。<br>        2、开发效率非常高，Python有非常强大的第三方库，基本上你想通过计算机实现任何功能，Python官方库里都有相应的模块进行支持，直接下载调用后，在基础库的基础上再进行开发，大大降低开发周期，避免重复造轮&gt;子。<br>        3、高级语言————当你用Python语言编写程序的时候，你无需考虑诸如如何管理你的程序使用的内存一类的底层细节<br>        4、可移植性————由于它的开源本质，Python已经被移植在许多平台上（经过改动使它能够工 作在不同平台上）。如果你小心地避免使用依赖于系统的特性，那么你的所有Python程序无需修改就几乎可以在市场上所有的系统平台上运行<br>        5、可扩展性————如果你需要你的一段关键代码运行得更快或者希望某些算法不公开，你可以把你的部分程&gt;序用C或C++编写，然后在你的Python程序中使用它们。<br>        6、可嵌入性————你可以把Python嵌入你的C/C++程序，从而向你的程序用户提供脚本功能。<br>    再看缺点：<br>        1、速度慢，Python 的运行速度相比C语言确实慢很多，跟JAVA相比也要慢一些，因此这也是很多所谓的大牛不屑于使用Python的主要原因，但其实这里所指的运行速度慢在大多数情况下用户是无法直接感知到的，必须借助测试工具才能体现出来，比如你用C运一个程序花了0.01s,用Python是0.1s,这样C语言直接比Python快了10倍,算是非常夸张了，但是你是无法直接通过肉眼感知的，因为一个正常人所能感知的时间最小单位是0.15-0.4s左右，哈哈。其实在大多数情况下Python已经完全可以满足你对程序速度的要求，除非你要写对速度要求极高的搜索引擎等，这种情况下，当然还是建议你用C去实现的。<br>        2、代码不能加密，因为PYTHON是解释性语言，它的源码都是以名文形式存放的，不过我不认为这算是一个缺点，如果你的项目要求源代码必须是加密的，那你一开始就不应该用Python来去实现。<br>        3、线程不能利用多CPU问题，这是Python被人诟病最多的一个缺点，GIL即全局解释器锁（Global Interpreter Lock），是计算机程序设计语言解释器用于同步线程的工具，使得任何时刻仅有一个线程在执行，Python的线&gt;程是操作系统的原生线程。在Linux上为pthread，在Windows上为Win thread，完全由操作系统调度线程的执行。一个python解释器进程内有一条主线程，以及多条用户程序的执行线程。即使在多核CPU平台上，由于GIL的存。</p>
-<p>Python解释器<br>    当我们编写Python代码时，我们得到的是一个包含Python代码的以.py为扩展名的文本文件。要运行代码，就需要Python解释器去执行.py文件。</p>
-<pre><code>由于整个Python语言从规范到解释器都是开源的，所以理论上，只要水平够高，任何人都可以编写Python解释器来执行Python代码（当然难度很大）。事实上，确实存在多种Python解释器。
-</code></pre>
-<p><strong>CPython</strong><br>当我们从Python官方网站下载并安装好Python 2.7后，我们就直接获得了一个官方版本的解释器：CPython。这个解释器是用C语言开发的，所以叫CPython。在命令行下运行python就是启动CPython解释器。</p>
-<p>CPython是使用最广的Python解释器。教程的所有代码也都在CPython下执行。</p>
-<p><strong>IPython</strong><br>IPython是基于CPython之上的一个交互式解释器，也就是说，IPython只是在交互方式上有所增强，但是执行Python代码的功能和CPython是完全一样的。好比很多国产浏览器虽然外观不同，但内核其实都是调用了IE。</p>
-<p>CPython用&gt;&gt;&gt;作为提示符，而IPython用In [序号]:作为提示符。</p>
-<p><strong>PyPy</strong><br>PyPy是另一个Python解释器，它的目标是执行速度。PyPy采用JIT技术，对Python代码进行动态编译（注意不是解释），所以可以显著提高Python代码的执行速度。</p>
-<p>绝大部分Python代码都可以在PyPy下运行，但是PyPy和CPython有一些是不同的，这就导致相同的Python代码在两种解释器下执行可能会有不同的结果。如果你的代码要放到PyPy下执行，就需要了解PyPy和CPython的不同点。</p>
-<p><strong>Jython</strong><br>Jython是运行在Java平台上的Python解释器，可以直接把Python代码编译成Java字节码执行。</p>
-<p><strong>IronPython</strong><br>IronPython和Jython类似，只不过IronPython是运行在微软.Net平台上的Python解释器，可以直接把Python代码编译成.Net的字节码。</p>
-<h2 id="Python发展史"><a href="#Python发展史" class="headerlink" title="Python发展史"></a>Python发展史</h2><p>1989年，为了打发圣诞节假期，Guido开始写Python语言的编译器。Python这个名字，来自Guido所挚爱的电视剧Monty Python’s Flying Circus。他希望这个新的叫做Python的语言，能符合他的理想：创造一种C和shell之间，功能全面，易学易用，可拓展的语言。<br>1991年，第一个Python编译器诞生。它是用C语言实现的，并能够调用C语言的库文件。从一出生，Python已经具有了：类，函数，异常处理，包含表和词典在内的核心数据类型，以及模块为基础的拓展系统。<br>Granddaddy of Python web frameworks, Zope 1 was released in 1999<br>Python 1.0 - January 1994 增加了 lambda, map, filter and reduce.<br>Python 2.0 - October 16, 2000，加入了内存回收机制，构成了现在Python语言框架的基础<br>Python 2.4 - November 30, 2004, 同年目前最流行的WEB框架Django 诞生<br>Python 2.5 - September 19, 2006<br>Python 2.6 - October 1, 2008<br>Python 2.7 - July 3, 2010<br>In November 2014, it was announced that Python 2.7 would be supported until 2020, and reaffirmed that there would be no 2.8 release as users were expected to move to Python 3.4+ as soon as possible<br>Python 3.0 - December 3, 2008<br>Python 3.1 - June 27, 2009<br>Python 3.2 - February 20, 2011<br>Python 3.3 - September 29, 2012<br>Python 3.4 - March 16, 2014<br>Python 3.5 - September 13, 2015<br>.<br>.<br>.<br>.<br>.<br>Python 3.9 - October 05,2020</p>
-<h2 id="模块初识"><a href="#模块初识" class="headerlink" title="模块初识"></a>模块初识</h2><p>Python的强大之处在于他有非常丰富和强大的标准库和第三方库，几乎你想实现的任何功能都有相应的Python库支持，本篇只记录两个最最最常用的sys和os</p>
-<h3 id="sys"><a href="#sys" class="headerlink" title="sys"></a>sys</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"> </span><br><span class="line">import sys</span><br><span class="line"> </span><br><span class="line">print(sys.argv)</span><br><span class="line"> </span><br><span class="line"> </span><br><span class="line">#输出</span><br><span class="line">$ python test.py helo world</span><br><span class="line">[&#x27;test.py&#x27;, &#x27;helo&#x27;, &#x27;world&#x27;]  #把执行脚本时传递的参数获取到了</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="os"><a href="#os" class="headerlink" title="os"></a>os</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># -*- coding: utf-8 -*-</span><br><span class="line"> </span><br><span class="line">import os</span><br><span class="line"> </span><br><span class="line">os.system(&quot;df -h&quot;) #调用系统命令</span><br></pre></td></tr></table></figure>
-
-<h3 id="也可以结合着写"><a href="#也可以结合着写" class="headerlink" title="也可以结合着写"></a>也可以结合着写</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">import os,sys</span><br><span class="line"> </span><br><span class="line">os.system(&#x27;&#x27;.join(sys.argv[1:])) #把用户的输入的参数当作一条命令交给os.system来执行</span><br></pre></td></tr></table></figure>
-<h2 id="pyc是个什么鬼"><a href="#pyc是个什么鬼" class="headerlink" title=".pyc是个什么鬼"></a>.pyc是个什么鬼</h2><ol>
-<li><p>Python是一门解释型语言？</p>
-<p> 我初学Python时，听到的关于Python的第一句话就是，Python是一门解释性语言，我就这样一直相信下去，直到发现了*.pyc文件的存在。如果是解释型语言，那么生成的*.pyc文件是什么呢？c应该是compiled的缩写才对啊！</p>
-<p> 我们就在文中来解决下这个问题，并且把一些基础概念给理清。</p>
+        <h2 id="1-继承"><a href="#1-继承" class="headerlink" title="1.继承"></a>1.继承</h2><h3 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h3><p>多个类中存在相同属性和行为时，将这些内容抽取到单独一个类中，那么多个类无需再定义这些属性和行为，只要继承那一个类即可。</p>
+<p>其中，多个类可以称为子类，单独那一个类称为父类、超类（superclass）或者基类。</p>
+<h3 id="1-2-定义"><a href="#1-2-定义" class="headerlink" title="1.2 定义"></a>1.2 定义</h3><p>继承：就是子类继承父类的属性和行为，使得子类对象具有与父类相同的属性、相同的行为。子类可以直接访问父类中的非私有的属性和行为。</p>
+<h3 id="1-3-好处"><a href="#1-3-好处" class="headerlink" title="1.3 好处"></a>1.3 好处</h3><ol>
+<li><p>提高代码的复用性。</p>
 </li>
-<li><p>解释型语言和编译型语言 </p>
-<p> 计算机是不能够识别高级语言的，所以当我们运行一个高级语言程序的时候，就需要一个“翻译机”来从事把高级语言转变成计算机能读懂的机器语言的过程。这个过程分成两类，第一种是编译，第二种是解释。</p>
-<p> 编译型语言在程序执行之前，先会通过编译器对程序执行一个编译的过程，把程序转变成机器语言。运行时就不需要翻译，而直接执行就可以了。最典型的例子就是C语言。</p>
-<p> 解释型语言就没有这个编译的过程，而是在程序运行的时候，通过解释器对程序逐行作出解释，然后直接运行，最典型的例子是Ruby。</p>
-<p> 通过以上的例子，我们可以来总结一下解释型语言和编译型语言的优缺点，因为编译型语言在程序运行之前就已经对程序做出了“翻译”，所以在运行时就少掉了“翻译”的过程，所以效率比较高。但是我们也不能一概而论，一些解释型语言也可以通过解释器的优化来在对程序做出翻译时对整个程序做出优化，从而在效率上超过编译型语言。</p>
-<p> 此外，随着Java等基于虚拟机的语言的兴起，我们又不能把语言纯粹地分成解释型和编译型这两种。</p>
-<p> 用Java来举例，Java首先是通过编译器编译成字节码文件，然后在运行时通过解释器给解释成机器文件。所以我们说Java是一种先编译后解释的语言。</p>
+<li><p>类与类之间产生了关系，是多态的前提。</p>
 </li>
-<li><p>Python到底是什么 </p>
-<p> 其实Python和Java/C#一样，也是一门基于虚拟机的语言，我们先来从表面上简单地了解一下Python程序的运行过程吧。</p>
-<p> 当我们在命令行中输入python hello.py时，其实是激活了Python的“解释器”，告诉“解释器”：你要开始工作了。可是在“解释”之前，其实执行的第一项工作和Java一样，是编译。</p>
-<p> 我们在命令行中如何执行一个Java的程序：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">javac hello.java</span><br><span class="line"></span><br><span class="line">java hello</span><br></pre></td></tr></table></figure>
+</ol>
+<h3 id="1-4-继承的格式"><a href="#1-4-继承的格式" class="headerlink" title="1.4 继承的格式"></a>1.4 继承的格式</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="class"><span class="keyword">class</span> 父类 </span>&#123;</span><br><span class="line"><span class="number">2</span>     ...</span><br><span class="line"><span class="number">3</span> &#125;</span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> <span class="class"><span class="keyword">class</span> 子类 <span class="keyword">extends</span> 父类 </span>&#123;</span><br><span class="line"><span class="number">6</span>     ...</span><br><span class="line"><span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
 
-<pre><code> 只是我们在用Eclipse之类的IDE时，将这两部给融合成了一部而已。其实Python也一样，当我们执行python hello.py时，他也一样执行了这么一个过程，所以我们应该这样来描述Python，Python是一门先编译后解释的语言。
-</code></pre>
+<h3 id="1-5-继承后的特点——成员变量"><a href="#1-5-继承后的特点——成员变量" class="headerlink" title="1.5 继承后的特点——成员变量"></a>1.5 继承后的特点——成员变量</h3><p><strong>成员变量不重名</strong></p>
+<p>　　如果子类父类中出现不重名的成员变量，这时的访问是没有影响的。</p>
+<p><strong>成员变量重名</strong></p>
+<p>　　子父类中出现了同名的成员变量时，在子类中需要访问父类中非私有成员变量时，需要使用 super 关键字，修饰父类成员变量，类似于之前学过的 this 。</p>
+<p>　　格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">super</span>.变量</span><br></pre></td></tr></table></figure>
+
+<p>父类中的成员变量非私有，子类中可以直接访问。若父类中的成员变量私有了，子类是不能直接访问的。</p>
+<p>通常编码时，我们遵循封装的原则，使用private修饰成员变量，在父类中提供公共的getXxx方法和setXxx方法来访问父类的私有成员变量。</p>
+<h3 id="1-6-继承后的特点——成员方法"><a href="#1-6-继承后的特点——成员方法" class="headerlink" title="1.6 继承后的特点——成员方法"></a>1.6 继承后的特点——成员方法</h3><p><strong>成员方法不重名</strong></p>
+<p>如果子类父类中出现<strong>不重名</strong>的成员方法，这时的调用是没有影响的。对象调用方法时，会先在子类中查找有没有对应的方法，若子类中存在就会执行子类中的方法，若子类中不存在就会执行父类中相应的方法。</p>
+<p><strong>成员方法重名——重写(Override)</strong></p>
+<p><strong>如果子类父类中出现重名的成员方法，这时的访问是一种特殊情况，叫做方法重写 (Override)。</strong></p>
+<p><strong>方法重写 ：子类中出现与父类一模一样的方法时（返回值类型，方法名和参数列表都相同），会出现覆盖效 果，也称为重写或者复写。声明不变，重新实现。</strong></p>
+<p>比如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="class"><span class="keyword">class</span> <span class="title">fu</span> </span>&#123;</span><br><span class="line"><span class="number">2</span> 　　<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pr</span><span class="params">()</span></span>&#123;<span class="comment">//do something&#125;      </span></span><br><span class="line"><span class="number">3</span> &#125;</span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> <span class="class"><span class="keyword">class</span> <span class="title">zi</span> <span class="keyword">extends</span> <span class="title">fu</span></span>&#123;</span><br><span class="line"><span class="number">6</span> 　　<span class="meta">@Override</span></span><br><span class="line"><span class="number">7</span> 　　<span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">pr</span><span class="params">()</span></span>&#123;<span class="comment">//do another thing&#125;</span></span><br><span class="line"><span class="number">8</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>重写的意义：子类可以根据需要，定义特定于自己的行为。既沿袭了父类的功能名称，又根据子类的需要重新实现父类方法，从 而进行扩展增强。</p>
+<p><strong>注意事项：</strong></p>
+<p><strong>1. 子类方法覆盖父类方法，必须要保证权限大于等于父类权限。</strong></p>
+<p><strong>2. 子类方法覆盖父类方法，返回值类型、函数名和参数列表都要一模一样。</strong></p>
+<h3 id="1-7-继承后的特点——构造方法"><a href="#1-7-继承后的特点——构造方法" class="headerlink" title="1.7 继承后的特点——构造方法"></a>1.7 继承后的特点——构造方法</h3><p>当类之间产生了关系，其中各类中的构造方法，又产生了哪些影响呢？</p>
+<p>首先我们要回忆两个事情，构造方法的定义格式和作用。</p>
+<ol>
+<li><p>构造方法的名字是与类名一致的。所以子类是无法继承父类构造方法的。</p>
 </li>
-<li><p>简述Python的运行过程</p>
-<p> 在说这个问题之前，我们先来说两个概念，PyCodeObject和pyc文件。</p>
-<p> 我们在硬盘上看到的pyc自然不必多说，而其实PyCodeObject则是Python编译器真正编译成的结果。我们先简单知道就可以了，继续向下看。</p>
-<p> 当python程序运行时，编译的结果则是保存在位于内存中的PyCodeObject中，当Python程序运行结束时，Python解释器则将PyCodeObject写回到pyc文件中。</p>
-<p> 当python程序第二次运行时，首先程序会在硬盘中寻找pyc文件，如果找到，则直接载入，否则就重复上面的过程。</p>
-<p> 所以我们应该这样来定位PyCodeObject和pyc文件，我们说pyc文件其实是PyCodeObject的一种持久化保存方式。</p>
+<li><p>构造方法的作用是初始化成员变量的。所以子类的初始化过程中，必须先执行父类的初始化动作。子类的构造方法中默认有一个 super() ，表示调用父类的构造方法，父类成员变量初始化后，才可以给子类使用。</p>
+</li>
+</ol>
+<h3 id="1-8-super和this"><a href="#1-8-super和this" class="headerlink" title="1.8 super和this"></a>1.8 super和this</h3><p><strong>父类空间优先于子类对象产生</strong></p>
+<p>　　在每次创建子类对象时，先初始化父类空间，再创建其子类对象本身。</p>
+<p>　　目的在于子类对象中包含了其对应的父类空间，便可以包含其父类的成员，如果父类成员非private修饰，则子类可以随意使用父类成员。</p>
+<p>　　代码体现在子类的构造方法调用时，一定先调用父类的构造方法。</p>
+<p><strong>super和this的含义</strong></p>
+<p>　　super ：代表父类的存储空间标识(可以理解为父亲的引用)。</p>
+<p>　　this ：代表当前对象的引用(谁调用就代表谁)。</p>
+<p><strong>super和this的用法</strong></p>
+<p>　　1.访问成员变量</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">this</span>.成员变量 ‐‐ 本类的</span><br><span class="line"><span class="number">2</span> <span class="keyword">super</span>.成员变量 ‐‐ 父类的</span><br><span class="line"><span class="number">3</span> <span class="keyword">this</span>.成员方法名() ‐‐ 本类的</span><br><span class="line"><span class="number">4</span> <span class="keyword">super</span>.成员方法名() ‐‐ 父类的</span><br></pre></td></tr></table></figure>
+
+<p>　　2.访问构造方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">this</span>(...) ‐‐ 本类的构造方法</span><br><span class="line"><span class="number">2</span> <span class="keyword">super</span>(...) ‐‐ 父类的构造方法</span><br></pre></td></tr></table></figure>
+
+<p>　　3.注意</p>
+<p>　　子类的每个构造方法中均有默认的super()，调用父类的空参构造。</p>
+<p>　　手动调用父类构造会覆盖默认的super()。</p>
+<p>　　super() 和 this() 都必须是在构造方法的第一行，所以不能同时出现。</p>
+<h3 id="1-9-继承的特点"><a href="#1-9-继承的特点" class="headerlink" title="1.9 继承的特点"></a>1.9 继承的特点</h3><ol>
+<li><p>Java只支持单继承，不支持多继承。</p>
+</li>
+<li><p>Java支持多层继承(继承体系)。</p>
+</li>
+<li><p>子类和父类是一种相对的概念。</p>
+</li>
+</ol>
+<h2 id="2-抽象类"><a href="#2-抽象类" class="headerlink" title="2.抽象类"></a>2.抽象类</h2><h3 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h3><p><strong>由来</strong></p>
+<p>父类中的方法，被它的子类们重写，子类各自的实现都不尽相同。那么父类的方法声明和方法主体，只有声明还有意义，而方法主体则没有存在的意义了。我们把没有方法主体的方法称为<strong>抽象方法</strong>。Java语法规定，包含抽象方法的类就是<strong>抽象类</strong>。</p>
+<p><strong>定义</strong></p>
+<p>抽象方法 ： 没有方法体的方法。</p>
+<p>抽象类：包含抽象方法的类。</p>
+<h3 id="2-2-abstract使用格式"><a href="#2-2-abstract使用格式" class="headerlink" title="2.2 abstract使用格式"></a>2.2 abstract使用格式</h3><p><strong>抽象方法</strong></p>
+<p>使用 <strong>abstract</strong> 关键字修饰方法，该方法就成了抽象方法，抽象方法只包含一个方法名，而没有方法体。</p>
+<p>定义格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 修饰符 <span class="keyword">abstract</span> 返回值类型 方法名 (参数列表)；</span><br></pre></td></tr></table></figure>
+
+<p><strong>抽象类</strong></p>
+<p><strong>如果一个类包含抽象方法，那么该类必须是抽象类。</strong></p>
+<p>定义格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">abstract</span> <span class="class"><span class="keyword">class</span> 类名字 </span>&#123;</span><br><span class="line"><span class="number">2</span>     ……</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>继承抽象类的子类必须重写父类所有的抽象方法。</p>
+<p>否则，该子类也必须声明为抽象类。</p>
+<p>最终，必须有子类实现该父类的抽象方法，否则，从最初的父类到最终的子类都不能创建对象，失去意义。</p>
+<h3 id="2-3-注意事项"><a href="#2-3-注意事项" class="headerlink" title="2.3 注意事项"></a>2.3 注意事项</h3><ol>
+<li><p>抽象类不能创建对象，如果创建，编译无法通过而报错。只能创建其非抽象子类的对象。</p>
+</li>
+<li><p>抽象类中，可以有构造方法，是供子类创建对象时，初始化父类成员使用的。</p>
+</li>
+<li><p>抽象类中，不一定包含抽象方法，但是有抽象方法的类必定是抽象类。</p>
+</li>
+<li><p>抽象类的子类，必须重写抽象父类中所有的抽象方法，否则，编译无法通过而报错。除非该子类也是抽象类。</p>
 </li>
 </ol>
 
@@ -258,7 +292,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
         		</li>
       		
 		</ul>
@@ -268,7 +302,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/01/2021-03-01-Python(%E4%B8%80)/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/10/07/JavaSE-10-%E7%BB%A7%E6%89%BF%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB/">展开全文 >></a>
         </p>
       
 
@@ -298,35 +332,74 @@
 
 
   
-    <article id="post-2021-03-01-迅雷解析思路" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-JavaSE-9-（练手）简单学生管理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/">迅雷链接解析为真实链接</a>
+      <a class="article-title" href="/2021/10/07/JavaSE-9-%EF%BC%88%E7%BB%83%E6%89%8B%EF%BC%89%E7%AE%80%E5%8D%95%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86/">JavaSE-9-（练手）简单学生管理</a>
     </h1>
   
 
         
-        <a href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/" class="archive-article-date">
-  	<time datetime="2021-02-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-01</time>
+        <a href="/2021/10/07/JavaSE-9-%EF%BC%88%E7%BB%83%E6%89%8B%EF%BC%89%E7%AE%80%E5%8D%95%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86/" class="archive-article-date">
+  	<time datetime="2021-10-07T15:02:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <p>最近因为“先审后播”的风声，觉得国内又进入资源大航海时代了，于是想借课下休息的时候写个综合下载工具，第一个练手的模块自然是令我不爽的迅雷哈哈哈</p>
-<p>首先观察迅雷下载链接，本来我还以为要用到十分复杂的工具和繁琐的步骤来研究它的链接，结果我看到。。。。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==</span><br></pre></td></tr></table></figure>
+        <h2 id="1-学生管理系统实现步骤"><a href="#1-学生管理系统实现步骤" class="headerlink" title="1.学生管理系统实现步骤"></a>1.学生管理系统实现步骤</h2><p><strong>案例需求</strong></p>
+<p>系统主要功能如下：</p>
+<p>添加学生：通过键盘录入学生信息，添加到集合中</p>
+<p>删除学生：通过键盘录入要删除学生的学号，将该学生对象从集合中删除</p>
+<p>修改学生：通过键盘录入要修改学生的学号，将该学生对象其他信息进行修改</p>
+<p>查看学生：将集合中的学生对象信息进行展示</p>
+<p>退出系统：结束程序</p>
+<p><strong>实现步骤</strong></p>
+<p>\1. 定义学生类，包含以下成员变量</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">1 private String sid; // 学生id</span><br><span class="line">2 </span><br><span class="line">3 private String name; // 学生姓名</span><br><span class="line">4 </span><br><span class="line">5 private String age; // 学生年龄</span><br><span class="line">6 </span><br><span class="line">7 private String address; // 学生所在地</span><br></pre></td></tr></table></figure>
 
-<p>这俩等号真眼熟，莫不是base64???<br>抱着试一试的想法，我去转换了一下，结果得到</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AAhttp://dl14.x570.com/3DMGAME_NEKOPARA_Vol.0.CHT.Green.rarZZ</span><br></pre></td></tr></table></figure>
-<p>真有你的啊迅雷。。。。。<br>于是就是人民群众喜闻乐见的掐头去尾，蛋白质含量是牛肉的三倍。。。。。。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># coding:utf-8</span><br><span class="line"># @Author:ZhiyDevQAQ</span><br><span class="line"># @Name:ThunderDecode.py</span><br><span class="line"># @Date:2021/4/9 9:03</span><br><span class="line">import binascii</span><br><span class="line">import re</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class thunderdecode(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self) -&gt; None:</span><br><span class="line">        self.THUNDER_HEADER = &#x27;thunder://&#x27;</span><br><span class="line">        self.THUNDER_PREFIX = &#x27;AA&#x27;</span><br><span class="line">        self.THUNDER_SUFFIX = &#x27;ZZ&#x27;</span><br><span class="line"></span><br><span class="line">    def __str__(self) -&gt; str:</span><br><span class="line">        msg = &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">        本类用于实现迅雷链接的解析，首先你要实例化对象，然后定义一个变量接收调用thunder2reallink方法传回的解析结果</span><br><span class="line">        例如:</span><br><span class="line">            th = thunderdecode()</span><br><span class="line">            result = th.thunder2reallink(&#x27;thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==&#x27;)</span><br><span class="line">            print(result)</span><br><span class="line"></span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        return msg</span><br><span class="line"></span><br><span class="line">    def check_url(func):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        本装饰器用于实现对迅雷链接的检查</span><br><span class="line">        :return wapper的内存地址:</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">        def wapper(self, url):</span><br><span class="line">            #  匹配模式:http | https | ftp | ed2k | thunder</span><br><span class="line">            if re.search(r&#x27;^[thunder://]&#x27;, url):</span><br><span class="line">                return func(self, url)</span><br><span class="line">            else:</span><br><span class="line">                return &#x27;灵能信号有误，请检查&#x27;</span><br><span class="line"></span><br><span class="line">        return wapper</span><br><span class="line"></span><br><span class="line">    @check_url</span><br><span class="line">    def thunder2reallink(self, url):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        本方法实现对迅雷链接的解析</span><br><span class="line">        :param url: 迅雷链接</span><br><span class="line">        :return url:经过解析的真实链接</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        url = url[len(self.THUNDER_HEADER):]</span><br><span class="line">        url = url.encode(&#x27;utf-8&#x27;)</span><br><span class="line">        try:</span><br><span class="line">            url = base64.b64decode(url)</span><br><span class="line">        except binascii.Error as e:</span><br><span class="line">            print(&#x27;灵能信号有误，具体信息如下:%s&#x27; % e)</span><br><span class="line">        url = url.decode(&#x27;utf-8&#x27;)</span><br><span class="line">        url = url[len(self.THUNDER_PREFIX):-len(self.THUNDER_SUFFIX)]</span><br><span class="line">        return url</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    th = thunderdecode()</span><br><span class="line">    print(th)</span><br><span class="line">    tk = th.thunder2reallink(&#x27;thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==&#x27;)</span><br><span class="line">    print(tk)</span><br></pre></td></tr></table></figure>
-<p>无伤通关。。。。。。</p>
+<p>\2. 学生管理系统主界面的搭建步骤</p>
+<p>　　2.1 用输出语句完成主界面的编写</p>
+<p>　　2.2 用Scanner实现键盘输入</p>
+<p>　　2.3 用switch语句完成选择的功能</p>
+<p>　　2.4 用 循环完成功能结束后再次回到主界面</p>
+<p>\3. 学生管理系统的添加学生功能实现步骤</p>
+<p>　　3.1 定义一个方法，接收ArrayList集合</p>
+<p>　　3.2 方法内完成添加学生的功能</p>
+<p>　　　　①键盘录入学生信息</p>
+<p>　　　　②根据录 入的信息创建学生对象</p>
+<p>　　　　③将学生对象添加到集合中</p>
+<p>　　　　④提示添加成功信息</p>
+<p>　　3.3 在添加学生的选项里调用添加学生的方法</p>
+<p>\4. 学生管理系统的查看学生功能实现步骤</p>
+<p>　　4.1 定义一个方法，接收ArrayList集合</p>
+<p>　　4.2 方法内遍历集合，将学生信息进行输出</p>
+<p>　　4.3 在查看所有学生选 项里调用查看学生方法</p>
+<p>\5. 学生管理系统的删除学生功能实现步骤</p>
+<p>　　5.1 定义一个方法，接收ArrayList集合</p>
+<p>　　5.2 方法中接收要删除学生的学号</p>
+<p>　　5.3 遍历集合，获取每个学生对象</p>
+<p>　　5.4 使用学生对象的学号和录入的要删除的学号进行比较,如果相同，则将当前学生对象从集合中删除</p>
+<p>　　5.5 在删除学生选项里调用删除学生的方法</p>
+<p>\6. 学生管理系统的修改学生功能实现步骤</p>
+<p>　　6.1 定义一个方法，接收ArrayList集合</p>
+<p>　　6.2 方法中接收要修改学生的学号</p>
+<p>　　6.3 通过键盘录入学生对象所需 的信息，并创建对象</p>
+<p>　　6.4 遍历集合，获取每一个学生对象。并和录入的修改学生学号进行比较.如果相同，则使用新学生对象替换当前学生对象</p>
+<p>　　6.5 在修改学生选项里调用修改学生的方法</p>
+<p>\7. 退出系统</p>
+<p>　　使用System.exit(0);退出JVM</p>
+<h2 id="2-实际代码"><a href="#2-实际代码" class="headerlink" title="2.实际代码"></a>2.实际代码</h2><p>Student.java 存储学生信息格式的简单类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line">    <span class="keyword">private</span> String sid; <span class="comment">// 学生id</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String name; <span class="comment">// 学生姓名</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String age; <span class="comment">// 学生年龄</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">private</span> String address; <span class="comment">// 学生所在地</span></span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String sid, String name, String age, String address)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.sid = sid;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">        <span class="keyword">this</span>.address = address;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getSid</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> sid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setSid</span><span class="params">(String sid)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.sid = sid;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(String age)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.age = age;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">getAddress</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> address;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAddress</span><span class="params">(String address)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.address = address;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">this</span> == o) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">        <span class="keyword">if</span> (o == <span class="keyword">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        Student student = (Student) o;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (sid != <span class="keyword">null</span> ? !sid.equals(student.sid) : student.sid != <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (name != <span class="keyword">null</span> ? !name.equals(student.name) : student.name != <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">if</span> (age != <span class="keyword">null</span> ? !age.equals(student.age) : student.age != <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">        <span class="keyword">return</span> address != <span class="keyword">null</span> ? address.equals(student.address) : student.address == <span class="keyword">null</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> result = sid != <span class="keyword">null</span> ? sid.hashCode() : <span class="number">0</span>;</span><br><span class="line">        result = <span class="number">31</span> * result + (name != <span class="keyword">null</span> ? name.hashCode() : <span class="number">0</span>);</span><br><span class="line">        result = <span class="number">31</span> * result + (age != <span class="keyword">null</span> ? age.hashCode() : <span class="number">0</span>);</span><br><span class="line">        result = <span class="number">31</span> * result + (address != <span class="keyword">null</span> ? address.hashCode() : <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="meta">@Override</span></span><br><span class="line">    <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;Student&#123;&quot;</span> +</span><br><span class="line">                <span class="string">&quot;sid=&#x27;&quot;</span> + sid + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, age=&#x27;&quot;</span> + age + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&quot;, address=&#x27;&quot;</span> + address + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line">                <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p> StudentManager.java</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.sql.SQLOutput;</span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">StudentManager</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        ArrayList&lt;Student&gt; stu = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;----------欢迎来到学生管理系统----------&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;1.添加学生&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;2.删除学生&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;3.修改学生&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;4.查看所有学生&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;5.退出&quot;</span>);</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入你的选择:&quot;</span>);</span><br><span class="line"></span><br><span class="line">            Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">            String line = sc.nextLine();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">switch</span> (line) &#123;</span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;1&quot;</span>:</span><br><span class="line">                    addStudent(stu);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;2&quot;</span>:</span><br><span class="line">                    removeStudent(stu);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;3&quot;</span>:</span><br><span class="line">                    setStudent(stu);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;4&quot;</span>:</span><br><span class="line">                    getAllStudent(stu);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">                <span class="keyword">case</span> <span class="string">&quot;5&quot;</span>:</span><br><span class="line">                    System.exit(<span class="number">0</span>);</span><br><span class="line">                    <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">addStudent</span><span class="params">(ArrayList&lt;Student&gt; stu)</span> </span>&#123;</span><br><span class="line">        String sid;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">while</span>(<span class="keyword">true</span>) &#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;请输入学生学号:&quot;</span>);</span><br><span class="line">            sid = sc.nextLine();</span><br><span class="line"></span><br><span class="line">            <span class="keyword">boolean</span> flag = isusd(stu, sid);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (flag) &#123;</span><br><span class="line">                System.out.println(<span class="string">&quot;该学号被占用！&quot;</span>);</span><br><span class="line">            &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;请输入学生姓名:&quot;</span>);</span><br><span class="line">        String name = sc.nextLine();</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入学生年龄:&quot;</span>);</span><br><span class="line">        String age = sc.nextLine();</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入学生居住地:&quot;</span>);</span><br><span class="line">        String address = sc.nextLine();</span><br><span class="line"></span><br><span class="line">        Student s = <span class="keyword">new</span> Student();</span><br><span class="line">        s.setSid(sid);</span><br><span class="line">        s.setName(name);</span><br><span class="line">        s.setAge(age);</span><br><span class="line">        s.setAddress(address);</span><br><span class="line"></span><br><span class="line">        stu.add(s);</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;添加成功!&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> Boolean <span class="title">isusd</span><span class="params">(ArrayList&lt;Student&gt; stu,String sid)</span></span>&#123;</span><br><span class="line">        <span class="keyword">boolean</span> flag = <span class="keyword">false</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; stu.size();i++)&#123;</span><br><span class="line">            Student s = stu.get(i);</span><br><span class="line">            <span class="keyword">if</span> (s.getSid().equals(sid))&#123;</span><br><span class="line">                flag = <span class="keyword">true</span>;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> flag;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">removeStudent</span><span class="params">(ArrayList&lt;Student&gt; stu)</span></span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入要删除的学生ID:&quot;</span>);</span><br><span class="line">        String sid = sc.nextLine();</span><br><span class="line"></span><br><span class="line">        <span class="keyword">int</span> index = -<span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; stu.size();i++)&#123;</span><br><span class="line">            Student s = stu.get(i);</span><br><span class="line">            <span class="keyword">if</span> (s.getSid().equals(sid))&#123;</span><br><span class="line">                index = i ;</span><br><span class="line">                <span class="keyword">break</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> (index == -<span class="number">1</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;查无此人&quot;</span>);</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            stu.remove(index);</span><br><span class="line">            System.out.println(<span class="string">&quot;删除成功&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">setStudent</span><span class="params">(ArrayList&lt;Student&gt; stu)</span></span>&#123;</span><br><span class="line">        Scanner sc= <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        String sid;</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入需要修改的学生ID:&quot;</span>);</span><br><span class="line">        sid = sc.nextLine();</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;请输入新的姓名:&quot;</span>);</span><br><span class="line">        String name = sc.nextLine();</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入新的年龄:&quot;</span>);</span><br><span class="line">        String age = sc.nextLine();</span><br><span class="line">        System.out.println(<span class="string">&quot;请输入新的地址:&quot;</span>);</span><br><span class="line">        String address= sc.nextLine();</span><br><span class="line"></span><br><span class="line">        Student s = <span class="keyword">new</span> Student();</span><br><span class="line">        s.setSid(sid);</span><br><span class="line">        s.setName(name);</span><br><span class="line">        s.setAge(age);</span><br><span class="line">        s.setAddress(address);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; stu.size();i++)&#123;</span><br><span class="line">            Student o = stu.get(i);</span><br><span class="line">            <span class="keyword">if</span> (o.getSid().equals(sid))&#123;</span><br><span class="line">                stu.set(i,s);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getAllStudent</span><span class="params">(ArrayList&lt;Student&gt; stu)</span></span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (stu.size() == <span class="number">0</span>)&#123;</span><br><span class="line">            System.out.println(<span class="string">&quot;无信息！&quot;</span>);</span><br><span class="line"></span><br><span class="line">            <span class="keyword">return</span> ;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        System.out.println(<span class="string">&quot;学号\t\t\t\t姓名\t\t\t\t年龄\t\t\t\t地址&quot;</span>);</span><br><span class="line">        <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; stu.size();i++)&#123;</span><br><span class="line">            Student s = stu.get(i);</span><br><span class="line">            System.out.println(s.getSid()+<span class="string">&quot;\t\t\t\t&quot;</span>+s.getName()+<span class="string">&quot;\t\t\t\t&quot;</span>+s.getAge()+<span class="string">&quot;岁\t\t\t\t&quot;</span>+s.getAddress());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
 
       
 
@@ -340,7 +413,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
         		</li>
       		
 		</ul>
@@ -350,7 +423,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/10/07/JavaSE-9-%EF%BC%88%E7%BB%83%E6%89%8B%EF%BC%89%E7%AE%80%E5%8D%95%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86/">展开全文 >></a>
         </p>
       
 
@@ -380,98 +453,80 @@
 
 
   
-    <article id="post-2020-12-14-Git基础" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-JavaSE-8-ArrayList" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/12/14/2020-12-14-Git%E5%9F%BA%E7%A1%80/">Git基础</a>
+      <a class="article-title" href="/2021/10/07/JavaSE-8-ArrayList/">JavaSE-8-ArrayList</a>
     </h1>
   
 
         
-        <a href="/2020/12/14/2020-12-14-Git%E5%9F%BA%E7%A1%80/" class="archive-article-date">
-  	<time datetime="2020-12-13T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-12-14</time>
+        <a href="/2021/10/07/JavaSE-8-ArrayList/" class="archive-article-date">
+  	<time datetime="2021-10-07T15:01:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="Git基础"><a href="#Git基础" class="headerlink" title="Git基础"></a>Git基础</h1><h2 id="Git介绍"><a href="#Git介绍" class="headerlink" title="Git介绍"></a>Git介绍</h2><p>此处已省略</p>
-<h3 id="Git的三种状态"><a href="#Git的三种状态" class="headerlink" title="Git的三种状态"></a>Git的三种状态</h3><p>Git的文件有三种状态: <strong>已提交（committed）</strong>、<strong>已修改（modified）</strong> 和 <strong>已暂存（staged）</strong></p>
-<ul>
-<li><p>已修改表示修改了文件，但还没保存到数据库中。</p>
-</li>
-<li><p>已暂存表示对一个已修改文件的当前版本做了标记，使之包含在下次提交的快照中。</p>
-</li>
-<li><p>已提交表示数据已经安全的保存在本地数据库中。</p>
-</li>
-</ul>
-<p>这会让我们的<code>Git</code>项目拥有三个阶段：工作区、暂存区以及<code>Git</code>目录。</p>
-<p><img src="https://s3.ax1x.com/2020/12/14/rnRdBD.md.png" alt="工作目录、暂存区域以及 Git 仓库"></p>
-<p>工作区是对项目的某个版本独立提取出来的内容。这些从<code>Git</code>仓库的压缩数据库中提取出来的文件,放在磁盘上供你使用或修改。</p>
-<p>暂存区是一个文件,保存了下次将要提交的文件列表信息,一般在<code>Git</code>仓库目录中。按照<code>Git</code>的术语叫做“索 引”，不过一般说法还是叫“暂存区”。</p>
-<p><code>Git</code> 仓库目录是 <code>Git</code> 用来保存项目的元数据和对象数据库的地方。 这是 <code>Git</code> 中最重要的部分，从其它计算机克隆 仓库时，复制的就是这里的数据。</p>
-<p>基本的 <code>Git</code> 工作流程如下：</p>
-<pre><code>1. 在工作区中修改文件。
-
-2. 将你想要下次提交的更改选择性地暂存，这样只会将更改的部分添加到暂存区。 
-
-3. 提交更新，找到暂存区的文件，将快照永久性存储到 `Git` 目录。 
-</code></pre>
-<p>如果 <code>Git</code> 目录中保存着特定版本的文件，就属于 <strong>已提交</strong> 状态。 如果文件已修改并放入暂存区，就属于 <strong>已暂存</strong> 状态。 如果自上次检出后，作了修改但还没有放到暂存区域，就是 <strong>已修改</strong> 状态。</p>
-<h2 id="实用Git操作"><a href="#实用Git操作" class="headerlink" title="实用Git操作"></a>实用Git操作</h2><ul>
-<li><p><code>git commit -a</code> </p>
-<p>  直接跳过使用暂存区域也就是跳过 <code>git add</code> 操作，直接把所有已经跟踪过的文件暂存并提交。</p>
-</li>
-<li><p><code>git mv</code></p>
-<p>  就相当于运行了下面三条命令： </p>
-  <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">$</span><span class="bash"> mv README.md README</span> </span><br><span class="line"><span class="meta">$</span><span class="bash"> git rm README.md</span> </span><br><span class="line"><span class="meta">$</span><span class="bash"> git add README</span> </span><br></pre></td></tr></table></figure></li>
-<li><p><code>git log -n</code> </p>
-<p>  指定显示几次提交记录 </p>
-</li>
-<li><p><code>git commit --amend</code> </p>
-<p>  有时候我们提交完了才发现漏掉了几个文件没有添加，或者提交信息写错了。此时，可以运行带有 –amend 选 项的提交命令来重新提交： </p>
-</li>
-<li><p><code>git reset HEAD &lt;file&gt;</code></p>
-<p>  取消指定文件的暂存状态</p>
-</li>
-<li><p><code>git checkout -- &lt;file&gt;</code></p>
-<p>  撤销对文件的修改</p>
-</li>
-</ul>
-<h3 id="创建标签"><a href="#创建标签" class="headerlink" title="创建标签"></a>创建标签</h3><p><code>Git</code> 支持两种标签：轻量标签<code>（lightweight）</code>与附注标签<code>（annotated）</code>。 </p>
-<p>轻量标签很像一个不会改变的分支——它只是某个特定提交的引用。 </p>
-<p>而附注标签是存储在 <code>Git</code> 数据库中的一个完整对象， 它们是可以被校验的，其中包含打标签者的名字、电子邮件 地址、日期时间， 此外还有一个标签信息，并且可以使用 <code>GNU Privacy Guard （GPG）</code>签名并验证。</p>
-<ul>
-<li><p><code>git tag &lt;tagname&gt;</code> </p>
-<p>  创建轻量标签</p>
-</li>
-<li><p><code>git tag -a &lt;tagname&gt;</code> </p>
-<p>  创建附注标签</p>
-</li>
-<li><p><code>git show &lt;tagname&gt;</code> </p>
-<p>  显示标签信息</p>
-</li>
-<li><p><code>git push origin &lt;tagname&gt;</code> </p>
-<p>  推送指定标签到远程仓库</p>
-</li>
-<li><p><code>git push origin --tags </code> </p>
-<p>  推送本地所有标签</p>
-</li>
-<li><p><code>git tag -d &lt;tagname&gt;</code> </p>
-<p>  删除本地标签</p>
-</li>
-<li><p><code>git push origin --delete &lt;tagname&gt;</code> </p>
-<p>  同步本地删除的标签到远程仓库</p>
-</li>
-<li><p><code>git config --global alias.co checkout </code> </p>
-<p>  可以通过 <code>git config</code> 文件来轻松地为每一个命令设置一个别名<br>  上面的例子设置了 <code>git co</code> 代替 <code>git checkou</code></p>
-</li>
-</ul>
+        <h2 id="1-ArrayList类概述"><a href="#1-ArrayList类概述" class="headerlink" title="1.ArrayList类概述"></a>1.ArrayList类概述</h2><p><strong>什么是集合</strong></p>
+<p>提供一种存储空间可变的存储模型，存储的数据容量可以发生改变</p>
+<p><strong>ArrayList集合的特点</strong></p>
+<p>底层是数组实现的，长度可以变化</p>
+<p><strong>泛型的使用</strong></p>
+<p>用于约束集合中存储元素的数据类型</p>
+<h2 id="2-ArrayList构造方法"><a href="#2-ArrayList构造方法" class="headerlink" title="2.ArrayList构造方法"></a>2.ArrayList构造方法</h2><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public ArrayList()</td>
+<td>创建一个空的集合对象</td>
+</tr>
+</tbody></table>
+<h2 id="3-ArrayList成员方法"><a href="#3-ArrayList成员方法" class="headerlink" title="3.ArrayList成员方法"></a>3.ArrayList成员方法</h2><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public boolean remove(Object o)</td>
+<td>删除指定的元素，返回删除是否成功</td>
+</tr>
+<tr>
+<td>public E remove(int index)</td>
+<td>删除指定索引处的元素，返回被删除的元素</td>
+</tr>
+<tr>
+<td>public E set(int index,E element)</td>
+<td>修改指定索引处的元素，返回被修改的元素</td>
+</tr>
+<tr>
+<td>public E get(int index)</td>
+<td>返回指定索引处的元素</td>
+</tr>
+<tr>
+<td>public int size()</td>
+<td>返回集合中的元素的个数</td>
+</tr>
+<tr>
+<td>public boolean add(E e)</td>
+<td>将指定的元素追加到此集合的末尾</td>
+</tr>
+<tr>
+<td>public void add(int index,E element)</td>
+<td>在此集合中的指定位置插入指定的元素</td>
+</tr>
+</tbody></table>
 
       
 
@@ -485,7 +540,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">Git</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
         		</li>
       		
 		</ul>
@@ -495,7 +550,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/12/14/2020-12-14-Git%E5%9F%BA%E7%A1%80/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/10/07/JavaSE-8-ArrayList/">展开全文 >></a>
         </p>
       
 
@@ -525,58 +580,149 @@
 
 
   
-    <article id="post-2020-11-02-psql常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-JavaSE-7-字符串常用API" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">psql常用命令</a>
+      <a class="article-title" href="/2021/10/07/JavaSE-7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8API/">JavaSE-7-字符串常用API</a>
     </h1>
   
 
         
-        <a href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
-  	<time datetime="2020-11-01T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-02</time>
+        <a href="/2021/10/07/JavaSE-7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8API/" class="archive-article-date">
+  	<time datetime="2021-10-07T15:00:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="psql介绍"><a href="#psql介绍" class="headerlink" title="psql介绍"></a>psql介绍</h2><p><code>psql</code> 是 <code>PgSQL</code> 中的一个命令行交互式客户端工具，允许我们键入SQL或命令，然后把他们发出给 PgSQL服务器，再显示SQL或命令的结果。</p>
-<h2 id="psql的常用命令"><a href="#psql的常用命令" class="headerlink" title="psql的常用命令"></a>psql的常用命令</h2><ul>
-<li><p><code>\l</code> 列出所有数据库</p>
-</li>
-<li><p><code>\c dbname</code> 连接指定数据库</p>
-</li>
-<li><p><code>\timing on</code>: 显示SQL执行时间</p>
-</li>
-<li><p><code>\d</code> <code>\dt</code>: 列出当前数据库中的所有表</p>
-</li>
-<li><p><code>\d &lt;tableName&gt;</code>: 显示这个表的结构定义, tebleName还可以换成索引、序列、视图、函数这些对象类型</p>
-</li>
-<li><p><code>\d+</code>: 显示比<code>\d</code> 更详细的信息</p>
-</li>
-<li><p><code>\dn</code>: 列出所有的schema</p>
-</li>
-<li><p><code>\db</code>: 显示所有表空间</p>
-<p>  tips: PgSQL的表空间就是对应一个目录，放在这个表空间的表，就是把表的数据文件放到这个表空间目录下</p>
-</li>
-<li><p><code>\du</code> <code>\dg</code>:  显示数据库中所有角色或用户</p>
-</li>
-<li><p><code>\dp</code> <code>\z</code>: 显示表的权限分配情况</p>
-</li>
-<li><p><code>\x</code>: 把表中每一行的每列数据都拆分为单行显示</p>
-</li>
-<li><p><code>\i &lt;文件名&gt;</code> 执行存储在外部文件中的sql语句或命令。</p>
-</li>
-<li><p><code>\echo &lt;content&gt;</code>: 用于输出一行信息，常用于.sql脚本文件中输出一些提示信息</p>
-</li>
-<li><p><code>\?</code> 更多命令</p>
-</li>
-</ul>
+        <h2 id="1-String"><a href="#1-String" class="headerlink" title="1.String"></a>1.String</h2><h3 id="1-1-String类概述"><a href="#1-1-String类概述" class="headerlink" title="1.1 String类概述"></a>1.1 String类概述</h3><p>String 类代表字符串，Java 程序中的所有字符串文字（例如“abc”）都被实现为此类的实例。也就是说，Java 程序 中所有的双引号字符串，都是 String 类的对象。String 类在 java.lang 包下，所以使用的时候不需要导包！</p>
+<h3 id="1-2-String类的特点"><a href="#1-2-String类的特点" class="headerlink" title="1.2 String类的特点"></a>1.2 String类的特点</h3><p>字符串不可变，它们的值在创建后不能被更改</p>
+<p>虽然 String 的值是不可变的，但是它们可以被共享</p>
+<p>字符串效果上相当于字符数组( char[] )，但是底层原理是字节数组( byte[] )</p>
+<h3 id="1-3-String的构造方法"><a href="#1-3-String的构造方法" class="headerlink" title="1.3 String的构造方法"></a>1.3 String的构造方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String()</td>
+<td>创建一个空白字符串对象，不含有任何内容</td>
+</tr>
+<tr>
+<td>public String(char[] chs)</td>
+<td>根据字符数组的内容，来创建字符串对象</td>
+</tr>
+<tr>
+<td>public String(byte[] bys)</td>
+<td>根据字节数组的内容，来创建字符串对象</td>
+</tr>
+<tr>
+<td>String s = “abc”;</td>
+<td>直接赋值的方式创建字符串对象，内容就是abc</td>
+</tr>
+</tbody></table>
+<h3 id="1-4-创建字符串对象两种方式的区别"><a href="#1-4-创建字符串对象两种方式的区别" class="headerlink" title="1.4 创建字符串对象两种方式的区别"></a>1.4 创建字符串对象两种方式的区别</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> String str = <span class="keyword">new</span> String();</span><br></pre></td></tr></table></figure>
+
+<p>通过 new 创建的字符串对象，每一次 new 都会申请一个内存空间，虽然内容相同，但是地址值不同</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> String str = <span class="string">&quot;&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<p>以“”方式给出的字符串，只要字符序列相同(顺序和大小写)，无论在程序代码中出现几次，JVM 都只会建立一个String 对象，并在字符串池中维护</p>
+<h3 id="1-5-字符串的比较"><a href="#1-5-字符串的比较" class="headerlink" title="1.5 字符串的比较"></a>1.5 字符串的比较</h3><h4 id="1-5-1-号的作用"><a href="#1-5-1-号的作用" class="headerlink" title="1.5.1 ==号的作用"></a>1.5.1 ==号的作用</h4><p>比较基本数据类型：比较的是具体的值</p>
+<p>比较引用数据类型：比较的是对象地址值</p>
+<h4 id="1-5-2-equals方法的作用"><a href="#1-5-2-equals方法的作用" class="headerlink" title="1.5.2 equals方法的作用"></a>1.5.2 equals方法的作用</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="comment">//比较两个字符串内容是否相同、区分大小写</span></span><br><span class="line"><span class="number">2</span> <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(String s)</span></span>;    </span><br></pre></td></tr></table></figure>
+
+<h3 id="1-6-String常用方法"><a href="#1-6-String常用方法" class="headerlink" title="1.6 String常用方法"></a>1.6 String常用方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public boolean equals(Object anObject)</td>
+<td>比较字符串的内容，严格区分大小写(用户名和密码)</td>
+</tr>
+<tr>
+<td>public char charAt(int index)</td>
+<td>返回指定索引处的char值</td>
+</tr>
+<tr>
+<td>public int length()</td>
+<td>返回此字符串的长度</td>
+</tr>
+</tbody></table>
+<h2 id="2-StringBuilder"><a href="#2-StringBuilder" class="headerlink" title="2.StringBuilder"></a>2.StringBuilder</h2><h3 id="2-1-StringBuilder类概述"><a href="#2-1-StringBuilder类概述" class="headerlink" title="2.1 StringBuilder类概述"></a>2.1 StringBuilder类概述</h3><p>StringBuilder 是一个可变的字符串类，我们可以把它看成是一个容器，这里的可变指的是 StringBuilder 对象中的内容是可变的</p>
+<h3 id="2-2-StringBuilder类和String类的区别"><a href="#2-2-StringBuilder类和String类的区别" class="headerlink" title="2.2 StringBuilder类和String类的区别"></a>2.2 StringBuilder类和String类的区别</h3><p>String类：内容是不可变的</p>
+<p>StringBuilder类：内容是可变的</p>
+<h3 id="2-3-StringBuilder类的构造方法"><a href="#2-3-StringBuilder类的构造方法" class="headerlink" title="2.3 StringBuilder类的构造方法"></a>2.3 StringBuilder类的构造方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public StringBuilder()</td>
+<td>创建一个空白可变字符串对象，不含有任何内容</td>
+</tr>
+<tr>
+<td>public StringBuilder(String str)</td>
+<td>根据字符串的内容，来创建可变字符串对象</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-StringBuilder类添加和反转方法"><a href="#2-4-StringBuilder类添加和反转方法" class="headerlink" title="2.4 StringBuilder类添加和反转方法"></a>2.4 StringBuilder类添加和反转方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public StringBuilder append(任意类型)</td>
+<td>添加数据，并返回对象本身</td>
+</tr>
+<tr>
+<td>public StringBuilder reverse()</td>
+<td>返回相反的字符序列</td>
+</tr>
+</tbody></table>
+<h3 id="2-5-StringBuilder和String相互转换"><a href="#2-5-StringBuilder和String相互转换" class="headerlink" title="2.5 StringBuilder和String相互转换"></a>2.5 StringBuilder和String相互转换</h3><p>StringBuilder转换为String</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="comment">//通过 toString() 就可以实现把 StringBuilder 转换为 String</span></span><br><span class="line"><span class="number">2</span> <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
+
+<p>String转换为StringBuilder</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="comment">//通过构造方法就可以实现把 String 转换为 StringBuilder</span></span><br><span class="line"><span class="number">2</span> <span class="function"><span class="keyword">public</span> <span class="title">StringBuilder</span><span class="params">(String s)</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-6-StringBuilder常用方法"><a href="#2-6-StringBuilder常用方法" class="headerlink" title="2.6 StringBuilder常用方法"></a>2.6 StringBuilder常用方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public StringBuilder append (任意类型)</td>
+<td>添加数据，并返回对象本身</td>
+</tr>
+<tr>
+<td>public StringBuilder reverse()</td>
+<td>返回相反的字符序列</td>
+</tr>
+<tr>
+<td>public int length()</td>
+<td>返回长度，实际存储值</td>
+</tr>
+<tr>
+<td>public String toString()</td>
+<td>通过toString()就可以实现把StringBuilder转换为String</td>
+</tr>
+</tbody></table>
 
       
 
@@ -590,11 +736,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SQL</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PgSQL</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
         		</li>
       		
 		</ul>
@@ -604,7 +746,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/10/07/JavaSE-7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8API/">展开全文 >></a>
         </p>
       
 
@@ -634,307 +776,78 @@
 
 
   
-    <article id="post-2020-09-27-SQL的连接查询" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-JavaSE-6-面向对象" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2020/09/27/2020-09-27-SQL%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/">SQL的连接查询</a>
+      <a class="article-title" href="/2021/10/07/JavaSE-6-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">JavaSE-陆-面向对象</a>
     </h1>
   
 
         
-        <a href="/2020/09/27/2020-09-27-SQL%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/" class="archive-article-date">
-  	<time datetime="2020-09-26T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-27</time>
+        <a href="/2021/10/07/JavaSE-6-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/" class="archive-article-date">
+  	<time datetime="2021-10-07T14:56:05.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前一段时间工作一直是和SQL打交道, 遇到一个sql连接查询问题, 自己疫情在家躺尸，早就把这方面的知识还给学校了，这里就把查到的一些资料以及把自己遇到的问题和解决方法记录一下。</p>
-<h2 id="Join"><a href="#Join" class="headerlink" title="Join"></a>Join</h2><p>我们知道,<code>SQL</code>的<code>Join</code>语法有很多<code>inner</code>的,有<code>outer</code>的，有<code>left</code>的，有时候，对于select出来的结果集是什么样子有点不是很清楚。通过韦恩图(Venn diagram, 可用来表示多个集合之间的逻辑关系)，可以帮我们有效的理解这些。</p>
-<p>假设我们有两张表。Table A 是左边的表。Table B 是右边的表。其各有四条记录，其中有两条记录name是相同的，如下所示：让我们看看不同JOIN的不同</p>
-<table>
-<thead>
-<tr>
-<th>A表</th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>id</td>
-<td>name</td>
-</tr>
-<tr>
-<td>1</td>
-<td>Pirate</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Monkey</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Ninja</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Spaghetti</td>
-</tr>
-</tbody></table>
-<table>
-<thead>
-<tr>
-<th>B表</th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>id</td>
-<td>name</td>
-</tr>
-<tr>
-<td>1</td>
-<td>Rutabaga</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Pirate</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Darth Vade</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Ninja</td>
-</tr>
-</tbody></table>
-<h3 id="INNER-JOIN"><a href="#INNER-JOIN" class="headerlink" title="INNER JOIN"></a>INNER JOIN</h3><p>INNER JOIN 产生的结果集中，是表A和表B的交集。</p>
-<p><img src="https://s1.ax1x.com/2020/09/27/0kRkbq.png" alt="0kRkbq.png"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> TableA <span class="keyword">INNER</span> <span class="keyword">JOIN</span> TableB <span class="keyword">ON</span> TableA.name <span class="operator">=</span> TableB.name</span><br></pre></td></tr></table></figure>
+        <h2 id="1-类和对象"><a href="#1-类和对象" class="headerlink" title="1. 类和对象"></a>1. 类和对象</h2><h3 id="1-1-类和对象的理解"><a href="#1-1-类和对象的理解" class="headerlink" title="1.1 类和对象的理解"></a>1.1 类和对象的理解</h3><p>客观存在的事物皆为对象 ，所以我们也常常说万物皆对象。</p>
+<p>类</p>
+<p><strong>类的理解</strong></p>
+<p>类是对现实生活中一类具有共同属性和行为的事物的抽象</p>
+<p>类是对象的数据类型，类是具有相同属性和行为的一组对象的集合</p>
+<p>简单理解：类就是对现实事物的一种描述</p>
+<p><strong>类的组成</strong></p>
+<p>属性：指事物的特征，例如：手机事物（品牌，价格，尺寸）</p>
+<p>行为：指事物能执行的操作，例如：手机事物（打电话，发短信）</p>
+<p><strong>类和对象的关系</strong></p>
+<p>类：类是对现实生活中一类具有共同属性和行为的事物的抽象</p>
+<p>对象：是能够看得到摸的着的真实存在的实体</p>
+<p>简单理解：类是对事物的一种描述，对象则为具体存在的事物</p>
+<h3 id="1-2-类的定义"><a href="#1-2-类的定义" class="headerlink" title="1.2 类的定义"></a>1.2 类的定义</h3><p>类的组成是由属性和行为两部分组成</p>
+<p>属性：在类中通过成员变量来体现（类中方法外的变量）</p>
+<p>行为：在类中通过成员方法来体现（和前面的方法相比去掉static关键字即可）</p>
+<p>类的定义步骤：</p>
+<p>①定义类</p>
+<p>②编写类的成员变量</p>
+<p>③编写类的成员方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 类名 </span>&#123;</span><br><span class="line"><span class="number">2</span> 　　<span class="comment">// 成员变量</span></span><br><span class="line"><span class="number">3</span> 　　变量<span class="number">1</span>的数据类型 变量<span class="number">1</span>；</span><br><span class="line"><span class="number">4</span> 　　变量<span class="number">2</span>的数据类型 变量<span class="number">2</span>;</span><br><span class="line"><span class="number">5</span> 　　…</span><br><span class="line"><span class="number">6</span> 　　<span class="comment">// 成员方法</span></span><br><span class="line"><span class="number">7</span> 　　方法<span class="number">1</span>;</span><br><span class="line"><span class="number">8</span> 　　方法<span class="number">2</span>;</span><br><span class="line"><span class="number">9</span> &#125;</span><br></pre></td></tr></table></figure>
 
-<table>
-<thead>
-<tr>
-<th>结果集</th>
-<th></th>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(TableA.)</td>
-<td></td>
-<td>(TableB.)</td>
-<td></td>
-</tr>
-<tr>
-<td>id</td>
-<td>name</td>
-<td>id</td>
-<td>name</td>
-</tr>
-<tr>
-<td>1</td>
-<td>Pirate</td>
-<td>2</td>
-<td>Pirate</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Ninja</td>
-<td>4</td>
-<td>Ninja</td>
-</tr>
-</tbody></table>
-<h3 id="FULL-OUTER-JOIN"><a href="#FULL-OUTER-JOIN" class="headerlink" title="FULL [OUTER] JOIN"></a>FULL [OUTER] JOIN</h3><p>FULL OUTER JOIN 产生表A和表B的并集。对于没有匹配的记录，则会以<code>Null</code>做为值。</p>
-<p><img src="https://s1.ax1x.com/2020/09/27/0kRod0.png" alt="0kRod0.png"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> TableA <span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> TableB <span class="keyword">ON</span> TableA.name <span class="operator">=</span> TableB.name</span><br></pre></td></tr></table></figure>
+<h3 id="1-3-对象的使用"><a href="#1-3-对象的使用" class="headerlink" title="1.3 对象的使用"></a>1.3 对象的使用</h3><p>创建对象的格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 类名 对象名 = <span class="keyword">new</span> 类名();</span><br></pre></td></tr></table></figure>
 
-<table>
-<thead>
-<tr>
-<th>结果集</th>
-<th></th>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(TableA.)</td>
-<td></td>
-<td>(TableB.)</td>
-<td></td>
-</tr>
-<tr>
-<td>id</td>
-<td>name</td>
-<td>id</td>
-<td>name</td>
-</tr>
-<tr>
-<td>1</td>
-<td>Pirate</td>
-<td>2</td>
-<td>Pirate</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Monkey</td>
-<td>null</td>
-<td>null</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Ninja</td>
-<td>4</td>
-<td>Ninja</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Spaghetti</td>
-<td>Null</td>
-<td>Null</td>
-</tr>
-<tr>
-<td>Null</td>
-<td>Null</td>
-<td>1</td>
-<td>Rutabaga</td>
-</tr>
-<tr>
-<td>Null</td>
-<td>Null</td>
-<td>3</td>
-<td>Darth Vade</td>
-</tr>
-</tbody></table>
-<h3 id="LEFT-OUTER-JOIN"><a href="#LEFT-OUTER-JOIN" class="headerlink" title="LEFT [OUTER] JOIN"></a>LEFT [OUTER] JOIN</h3><p>LEFT OUTER JOIN 产生表A的完全集，B表中没有匹配的则以null值取代。</p>
-<p><img src="https://s1.ax1x.com/2020/09/27/0kbWqS.png" alt="0kbWqS.png"></p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> TableA <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> TableB <span class="keyword">ON</span> TableA.name <span class="operator">=</span> TableB.name</span><br></pre></td></tr></table></figure>
+<p>调用成员的格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 对象名.成员变量 对象名.成员方法();</span><br></pre></td></tr></table></figure>
 
-<table>
-<thead>
-<tr>
-<th>结果集</th>
-<th></th>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>(TableA.)</td>
-<td></td>
-<td>(TableB.)</td>
-<td></td>
-</tr>
-<tr>
-<td>id</td>
-<td>name</td>
-<td>id</td>
-<td>name</td>
-</tr>
-<tr>
-<td>1</td>
-<td>Pirate</td>
-<td>2</td>
-<td>Pirate</td>
-</tr>
-<tr>
-<td>2</td>
-<td>Monkey</td>
-<td>null</td>
-<td>null</td>
-</tr>
-<tr>
-<td>3</td>
-<td>Ninja</td>
-<td>4</td>
-<td>Ninja</td>
-</tr>
-<tr>
-<td>4</td>
-<td>Spaghetti</td>
-<td>Null</td>
-<td>Null</td>
-</tr>
-</tbody></table>
-<h3 id="RIGHT-OUTER-JOIN"><a href="#RIGHT-OUTER-JOIN" class="headerlink" title="RIGHT [OUTER] JOIN"></a>RIGHT [OUTER] JOIN</h3><p>RIGHT OUTER JOIN 是后面的表为基础，与LEFT OUTER JOIN用法类似。产生表B的完全集，A表中没有匹配的则以null值取代。</p>
-<h3 id="UNION-与-UNION-ALL"><a href="#UNION-与-UNION-ALL" class="headerlink" title="UNION 与 UNION ALL"></a>UNION 与 UNION ALL</h3><p>UNION 操作符用于合并两个或多个 SELECT 语句的结果集。</p>
-<p>UNION 内部的 SELECT 语句必须拥有相同数量的列。列也必须拥有相似的数据类型。每条 SELECT 语句中的列的顺序必须相同。</p>
-<p>UNION ALL是直接连接，取到得是所有值，记录可能有重复 UNION 是取唯一值，记录没有重复</p>
-<p>UNION将会按照字段的顺序进行排序; UNION ALL只是简单的将两个结果合并后就返回。</p>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> TableA <span class="keyword">UNION</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> TableB</span><br></pre></td></tr></table></figure>
+<h2 id="2-成员变量与局部变量的区别"><a href="#2-成员变量与局部变量的区别" class="headerlink" title="2.成员变量与局部变量的区别"></a>2.成员变量与局部变量的区别</h2><p>类中位置不同：成员变量（类中方法外）局部变量（方法内部或方法声明上）</p>
+<p>内存中位置不同：成员变量（堆内存）局部变量（栈内存）</p>
+<p>生命周期不同：成员变量（随着对象的存在而存在，随着对象的消失而消失）局部变量（随着方法的调用而 存在，醉着方法的调用完毕而消失）</p>
+<p>初始化值不同：成员变量（有默认初始化值）局部变量（没有默认初始化值，必须先定义，赋值才能使用）</p>
+<h2 id="3-封装"><a href="#3-封装" class="headerlink" title="3.封装"></a>3.封装</h2><h3 id="3-1-private关键字"><a href="#3-1-private关键字" class="headerlink" title="3.1 private关键字"></a>3.1 private关键字</h3><p>private是一个修饰符，可以用来修饰成员（成员变量，成员方法）</p>
+<p>被private修饰的成员，只能在本类进行访问，针对private修饰的成员变量，如果需要被其他类使用，提供相应的操作</p>
+<p>　　提供“get变量名()”方法，用于获取成员变量的值，方法用public修饰</p>
+<p>　　提供“set变量名(参数)”方法，用于设置成员变量的值，方法用public修饰</p>
+<h3 id="3-2-this关键字"><a href="#3-2-this关键字" class="headerlink" title="3.2 this关键字"></a>3.2 this关键字</h3><p>this修饰的变量用于指代成员变量，其主要作用是（区分局部变量和成员变量的重名问题）</p>
+<p>　　方法的形参如果与成员变量同名，不带this修饰的变量指的是形参，而不是成员变量</p>
+<p>　　方法的形参没有与成员变量同名，不带this修饰的变量指的是成员变量</p>
+<h2 id="4-构造方法"><a href="#4-构造方法" class="headerlink" title="4.构造方法"></a>4.构造方法</h2><h3 id="4-1-构造方法概述"><a href="#4-1-构造方法概述" class="headerlink" title="4.1 构造方法概述"></a>4.1 构造方法概述</h3><p>构造方法是一种特殊的方法，作用是创建对象。</p>
+<p>格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> 类名</span>&#123;</span><br><span class="line"><span class="number">2</span> 　　修饰符 类名( 参数 ) &#123;</span><br><span class="line"><span class="number">3</span> 　　&#125;</span><br><span class="line"><span class="number">4</span> &#125;</span><br></pre></td></tr></table></figure>
 
-<table>
-<thead>
-<tr>
-<th>结果集</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>name</td>
-</tr>
-<tr>
-<td>Pirate</td>
-</tr>
-<tr>
-<td>Monkey</td>
-</tr>
-<tr>
-<td>Ninja</td>
-</tr>
-<tr>
-<td>Spaghetti</td>
-</tr>
-<tr>
-<td>Rutabaga</td>
-</tr>
-<tr>
-<td>Darth Vade</td>
-</tr>
-</tbody></table>
-<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> TableA <span class="keyword">UNION</span> <span class="keyword">ALL</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> TableB</span><br></pre></td></tr></table></figure>
-
-<table>
-<thead>
-<tr>
-<th>结果集</th>
-</tr>
-</thead>
-<tbody><tr>
-<td>name</td>
-</tr>
-<tr>
-<td>Pirate</td>
-</tr>
-<tr>
-<td>Monkey</td>
-</tr>
-<tr>
-<td>Ninja</td>
-</tr>
-<tr>
-<td>Spaghetti</td>
-</tr>
-<tr>
-<td>Rutabaga</td>
-</tr>
-<tr>
-<td>Pirate</td>
-</tr>
-<tr>
-<td>Darth Vade</td>
-</tr>
-<tr>
-<td>Ninja</td>
-</tr>
-</tbody></table>
-<h2 id="使用Join遇到的问题及解决方法"><a href="#使用Join遇到的问题及解决方法" class="headerlink" title="使用Join遇到的问题及解决方法"></a>使用Join遇到的问题及解决方法</h2><h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a target="_blank" rel="noopener" href="https://justcode.ikeepstudying.com/2016/08/mysql-%E5%9B%BE%E8%A7%A3-inner-join%E3%80%81left-join%E3%80%81right-join%E3%80%81full-outer-join%E3%80%81union%E3%80%81union-all%E7%9A%84%E5%8C%BA%E5%88%AB/">Mysql: 图解 inner join、left join、right join、full outer join、union、union all的区别</a> 本文使用到的图片、Sql、以及一些内容都出自这里</p>
+<p>功能：主要是完成对象数据的初始化。</p>
+<h3 id="4-2-构造方法的注意事项"><a href="#4-2-构造方法的注意事项" class="headerlink" title="4.2 构造方法的注意事项"></a>4.2 构造方法的注意事项</h3><p><strong>构造方法的创建</strong></p>
+<p>如果没有定义构造方法，系统将给出一个默认的无参数构造方法 如果定义了构造方法，系统将不再提供默认的构造方法</p>
+<p><strong>构造方法的重载</strong></p>
+<p>如果自定义了带参构造方法，还要使用无参数构造方法，就必须再写一个无参数构造方法</p>
+<p><strong>推荐的使用方式</strong></p>
+<p>无论是否使用，都手工书写无参数构造方法</p>
+<p><strong>重要功能！</strong></p>
+<p>可以使用带参构造，为成员变量进行初始化</p>
 
       
 
@@ -948,7 +861,7 @@
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SQL</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
         		</li>
       		
 		</ul>
@@ -958,7 +871,933 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2020/09/27/2020-09-27-SQL%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/10/07/JavaSE-6-%E9%9D%A2%E5%90%91%E5%AF%B9%E8%B1%A1/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-5-数组" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/07/JavaSE-5-%E6%95%B0%E7%BB%84/">JavaSE-伍-数组</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/07/JavaSE-5-%E6%95%B0%E7%BB%84/" class="archive-article-date">
+  	<time datetime="2021-10-07T14:54:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h2><p>同一种类型数据的集合。其实数组就是一个容器。</p>
+<h2 id="2-优点"><a href="#2-优点" class="headerlink" title="2.优点"></a>2.优点</h2><p>可以自动给数组中的元素从0开始编号，方便操作这些元素。</p>
+<h2 id="3-格式"><a href="#3-格式" class="headerlink" title="3.格式"></a>3.格式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 元素类型[] 数组名 = <span class="keyword">new</span> 元素类型[元素个数或数组长度];</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 元素类型[] 数组名 = <span class="keyword">new</span> 元素类型[]&#123;元素，元素，……&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-数组遍历"><a href="#4-数组遍历" class="headerlink" title="4.数组遍历"></a>4.数组遍历</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> x[] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; x.length;i++)&#123;</span><br><span class="line"><span class="number">4</span> 　　System.out.println(x[i]);</span><br><span class="line"><span class="number">5</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-常见异常"><a href="#5-常见异常" class="headerlink" title="5.常见异常"></a>5.常见异常</h2><ol>
+<li>NullPointerException 空指针异常<br>原因： 引用类型变量没有指向任何对象，而访问了对象的属性或者是调用了对象的方法。</li>
+</ol>
+<ol start="2">
+<li>ArrayIndexOutOfBoundsException 索引值越界。<br>原因：访问了不存在的索引值。</li>
+</ol>
+<h2 id="6-二维数组"><a href="#6-二维数组" class="headerlink" title="6.二维数组"></a>6.二维数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 元素类型[][] 数组名 = <span class="keyword">new</span> 元素类型[一维数组的个数][每一个一维数组中元素的个数];</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-Arrays类"><a href="#7-Arrays类" class="headerlink" title="7.Arrays类"></a>7.Arrays类</h2><p>java.util.Arrays 类能方便地操作数组，它提供的所有方法都是静态的。</p>
+<table>
+<thead>
+<tr>
+<th><strong>方法</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>public static int binarySearch(Object[] a, Object key)</strong></td>
+<td>查找数组元素</td>
+<td>用二分查找算法在给定数组中搜索给定值的对象(Byte,Int,double等)。数组在调用前必须排序好的。如果查找值包含在数组中，则返回搜索键的索引；否则返回 (-(<em>插入点</em>) - 1)。</td>
+</tr>
+<tr>
+<td><strong>public static boolean equals(long[] a, long[] a2)</strong></td>
+<td>比较数组</td>
+<td>如果两个指定的 long 型数组彼此<em>相等</em>，则返回 true。如果两个数组包含相同数量的元素，并且两个数组中的所有相应元素对都是相等的，则认为这两个数组是相等的。换句话说，如果两个数组以相同顺序包含相同的元素，则两个数组是相等的。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。</td>
+</tr>
+<tr>
+<td><strong>public static void fill(int[] a, int val)</strong></td>
+<td>给数组赋值</td>
+<td>将指定的 int 值分配给指定 int 型数组指定范围中的每个元素。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。</td>
+</tr>
+<tr>
+<td><strong>public static void sort(Object[] a)</strong></td>
+<td>对数组排序</td>
+<td>对指定对象数组根据其元素的自然顺序进行升序排列。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。</td>
+</tr>
+</tbody></table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/07/JavaSE-5-%E6%95%B0%E7%BB%84/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-4-Switch和循环语句" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/07/JavaSE-4-Switch%E5%92%8C%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5/">JavaSE-肆-Switch和循环语句</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/07/JavaSE-4-Switch%E5%92%8C%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5/" class="archive-article-date">
+  	<time datetime="2021-10-07T14:51:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-Switch"><a href="#1-Switch" class="headerlink" title="1.Switch"></a>1.Switch</h2><p>格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">switch</span> (表达式) &#123;</span><br><span class="line"> <span class="number">2</span> 　　<span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line"> <span class="number">3</span> 　　　　语句体<span class="number">1</span>;</span><br><span class="line"> <span class="number">4</span> 　　<span class="keyword">break</span>;</span><br><span class="line"> <span class="number">5</span> 　　<span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line"> <span class="number">6</span> 　　　　语句体<span class="number">2</span>;</span><br><span class="line"> <span class="number">7</span> 　　<span class="keyword">break</span>;</span><br><span class="line"> <span class="number">8</span> 　　...</span><br><span class="line"> <span class="number">9</span> 　　<span class="keyword">default</span>:</span><br><span class="line"><span class="number">10</span> 　　　　语句体n+<span class="number">1</span>;</span><br><span class="line"><span class="number">11</span> 　　<span class="keyword">break</span>;</span><br><span class="line"><span class="number">12</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行流程：</p>
+<p>首先计算出表达式的值。</p>
+<p>其次，和case依次比较，一旦有对应的值，就会执行相应的语句，在执行的过程中，遇到break就会结束。</p>
+<p>最后，如果所有的case都和表达式的值不匹配，就会执行default语句体部分，然后程序结束掉。</p>
+<h2 id="2-for循环"><a href="#2-for循环" class="headerlink" title="2.for循环"></a>2.for循环</h2><p>循环： 循环语句可以在满足循环条件的情况下，反复执行某一段代码，这段被重复执行的代码被称为循环体语句， 当反复执行这个循环体时，需要在合适的时候把循环判断条件修改为false，从而结束循环，否则循环将一直执行下去，形成死循环。</p>
+<p>格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">for</span> (初始化语句;条件判断语句;条件控制语句) &#123;</span><br><span class="line"><span class="number">2</span> 　　循环体语句;</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>格式解释：</p>
+<p>初始化语句： 用于表示循环开启时的起始状态，简单说就是循环开始的时候什么样</p>
+<p>条件判断语句：用于表示循环反复执行的条件，简单说就是判断循环是否能一直执行下去</p>
+<p>循环体语句： 用于表示循环反复执行的内容，简单说就是循环反复执行的事情</p>
+<p>条件控制语句：用于表示循环执行中每次变化的内容，简单说就是控制循环是否能执行下去</p>
+<p>执行流程：</p>
+<p>①执行初始化语句</p>
+<p>②执行条件判断语句，看其结果是true还是false</p>
+<p>如果是false，循环结束</p>
+<p>如果是true，继续执行</p>
+<p>③执行循环体语句</p>
+<p>④执行条件控制语句</p>
+<p>⑤回到②继续</p>
+<h2 id="3-while循环"><a href="#3-while循环" class="headerlink" title="3.while循环"></a>3.while循环</h2><p>格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">while</span> (条件判断语句) &#123;</span><br><span class="line"><span class="number">2</span>     循环体语句;</span><br><span class="line"><span class="number">3</span>     条件控制语句;</span><br><span class="line"><span class="number">4</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>执行流程：</p>
+<p>①执行初始化语句</p>
+<p>②执行条件判断语句，看其结果是true还是false</p>
+<p>如果是false，循环结束</p>
+<p>如果是true，继续执行</p>
+<p>③执行循环体语句</p>
+<p>④执行条件控制语句</p>
+<p>⑤回到②继续</p>
+<h2 id="4-do……while循环"><a href="#4-do……while循环" class="headerlink" title="4.do……while循环"></a>4.do……while循环</h2><p>格式：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">do</span> &#123;</span><br><span class="line"><span class="number">2</span> 　　循环体语句;</span><br><span class="line"><span class="number">3</span> 　　条件控制语句;</span><br><span class="line"><span class="number">4</span> &#125;<span class="keyword">while</span>(条件判断语句);</span><br></pre></td></tr></table></figure>
+
+<p>执行流程：</p>
+<p>① 执行初始化语句</p>
+<p>② 执行循环体语句</p>
+<p>③ 执行条件控制语句</p>
+<p>④ 执行条件判断语句，看其结果是true还是false</p>
+<p>如果是false，循环结束</p>
+<p>如果是true，继续执行</p>
+<p>⑤ 回到②继续</p>
+<h2 id="5-三种循环的区别"><a href="#5-三种循环的区别" class="headerlink" title="5.三种循环的区别"></a>5.三种循环的区别</h2><h3 id="5-1-三种循环的区别"><a href="#5-1-三种循环的区别" class="headerlink" title="5.1 三种循环的区别"></a>5.1 三种循环的区别</h3><p>for循环和while循环先判断条件是否成立，然后决定是否执行循环体（先判断后执行）</p>
+<p>do…while循环先执行一次循环体，然后判断条件是否成立，是否继续执行循环体（先执行后判断）</p>
+<h3 id="5-2-for循环和while的区别"><a href="#5-2-for循环和while的区别" class="headerlink" title="5.2 for循环和while的区别"></a>5.2 for循环和while的区别</h3><p>条件控制语句所控制的自增变量，因为归属for循环的语法结构中，在for循环结束后，就不能再次被访问到了</p>
+<p>条件控制语句所控制的自增变量，对于while循环来说不归属其语法结构中，在while循环结束后，该变量还可以继续使用</p>
+<h3 id="5-3-死循环（无限循环）的三种格式"><a href="#5-3-死循环（无限循环）的三种格式" class="headerlink" title="5.3 死循环（无限循环）的三种格式"></a>5.3 死循环（无限循环）的三种格式</h3><ol>
+<li><p>for(;;){}</p>
+</li>
+<li><p>while(true){}</p>
+</li>
+<li><p>do {} while(true);</p>
+</li>
+</ol>
+<h2 id="6-跳转控制语句"><a href="#6-跳转控制语句" class="headerlink" title="6.跳转控制语句"></a>6.跳转控制语句</h2><p>跳转控制语句（break） 跳出循环，结束循环</p>
+<p>跳转控制语句（continue） 跳过本次循环，继续下次循环</p>
+<p>注意： continue只能在循环中进行使用！</p>
+<h2 id="7-Random"><a href="#7-Random" class="headerlink" title="7.Random"></a>7.Random</h2><p>概述： Random类似Scanner，也是Java提供好的API，内部提供了产生随机数的功能。</p>
+<p>使用步骤：</p>
+<ol>
+<li>导入包 </li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">import</span> java.util.Random;</span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>创建对象 </li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> Random r = <span class="keyword">new</span> Random();</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>产生随机数 </li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> num = r.nextInt(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
+
+<p>解释： 10代表的是一个范围，如果括号写10，产生的随机数就是0-9，括号写20，参数的随机数则是0- 19。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/07/JavaSE-4-Switch%E5%92%8C%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-3-运算符和分支语句" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/07/JavaSE-3-%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/">JavaSE-叁-运算符和分支语句</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/07/JavaSE-3-%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/" class="archive-article-date">
+  	<time datetime="2021-10-07T14:48:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-运算符"><a href="#1-运算符" class="headerlink" title="1.运算符"></a>1.运算符</h2><h3 id="1-1-算术运算符"><a href="#1-1-算术运算符" class="headerlink" title="1.1 算术运算符"></a>1.1 算术运算符</h3><h4 id="1-1-1-运算符和表达式"><a href="#1-1-1-运算符和表达式" class="headerlink" title="1.1.1 运算符和表达式"></a>1.1.1 运算符和表达式</h4><p>运算符：对常量或者变量进行操作的符号</p>
+<p>表达式：用运算符把常量或者变量连接起来符合java语法的式子就可以称为表达式。</p>
+<p>不同运算符连接的表达式体现的是不同类型的表达式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> <span class="keyword">int</span> c = a + b;</span><br></pre></td></tr></table></figure>
+
+<p>+：是运算符，并且是算术运算符。 a + b：是表达式，由于+是算术运算符，所以这个表达式叫算术表达式。</p>
+<h4 id="1-1-2-算术运算符"><a href="#1-1-2-算术运算符" class="headerlink" title="1.1.2 算术运算符"></a>1.1.2 算术运算符</h4><table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>+</td>
+<td>加</td>
+<td>略</td>
+</tr>
+<tr>
+<td>-</td>
+<td>减</td>
+<td>略</td>
+</tr>
+<tr>
+<td>*</td>
+<td>乘</td>
+<td>略</td>
+</tr>
+<tr>
+<td>/</td>
+<td>除</td>
+<td>略</td>
+</tr>
+<tr>
+<td>%</td>
+<td>取余</td>
+<td>获取两数做除法后的余数</td>
+</tr>
+</tbody></table>
+<p>注意： /和%的区别：两个数据做除法，/取结果的商，%取结果的余数。 整数操作只能得到整数，要想得到小数，必须有浮点数参与运算。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> System.out.println(a / b); <span class="comment">// 输出结果3</span></span><br><span class="line"><span class="number">6</span> </span><br><span class="line"><span class="number">7</span> System.out.println(a % b); <span class="comment">// 输出结果1</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="1-1-3-字符的“-”操作"><a href="#1-1-3-字符的“-”操作" class="headerlink" title="1.1.3 字符的“+”操作"></a>1.1.3 字符的“+”操作</h4><p>char类型参与算术运算，使用的是计算机底层对应的十进制数值。需要我们记住三个字符对应的数值：</p>
+<p>‘a’ – 97 a-z是连续的，所以’b’对应的数值是98，’c’是99，依次递加</p>
+<p>‘A’ – 65 A-Z是连续的，所以’B’对应的数值是66，’C’是67，依次递加</p>
+<p>‘0’ – 48 0-9是连续的，所以’1’对应的数值是49，’2’是50，依次递加</p>
+<p>或者也可以只记住两个值，大写A+32就是小写a</p>
+<p>算术表达式中包含不同的基本数据类型的值的时候，整个算术表达式的类型会自动进行提升。</p>
+<p>提升规则： byte类型，short类型和char类型将被提升到int类型，不管是否有其他类型参与运算。</p>
+<p>整个表达式的类型自动提升到与表达式中最高等级的操作数相同的类型</p>
+<p>等级顺序：byte,short,char –&gt; int –&gt; long –&gt; float –&gt; double</p>
+<p>tips：</p>
+<p>1、正是由于上述原因，所以在程序开发中我们很少使用byte或者short类型定义整数。也很少会使用char类型定 义字符，而使用字符串类型，更不会使用char类型做算术运算。</p>
+<p>2、当“+”操作中出现字符串时，这个”+”是字符串连接符，而不是算术运算。在”+”操作中，如果出现了字符串，就是连接运算符，否则就是算术运算。当连续进行“+”操作时，从左到右逐个执行。</p>
+<p>3、对于大量字符串连接，会产生严重的性能问题，为了解决这一问题，可以在有大量字符串连接的代码中使用StringBuffer或者StringBuilder。</p>
+<h3 id="1-2-赋值运算符"><a href="#1-2-赋值运算符" class="headerlink" title="1.2 赋值运算符"></a>1.2 赋值运算符</h3><table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>=</td>
+<td>赋值</td>
+<td>a=1，将1赋值给变量a</td>
+</tr>
+<tr>
+<td>+=</td>
+<td>加后赋值</td>
+<td>a+=b，将a+b的值给a，等同于a=a+b</td>
+</tr>
+<tr>
+<td>-=</td>
+<td>减后赋值</td>
+<td>a-=b，将a-b的值给a，等同于a=a-b</td>
+</tr>
+<tr>
+<td>*=</td>
+<td>乘后赋值</td>
+<td>a*=b，将a<em>b的值给a，等同于a=a</em>b</td>
+</tr>
+<tr>
+<td>/=</td>
+<td>除后赋值</td>
+<td>a/=b，将a/b的值给a，等同于a=a/b</td>
+</tr>
+<tr>
+<td>%=</td>
+<td>取余后赋值</td>
+<td>a%=b，将a%b的值给a，等同于a=a%b</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-自增自减"><a href="#1-3-自增自减" class="headerlink" title="1.3 自增自减"></a>1.3 自增自减</h3><table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>++</td>
+<td>自增</td>
+<td>a++，即a=a+1</td>
+</tr>
+<tr>
+<td>–</td>
+<td>自减</td>
+<td>a–，即a=a-1</td>
+</tr>
+</tbody></table>
+<p>注意事项：</p>
+<p>++和– 既可以放在变量的后边，也可以放在变量的前边。</p>
+<p>单独使用的时候， ++和– 无论是放在变量的前边还是后边，结果是一样的。</p>
+<p>参与操作的时候，如果放在变量的前边，先拿变量做++或者–，后拿变量参与操作；如果放在变量的后边，先拿变量参与操作，后拿变量做++或者–。</p>
+<h3 id="1-4-关系运算符"><a href="#1-4-关系运算符" class="headerlink" title="1.4 关系运算符"></a>1.4 关系运算符</h3><table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>==</td>
+<td>判断是否相等</td>
+<td>成立返回true，不成立返回false</td>
+</tr>
+<tr>
+<td>&gt;</td>
+<td>判断a是否大于b</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>&gt;=</td>
+<td>判断a是否大于等于b</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>&lt;</td>
+<td>判断a是否小于b</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>&lt;=</td>
+<td>判断a是否小于等于b</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>!=</td>
+<td>判断是否不相等</td>
+<td>同上</td>
+</tr>
+</tbody></table>
+<p>注意事项：</p>
+<p>1、关系运算符的结果都是boolean类型，要么是true，要么是false。</p>
+<p>2、不要混淆“==”与“=”，一个是判断，一个是赋值。</p>
+<h3 id="1-5-逻辑运算符"><a href="#1-5-逻辑运算符" class="headerlink" title="1.5 逻辑运算符"></a>1.5 逻辑运算符</h3><table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&amp;</td>
+<td>与</td>
+<td>a &amp; b,a与b是否都是true,成立返回true，不成立返回false</td>
+</tr>
+<tr>
+<td>|</td>
+<td>或</td>
+<td>a | b,a与b是否有一个是true,成立返回true，不成立返回false</td>
+</tr>
+<tr>
+<td>^</td>
+<td>异或</td>
+<td>a ^ b,a与b是否结果不同,成立返回true，不成立返回false</td>
+</tr>
+<tr>
+<td>!</td>
+<td>非</td>
+<td>!a ,结果与a是否完全相反,成立返回true，不成立返回false</td>
+</tr>
+</tbody></table>
+<p><strong>短路逻辑运算符</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>符号</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>&amp;&amp;</td>
+<td>短路与</td>
+<td>a &amp;&amp; b,a与b是否都是true,成立返回true，不成立返回false，具有短路效果</td>
+</tr>
+<tr>
+<td>||</td>
+<td>短路或</td>
+<td>a || b,a与b是否有一个是true,成立返回true，不成立返回false，具有短路效果</td>
+</tr>
+</tbody></table>
+<p><strong>短路效果：在逻辑与运算中，只要有一个表达式的值为false，那么结果就可以判定为false了，没有必要将所有表达式的值都 计算出来，短路与操作就有这样的效果，可以提高效率。同理在逻辑或运算中，一旦发现值为true，右边的表达式 将不再参与运算。</strong></p>
+<h3 id="1-6-三元运算符"><a href="#1-6-三元运算符" class="headerlink" title="1.6 三元运算符"></a>1.6 三元运算符</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">关系表达式 ? 表达式<span class="number">1</span> : 表达式<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
+
+<p>解释：问号前面的位置是判断的条件，判断结果为boolean型，为true时调用表达式1，为false时调用表达式2。其 逻辑为：如果条件表达式成立或者满足则执行表达式1，否则执行第二个。</p>
+<p>举例：判断pwd和passwd是否相等，相等返回true，不相等返回false。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span> 　　<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span> 　　　　<span class="comment">//1：定义两个变量，此处仅作展示，请不要使用弱口令密码。</span></span><br><span class="line"> <span class="number">4</span> 　　　　<span class="keyword">int</span> pwd = <span class="number">123456</span>;</span><br><span class="line"> <span class="number">5</span> 　　　　<span class="keyword">int</span> passwd = <span class="number">123123</span>;</span><br><span class="line"> <span class="number">6</span> 　　　　<span class="comment">//2：用三元运算符实现数值的判断，相同，返回true，否则，返回false。</span></span><br><span class="line"> <span class="number">7</span> 　　　　<span class="keyword">boolean</span> b = pwd == passwd ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br><span class="line"> <span class="number">8</span> 　　　　<span class="comment">//3：输出结果</span></span><br><span class="line"> <span class="number">9</span> 　　　　System.out.println(<span class="string">&quot;b:&quot;</span> + b);</span><br><span class="line"><span class="number">10</span> 　　&#125;</span><br><span class="line"><span class="number">11</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-数据输入"><a href="#2-数据输入" class="headerlink" title="2. 数据输入"></a>2. 数据输入</h2><p>我们可以通过 Scanner 类来获取用户的输入。</p>
+<p>使用步骤如下：</p>
+<p>1、导包。Scanner 类在java.util包下，所以需要将该类导入。导包的语句需要定义在类的上面。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">import</span> java.util.Scanner</span><br></pre></td></tr></table></figure>
+
+<p>2、创建Scanner对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br></pre></td></tr></table></figure>
+
+<p>3、接收数据</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> String str = sc.nextLine();</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-流程控制语句"><a href="#3-流程控制语句" class="headerlink" title="3. 流程控制语句"></a>3. 流程控制语句</h2><p>在一个程序执行的过程中，各条语句的执行顺序对程序的结果是有直接影响的。所以，我们必须清楚每条语句的执 行流程。而且，很多时候要通过控制语句的执行顺序来实现我们想要的功能。</p>
+<p><img src="https://ftp.bmp.ovh/imgs/2020/11/f7335ac52a9bcb53.jpg" alt="流程控制语句"></p>
+<h4 id="3-1-流程控制语句分类"><a href="#3-1-流程控制语句分类" class="headerlink" title="3.1 流程控制语句分类"></a>3.1 流程控制语句分类</h4><p>顺序结构、分支结构(if, switch)、循环结构(for, while, do…while)</p>
+<h4 id="3-2-顺序结构"><a href="#3-2-顺序结构" class="headerlink" title="3.2 顺序结构"></a>3.2 顺序结构</h4><p>顺序结构是程序中最简单最基本的流程控制，没有特定的语法结构，按照代码的先后顺序，依次执行，程序中大多 数的代码都是这样执行的。</p>
+<h4 id="3-3-分支结构之if语句"><a href="#3-3-分支结构之if语句" class="headerlink" title="3.3 分支结构之if语句"></a>3.3 分支结构之if语句</h4><p>1.if语句</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">if</span>(a == b)&#123;</span><br><span class="line"><span class="number">2</span> 　　<span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断a与b是否相等，相等执行花括号内语句，不相等什么都不做。</p>
+<p>2.if……else</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">if</span>(a == b)&#123;</span><br><span class="line"><span class="number">2</span> 　　<span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line"><span class="number">3</span> &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="number">4</span> 　　<span class="keyword">return</span> <span class="string">&quot;no!God!no!&quot;</span></span><br><span class="line"><span class="number">5</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断a与b是否相等，相等执行if下花括号内语句，不相等执行else下花括号内语句。</p>
+<p>3.if……else if……else</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">if</span>(a == b)&#123;</span><br><span class="line"><span class="number">2</span> 　　<span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line"><span class="number">3</span> &#125;<span class="keyword">else</span> <span class="keyword">if</span>(a &lt; b)&#123;</span><br><span class="line"><span class="number">4</span> 　　<span class="keyword">return</span> <span class="string">&quot;no bad&quot;</span></span><br><span class="line"><span class="number">5</span> &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="number">6</span> 　　<span class="keyword">return</span> <span class="string">&quot;no!God!no!&quot;</span></span><br><span class="line"><span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>判断a与b是否相等，相等执行if下花括号内语句，不相等则判断else if中的判断，如果为true执行else if下花括号的语句。注意，else if语句可以有多个，如果都无法通过判断，则执行else下花括号内语句。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/07/JavaSE-3-%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-2-基本语法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/07/JavaSE-2-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">JavaSE-贰-基本语法</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/07/JavaSE-2-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" class="archive-article-date">
+  	<time datetime="2021-10-07T14:42:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-注释"><a href="#1-注释" class="headerlink" title="1.注释"></a>1.注释</h2><p>注释是对代码的解释和说明文字，可以提高程序的可读性，因此在程序中添加必要的注释文字十分重要。</p>
+<p>Java中的注释分为三种：</p>
+<p><strong>单行注释</strong>。单行注释的格式是使用//，从//开始至本行结尾的文字将作为注释文字。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="comment">// 这是单行注释</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>多行注释</strong>。多行注释的格式是使用/* 和 */将一段较长的注释括起来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="comment">/*</span></span><br><span class="line"><span class="comment">2 这</span></span><br><span class="line"><span class="comment">3 是</span></span><br><span class="line"><span class="comment">4 多</span></span><br><span class="line"><span class="comment">5 行</span></span><br><span class="line"><span class="comment">6 注</span></span><br><span class="line"><span class="comment">7 释</span></span><br><span class="line"><span class="comment">8 */</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>文档注释</strong>。文档注释以 /** 开始，以 */ 结束。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 这是文档注释</span></span><br><span class="line"><span class="comment">* <span class="doctag">@author</span> ZhiyDev</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-关键字"><a href="#2-关键字" class="headerlink" title="2.关键字"></a>2.关键字</h2><p>关键字是指被java语言赋予了特殊含义的单词。</p>
+<p>特征：全部小写。</p>
+<h2 id="3-常量"><a href="#3-常量" class="headerlink" title="3.常量"></a>3.常量</h2><p>在程序运行过程中，其值不可以发生改变的量。</p>
+<table>
+<thead>
+<tr>
+<th>字符串</th>
+<th>用双引号括起来的多个字符（可以包含0个、一个或多个）</th>
+<th>“Hello World”、“A”、“”</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>整型</td>
+<td>整数</td>
+<td>1、2、10、-8</td>
+</tr>
+<tr>
+<td>浮点型</td>
+<td>小数</td>
+<td>1.5、2.8、99.99</td>
+</tr>
+<tr>
+<td>字符型</td>
+<td>用单引号括起来的一个字符</td>
+<td>‘a’、‘c’</td>
+</tr>
+<tr>
+<td>布尔型</td>
+<td>布尔值，表示真假，只有两个值</td>
+<td>true、false</td>
+</tr>
+<tr>
+<td>空常量</td>
+<td>一个特殊的值，空值</td>
+<td>null</td>
+</tr>
+</tbody></table>
+<p>除空常量外，其他类型均能通过输出语句输出。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 public class Demo &#123;</span><br><span class="line">2 　　public static void main(String[] args) &#123;</span><br><span class="line">3 　　　　System.out.println(10); // 输出一个整数</span><br><span class="line">4 　　　　System.out.println(5.5); // 输出一个小数</span><br><span class="line">5 　　　　System.out.println(&#x27;a&#x27;); // 输出一个字符</span><br><span class="line">6 　　　　System.out.println(true); // 输出boolean值true</span><br><span class="line">7 　　　　System.out.println(&quot;你好，世界&quot;); // 输出字符串</span><br><span class="line">8 　　&#125;</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-数据类型"><a href="#4-数据类型" class="headerlink" title="4.数据类型"></a>4.数据类型</h2><p>Java是一个强类型语言，Java中的数据必须明确数据类型。在Java中的数据类型包括<strong>基本数据类型</strong>和<strong>引用数据类型</strong>两种。</p>
+<p>Java中的基本数据类型：</p>
+<table>
+<thead>
+<tr>
+<th><strong>数据类型</strong></th>
+<th><strong>关键字</strong></th>
+<th><strong>内存占用</strong></th>
+<th><strong>取值范围</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>整型</td>
+<td>byte</td>
+<td>1</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+<td>-32768~32767</td>
+<td></td>
+</tr>
+<tr>
+<td>int(默认)</td>
+<td>4</td>
+<td>-2的31次方到2的31次方-1</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>8</td>
+<td>-2的63次方到2的63次方-1</td>
+<td></td>
+</tr>
+<tr>
+<td>浮点型</td>
+<td>float</td>
+<td>4</td>
+<td>负数：-3.402823E+38到-1.401298E-45正数： 1.401298E-45 到 3.402823E+38(e+38表示是乘以10的38次方，同样，e-45表示乘以10的负45次方。)</td>
+</tr>
+<tr>
+<td>double(默认)</td>
+<td>8</td>
+<td>负数：-1.797693E+308 到 -4.9000000E-324正数： 4.9000000E-324 到 1.797693E+308</td>
+<td></td>
+</tr>
+<tr>
+<td>字符型</td>
+<td>char</td>
+<td>2</td>
+<td>0-65535</td>
+</tr>
+<tr>
+<td>布尔型</td>
+<td>boolean</td>
+<td>1</td>
+<td>true,false</td>
+</tr>
+</tbody></table>
+<h2 id="5-变量"><a href="#5-变量" class="headerlink" title="5.变量"></a>5.变量</h2><h3 id="5-1-概述"><a href="#5-1-概述" class="headerlink" title="5.1 概述"></a>5.1 概述</h3><p>变量：在程序运行过程中，其值可以发生改变的量。 从本质上讲，变量是内存中的一小块区域，其值可以在一定范围内变化。</p>
+<p>格式为：数据类型 变量名 = 初始化值;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 int a = 1;</span><br><span class="line">2 </span><br><span class="line">3 String str = &quot;Hello world&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>或者也可分开写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 String str;</span><br><span class="line">2 </span><br><span class="line">3 str = &quot;hello world&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>还可以在同一行定义多个同一种数据类型的变量，中间使用逗号隔开。但在实际的开发中不建议使用这种方式，因为会降低程序的可读性。</p>
+<h3 id="5-2-使用变量时的注意事项"><a href="#5-2-使用变量时的注意事项" class="headerlink" title="5.2 使用变量时的注意事项"></a>5.2 使用变量时的注意事项</h3><p>1）.在同一对花括号中，变量名不能重复。</p>
+<p>2）.变量在使用之前，必须初始化（赋值）。</p>
+<p>3）.定义long类型的变量时，需要在整数的后面加L（大小写均可，建议大写）。因为整数默认是int类型，整数太大可能超出int范围。</p>
+<p>4）.定义float类型的变量时，需要在小数的后面加F（大小写均可，建议大写）。因为浮点数的默认类型是 double， double的取值范围是大于float的，类型不兼容。</p>
+<h2 id="6-标识符"><a href="#6-标识符" class="headerlink" title="6.标识符"></a>6.标识符</h2><p>标识符是用户编程时使用的名字，用于给类、方法、变量、常量等命名。</p>
+<p>Java中标识符的组成规则：</p>
+<p>由字母、数字、下划线“_”、美元符号“$”组成，第一个字符不能是数字。</p>
+<p>不能使用java中的关键字作为标识符。</p>
+<p>标识符对大小写敏感（区分大小写）。</p>
+<p>Java中标识符的命名约定：</p>
+<p>小驼峰式命名：变量名、方法名 首字母小写，从第二个单词开始每个单词的首字母大写。</p>
+<p>大驼峰式命名：类名 每个单词的首字母都大写。 另外，标识符的命名最好可以做到见名知意。</p>
+<h2 id="7-类型转换"><a href="#7-类型转换" class="headerlink" title="7.类型转换"></a>7.类型转换</h2><p>在Java中，一些数据类型之间是可以相互转换的。分为两种情况：<strong>自动类型转换</strong>和<strong>强制类型转换</strong>。</p>
+<h3 id="7-1-自动类型转换"><a href="#7-1-自动类型转换" class="headerlink" title="7.1 自动类型转换"></a>7.1 自动类型转换</h3><p>把一个表示数据范围小的数值或者变量赋值给另一个表示数据范围大的变量。这种转换方式是自动的，直接书写即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">double</span> a = <span class="number">10</span>;    <span class="comment">//将整型10赋给double类型的变量a</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-强制类型转换"><a href="#7-2-强制类型转换" class="headerlink" title="7.2 强制类型转换"></a>7.2 强制类型转换</h3><p>把一个表示数据范围大的数值或者变量赋值给另一个表示数据范围小的变量。</p>
+<p>强制类型转换格式：目标数据类型 变量名 = (目标数据类型)值或者变量;</p>
+<p>注意：这种转换可能会丢失精度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">double</span> num1 = <span class="number">1.5</span>;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">int</span> num2 = (<span class="keyword">int</span>) num1; <span class="comment">// 将double类型的num1强制转换为int类型</span></span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> System.out.println(num2); <span class="comment">// 输出1（小数位直接舍弃）</span></span><br></pre></td></tr></table></figure>
+
+<p>数据范围大小：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> &gt; <span class="keyword">float</span> &gt; <span class="keyword">long</span> &gt; <span class="keyword">int</span> &gt; <span class="keyword">short</span> = <span class="keyword">char</span> &gt; <span class="keyword">byte</span></span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>char类型的数据转换为int类型是按照码表中对应的int值进行计算的。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> a = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> System.out.println(a); <span class="comment">// 将输出97</span></span><br></pre></td></tr></table></figure>
+
+<p>\2. 整数默认是int类型，byte、short和char类型数据参与运算均会自动转换为int类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">byte</span> b1 = <span class="number">1</span>;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">byte</span> b2 = <span class="number">2</span>;</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span> <span class="keyword">byte</span> b3 = b1 + b2;</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span> <span class="comment">// 第三行代码会报错，b1和b2会自动转换为int类型，计算结果为int，int赋值给byte需要强制类型转换。</span></span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span> <span class="comment">// 修改为:</span></span><br><span class="line"><span class="number">10</span> </span><br><span class="line"><span class="number">11</span> <span class="keyword">byte</span> b3 = (<span class="keyword">byte</span>) (b1 + b2);</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>boolean类型不能与其他基本数据类型相互转换。</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/07/JavaSE-2-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-1-概述" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/04/JavaSE-1-%E6%A6%82%E8%BF%B0/">JavaSE(壹) 概述</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/04/JavaSE-1-%E6%A6%82%E8%BF%B0/" class="archive-article-date">
+  	<time datetime="2021-10-04T08:37:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-04</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-1-Java语言发展史"><a href="#1-1-Java语言发展史" class="headerlink" title="1.1 Java语言发展史"></a>1.1 Java语言发展史</h2><p>语言：人与人交流沟通的表达方式</p>
+<p>计算机语言：人与计算机之间进行信息交流沟通的一种特殊语言</p>
+<p>Java语言是美国Sun公司（Stanford University Network）在1995年推出的计算机语言</p>
+<p>Java之父：詹姆斯·高斯林（James Gosling）</p>
+<p>2009年，Sun公司被甲骨文公司收购</p>
+<h2 id="1-2-Java语言跨平台原理"><a href="#1-2-Java语言跨平台原理" class="headerlink" title="1.2 Java语言跨平台原理"></a>1.2 Java语言跨平台原理</h2><p>Java程序并非是直接运行的，Java编译器将Java源程序编译成与平台无关的字节码文件(class文件)，然后由Java虚 拟机（JVM）对字节码文件解释执行。所以在不同的操作系统下，只需安装不同的Java虚拟机即可实现java程序的 跨平台。</p>
+<h2 id="1-3-JRE和JDK"><a href="#1-3-JRE和JDK" class="headerlink" title="1.3 JRE和JDK"></a>1.3 JRE和JDK</h2><p>JVM（Java Virtual Machine），Java虚拟机</p>
+<p>JRE（Java Runtime Environment），Java运行环境，包含了JVM和Java的核心类库（Java API）</p>
+<p>JDK（Java Development Kit）称为Java开发工具，包含了JRE和开发工具</p>
+<h2 id="1-4-JDK的安装目录介绍"><a href="#1-4-JDK的安装目录介绍" class="headerlink" title="1.4 JDK的安装目录介绍"></a>1.4 JDK的安装目录介绍</h2><table>
+<thead>
+<tr>
+<th>/bin</th>
+<th>该路径下存放了JDK的各种工具命令。javac和java就放在这个目录。</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>/conf</td>
+<td>该路径下存放了JDK的相关配置文件。</td>
+</tr>
+<tr>
+<td>/include</td>
+<td>该路径下存放了一些平台特定的头文件。</td>
+</tr>
+<tr>
+<td>/jmods</td>
+<td>该路径下存放了JDK的各种模块。</td>
+</tr>
+<tr>
+<td>/legal</td>
+<td>该路径下存放了JDK各模块的授权文档。</td>
+</tr>
+<tr>
+<td>/lib</td>
+<td>该路径下存放了JDK工具的一些补充JAR包。</td>
+</tr>
+</tbody></table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/04/JavaSE-1-%E6%A6%82%E8%BF%B0/">展开全文 >></a>
         </p>
       
 
@@ -990,7 +1829,7 @@
   
   
     <nav id="page-nav">
-      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span>
+      <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
     </nav>
   
 
@@ -1081,15 +1920,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1097,7 +1928,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">JDBC</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1105,7 +1952,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">CSS</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
             
             <div class="clearfix"></div>
