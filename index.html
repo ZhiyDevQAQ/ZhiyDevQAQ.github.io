@@ -590,6 +590,9 @@
 2. 快速入门
 3. 对JDBC中各个接口和类详解
 </code></pre>
+<hr>
+<p>最新的驱动名已经从“com.mysql.jdbc.Driver”改为“com.mysql.cj.jdbc.Driver”</p>
+<hr>
 <h2 id="JDBC："><a href="#JDBC：" class="headerlink" title="JDBC："></a>JDBC：</h2><pre><code>1. 概念：Java DataBase Connectivity  Java 数据库连接， Java语言操作数据库
     * JDBC本质：其实是官方（sun公司）定义的一套操作所有关系型数据库的规则，即接口。各个数据库厂商去实现这套接口，提供数据库驱动jar包。我们可以使用这套接口（JDBC）编程，真正执行的代码是驱动jar包中的实现类。
 
@@ -912,7 +915,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE USER(</span><br><span class="line">	id INT PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">	username VARCHAR(32),</span><br><span class="line">	PASSWORD VARCHAR(32)</span><br><span class="line"></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO USER VALUES(NULL,&#x27;zhangsan&#x27;,&#x27;123&#x27;);</span><br><span class="line">INSERT INTO USER VALUES(NULL,&#x27;lisi&#x27;,&#x27;234&#x27;);</span><br></pre></td></tr></table></figure></li>
 <li><p>代码实现：</p>
 <pre><code>     public class JDBCDemo9 &#123;
-
+     
          public static void main(String[] args) &#123;
              //1.键盘录入，接受用户名和密码
              Scanner sc = new Scanner(System.in);
@@ -3643,15 +3646,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">PgSQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">Python</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">PgSQL</a>
               </li>
              
               <li class="article-tag-list-item">
