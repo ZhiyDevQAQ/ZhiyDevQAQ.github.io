@@ -6,12 +6,12 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>Tag: JavaSE | 无殇阁</title>
+  <title>无殇阁</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="山东现代学院2017级，自由开发者。不擅长Java和各项前端技能，从没深入研究移动端开发与前端性能。此为树洞一个。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="无殇阁">
-<meta property="og:url" content="http://example.com/tags/JavaSE/index.html">
+<meta property="og:url" content="http://example.com/page/5/index.html">
 <meta property="og:site_name" content="无殇阁">
 <meta property="og:description" content="山东现代学院2017级，自由开发者。不擅长Java和各项前端技能，从没深入研究移动端开发与前端性能。此为树洞一个。">
 <meta property="og:locale" content="zh_CN">
@@ -165,402 +165,363 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-2020-09-27-SQL的连接查询" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
   
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/09/27/2020-09-27-SQL%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/">SQL的连接查询</a>
+    </h1>
+  
+
+        
+        <a href="/2020/09/27/2020-09-27-SQL%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/" class="archive-article-date">
+  	<time datetime="2020-09-26T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-09-27</time>
+</a>
+        
+      </header>
     
-    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h1><p>前一段时间工作一直是和SQL打交道, 遇到一个sql连接查询问题, 自己疫情在家躺尸，早就把这方面的知识还给学校了，这里就把查到的一些资料以及把自己遇到的问题和解决方法记录一下。</p>
+<h2 id="Join"><a href="#Join" class="headerlink" title="Join"></a>Join</h2><p>我们知道,<code>SQL</code>的<code>Join</code>语法有很多<code>inner</code>的,有<code>outer</code>的，有<code>left</code>的，有时候，对于select出来的结果集是什么样子有点不是很清楚。通过韦恩图(Venn diagram, 可用来表示多个集合之间的逻辑关系)，可以帮我们有效的理解这些。</p>
+<p>假设我们有两张表。Table A 是左边的表。Table B 是右边的表。其各有四条记录，其中有两条记录name是相同的，如下所示：让我们看看不同JOIN的不同</p>
+<table>
+<thead>
+<tr>
+<th>A表</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>name</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Monkey</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ninja</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spaghetti</td>
+</tr>
+</tbody></table>
+<table>
+<thead>
+<tr>
+<th>B表</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>id</td>
+<td>name</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Rutabaga</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Darth Vade</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Ninja</td>
+</tr>
+</tbody></table>
+<h3 id="INNER-JOIN"><a href="#INNER-JOIN" class="headerlink" title="INNER JOIN"></a>INNER JOIN</h3><p>INNER JOIN 产生的结果集中，是表A和表B的交集。</p>
+<p><img src="https://s1.ax1x.com/2020/09/27/0kRkbq.png" alt="0kRkbq.png"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> TableA <span class="keyword">INNER</span> <span class="keyword">JOIN</span> TableB <span class="keyword">ON</span> TableA.name <span class="operator">=</span> TableB.name</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>结果集</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(TableA.)</td>
+<td></td>
+<td>(TableB.)</td>
+<td></td>
+</tr>
+<tr>
+<td>id</td>
+<td>name</td>
+<td>id</td>
+<td>name</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Pirate</td>
+<td>2</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ninja</td>
+<td>4</td>
+<td>Ninja</td>
+</tr>
+</tbody></table>
+<h3 id="FULL-OUTER-JOIN"><a href="#FULL-OUTER-JOIN" class="headerlink" title="FULL [OUTER] JOIN"></a>FULL [OUTER] JOIN</h3><p>FULL OUTER JOIN 产生表A和表B的并集。对于没有匹配的记录，则会以<code>Null</code>做为值。</p>
+<p><img src="https://s1.ax1x.com/2020/09/27/0kRod0.png" alt="0kRod0.png"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> TableA <span class="keyword">FULL</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> TableB <span class="keyword">ON</span> TableA.name <span class="operator">=</span> TableB.name</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>结果集</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(TableA.)</td>
+<td></td>
+<td>(TableB.)</td>
+<td></td>
+</tr>
+<tr>
+<td>id</td>
+<td>name</td>
+<td>id</td>
+<td>name</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Pirate</td>
+<td>2</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Monkey</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ninja</td>
+<td>4</td>
+<td>Ninja</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spaghetti</td>
+<td>Null</td>
+<td>Null</td>
+</tr>
+<tr>
+<td>Null</td>
+<td>Null</td>
+<td>1</td>
+<td>Rutabaga</td>
+</tr>
+<tr>
+<td>Null</td>
+<td>Null</td>
+<td>3</td>
+<td>Darth Vade</td>
+</tr>
+</tbody></table>
+<h3 id="LEFT-OUTER-JOIN"><a href="#LEFT-OUTER-JOIN" class="headerlink" title="LEFT [OUTER] JOIN"></a>LEFT [OUTER] JOIN</h3><p>LEFT OUTER JOIN 产生表A的完全集，B表中没有匹配的则以null值取代。</p>
+<p><img src="https://s1.ax1x.com/2020/09/27/0kbWqS.png" alt="0kbWqS.png"></p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> TableA <span class="keyword">LEFT</span> <span class="keyword">OUTER</span> <span class="keyword">JOIN</span> TableB <span class="keyword">ON</span> TableA.name <span class="operator">=</span> TableB.name</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>结果集</th>
+<th></th>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>(TableA.)</td>
+<td></td>
+<td>(TableB.)</td>
+<td></td>
+</tr>
+<tr>
+<td>id</td>
+<td>name</td>
+<td>id</td>
+<td>name</td>
+</tr>
+<tr>
+<td>1</td>
+<td>Pirate</td>
+<td>2</td>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Monkey</td>
+<td>null</td>
+<td>null</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Ninja</td>
+<td>4</td>
+<td>Ninja</td>
+</tr>
+<tr>
+<td>4</td>
+<td>Spaghetti</td>
+<td>Null</td>
+<td>Null</td>
+</tr>
+</tbody></table>
+<h3 id="RIGHT-OUTER-JOIN"><a href="#RIGHT-OUTER-JOIN" class="headerlink" title="RIGHT [OUTER] JOIN"></a>RIGHT [OUTER] JOIN</h3><p>RIGHT OUTER JOIN 是后面的表为基础，与LEFT OUTER JOIN用法类似。产生表B的完全集，A表中没有匹配的则以null值取代。</p>
+<h3 id="UNION-与-UNION-ALL"><a href="#UNION-与-UNION-ALL" class="headerlink" title="UNION 与 UNION ALL"></a>UNION 与 UNION ALL</h3><p>UNION 操作符用于合并两个或多个 SELECT 语句的结果集。</p>
+<p>UNION 内部的 SELECT 语句必须拥有相同数量的列。列也必须拥有相似的数据类型。每条 SELECT 语句中的列的顺序必须相同。</p>
+<p>UNION ALL是直接连接，取到得是所有值，记录可能有重复 UNION 是取唯一值，记录没有重复</p>
+<p>UNION将会按照字段的顺序进行排序; UNION ALL只是简单的将两个结果合并后就返回。</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> TableA <span class="keyword">UNION</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> TableB</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>结果集</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>name</td>
+</tr>
+<tr>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>Monkey</td>
+</tr>
+<tr>
+<td>Ninja</td>
+</tr>
+<tr>
+<td>Spaghetti</td>
+</tr>
+<tr>
+<td>Rutabaga</td>
+</tr>
+<tr>
+<td>Darth Vade</td>
+</tr>
+</tbody></table>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> TableA <span class="keyword">UNION</span> <span class="keyword">ALL</span> <span class="keyword">SELECT</span> name <span class="keyword">FROM</span> TableB</span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th>结果集</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>name</td>
+</tr>
+<tr>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>Monkey</td>
+</tr>
+<tr>
+<td>Ninja</td>
+</tr>
+<tr>
+<td>Spaghetti</td>
+</tr>
+<tr>
+<td>Rutabaga</td>
+</tr>
+<tr>
+<td>Pirate</td>
+</tr>
+<tr>
+<td>Darth Vade</td>
+</tr>
+<tr>
+<td>Ninja</td>
+</tr>
+</tbody></table>
+<h2 id="使用Join遇到的问题及解决方法"><a href="#使用Join遇到的问题及解决方法" class="headerlink" title="使用Join遇到的问题及解决方法"></a>使用Join遇到的问题及解决方法</h2><h2 id="参考博文"><a href="#参考博文" class="headerlink" title="参考博文"></a>参考博文</h2><p><a target="_blank" rel="noopener" href="https://justcode.ikeepstudying.com/2016/08/mysql-%E5%9B%BE%E8%A7%A3-inner-join%E3%80%81left-join%E3%80%81right-join%E3%80%81full-outer-join%E3%80%81union%E3%80%81union-all%E7%9A%84%E5%8C%BA%E5%88%AB/">Mysql: 图解 inner join、left join、right join、full outer join、union、union all的区别</a> 本文使用到的图片、Sql、以及一些内容都出自这里</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
       
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2021" class="archive-year">2021</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-25-Junit%E5%92%8C%E6%B3%A8%E8%A7%A3/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:31:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-25-Junit%E5%92%8C%E6%B3%A8%E8%A7%A3/">JavaSE-25-Junit和注解</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SQL</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
+      
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/09/27/2020-09-27-SQL%E7%9A%84%E8%BF%9E%E6%8E%A5%E6%9F%A5%E8%AF%A2/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-24-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E3%80%81%E5%8F%8D%E5%B0%84%E5%92%8C%E6%A8%A1%E5%9D%97%E5%8C%96/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:30:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-24-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E3%80%81%E5%8F%8D%E5%B0%84%E5%92%8C%E6%A8%A1%E5%9D%97%E5%8C%96/">JavaSE-24-类加载器、反射和模块化</a>
-    </h1>
-  
+        
+        
+    </div>
+</aside>
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
-          
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-23-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3%E4%B8%8EStream%E6%B5%81/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:27:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-23-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3%E4%B8%8EStream%E6%B5%81/">JavaSE-23-函数式接口与Stream流</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-22-Lambda%E4%B8%8E%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:25:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-22-Lambda%E4%B8%8E%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/">JavaSE-22-Lambda与方法引用</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-21-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:24:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-21-%E7%BD%91%E7%BB%9C%E7%BC%96%E7%A8%8B/">JavaSE-21-网络编程</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-20-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:22:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-20-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5/">JavaSE-20-线程与同步</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-19-IO%E7%89%B9%E6%AE%8A%E6%B5%81%E5%92%8CProperties%E9%9B%86%E5%90%88/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:21:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-19-IO%E7%89%B9%E6%AE%8A%E6%B5%81%E5%92%8CProperties%E9%9B%86%E5%90%88/">JavaSE-19-IO特殊流和Properties集合</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-18-%E5%AD%97%E8%8A%82%E7%BC%93%E5%86%B2%E6%B5%81%E5%92%8C%E5%AD%97%E7%AC%A6%E6%B5%81/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:20:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-18-%E5%AD%97%E8%8A%82%E7%BC%93%E5%86%B2%E6%B5%81%E5%92%8C%E5%AD%97%E7%AC%A6%E6%B5%81/">JavaSE-18-字节缓冲流和字符流</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-17-File%E3%80%81%E9%80%92%E5%BD%92%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:19:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-17-File%E3%80%81%E9%80%92%E5%BD%92%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81/">JavaSE-17-File、递归和字节流</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2021/10/08/JavaSE-16-%E9%9B%86%E5%90%88%EF%BC%88%E5%8F%81%EF%BC%89/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:17:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2021/10/08/JavaSE-16-%E9%9B%86%E5%90%88%EF%BC%88%E5%8F%81%EF%BC%89/">JavaSE-16-集合（叁）</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
-  
-
-    
     <nav id="page-nav">
-      <span class="page-number current">1</span><a class="page-number" href="/tags/JavaSE/page/2/">2</a><a class="page-number" href="/tags/JavaSE/page/3/">3</a><a class="extend next" rel="next" href="/tags/JavaSE/page/2/">Next &amp;raquo;</a>
+      <a class="extend prev" rel="prev" href="/page/4/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="space">&hellip;</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><span class="page-number current">5</span>
     </nav>
   
 
@@ -584,10 +545,10 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: false,
+		isHome: true,
 		isPost: false,
 		isArchive: false,
-		isTag: true,
+		isTag: false,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,
