@@ -165,6 +165,234 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaSE-2-基本语法" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/07/JavaSE-2-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">JavaSE-2-基本语法</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/07/JavaSE-2-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/" class="archive-article-date">
+  	<time datetime="2021-10-07T14:42:55.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-注释"><a href="#1-注释" class="headerlink" title="1.注释"></a>1.注释</h2><p>注释是对代码的解释和说明文字，可以提高程序的可读性，因此在程序中添加必要的注释文字十分重要。</p>
+<p>Java中的注释分为三种：</p>
+<p><strong>单行注释</strong>。单行注释的格式是使用//，从//开始至本行结尾的文字将作为注释文字。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="comment">// 这是单行注释</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>多行注释</strong>。多行注释的格式是使用/* 和 */将一段较长的注释括起来。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="comment">/*</span></span><br><span class="line"><span class="comment">2 这</span></span><br><span class="line"><span class="comment">3 是</span></span><br><span class="line"><span class="comment">4 多</span></span><br><span class="line"><span class="comment">5 行</span></span><br><span class="line"><span class="comment">6 注</span></span><br><span class="line"><span class="comment">7 释</span></span><br><span class="line"><span class="comment">8 */</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>文档注释</strong>。文档注释以 /** 开始，以 */ 结束。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment">* 这是文档注释</span></span><br><span class="line"><span class="comment">* <span class="doctag">@author</span> ZhiyDev</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="2-关键字"><a href="#2-关键字" class="headerlink" title="2.关键字"></a>2.关键字</h2><p>关键字是指被java语言赋予了特殊含义的单词。</p>
+<p>特征：全部小写。</p>
+<h2 id="3-常量"><a href="#3-常量" class="headerlink" title="3.常量"></a>3.常量</h2><p>在程序运行过程中，其值不可以发生改变的量。</p>
+<table>
+<thead>
+<tr>
+<th>字符串</th>
+<th>用双引号括起来的多个字符（可以包含0个、一个或多个）</th>
+<th>“Hello World”、“A”、“”</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>整型</td>
+<td>整数</td>
+<td>1、2、10、-8</td>
+</tr>
+<tr>
+<td>浮点型</td>
+<td>小数</td>
+<td>1.5、2.8、99.99</td>
+</tr>
+<tr>
+<td>字符型</td>
+<td>用单引号括起来的一个字符</td>
+<td>‘a’、‘c’</td>
+</tr>
+<tr>
+<td>布尔型</td>
+<td>布尔值，表示真假，只有两个值</td>
+<td>true、false</td>
+</tr>
+<tr>
+<td>空常量</td>
+<td>一个特殊的值，空值</td>
+<td>null</td>
+</tr>
+</tbody></table>
+<p>除空常量外，其他类型均能通过输出语句输出。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">1 public class Demo &#123;</span><br><span class="line">2 　　public static void main(String[] args) &#123;</span><br><span class="line">3 　　　　System.out.println(10); // 输出一个整数</span><br><span class="line">4 　　　　System.out.println(5.5); // 输出一个小数</span><br><span class="line">5 　　　　System.out.println(&#x27;a&#x27;); // 输出一个字符</span><br><span class="line">6 　　　　System.out.println(true); // 输出boolean值true</span><br><span class="line">7 　　　　System.out.println(&quot;你好，世界&quot;); // 输出字符串</span><br><span class="line">8 　　&#125;</span><br><span class="line">9 &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-数据类型"><a href="#4-数据类型" class="headerlink" title="4.数据类型"></a>4.数据类型</h2><p>Java是一个强类型语言，Java中的数据必须明确数据类型。在Java中的数据类型包括<strong>基本数据类型</strong>和<strong>引用数据类型</strong>两种。</p>
+<p>Java中的基本数据类型：</p>
+<table>
+<thead>
+<tr>
+<th><strong>数据类型</strong></th>
+<th><strong>关键字</strong></th>
+<th><strong>内存占用</strong></th>
+<th><strong>取值范围</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>整型</td>
+<td>byte</td>
+<td>1</td>
+<td>-128~127</td>
+</tr>
+<tr>
+<td>short</td>
+<td>2</td>
+<td>-32768~32767</td>
+<td></td>
+</tr>
+<tr>
+<td>int(默认)</td>
+<td>4</td>
+<td>-2的31次方到2的31次方-1</td>
+<td></td>
+</tr>
+<tr>
+<td>long</td>
+<td>8</td>
+<td>-2的63次方到2的63次方-1</td>
+<td></td>
+</tr>
+<tr>
+<td>浮点型</td>
+<td>float</td>
+<td>4</td>
+<td>负数：-3.402823E+38到-1.401298E-45正数： 1.401298E-45 到 3.402823E+38(e+38表示是乘以10的38次方，同样，e-45表示乘以10的负45次方。)</td>
+</tr>
+<tr>
+<td>double(默认)</td>
+<td>8</td>
+<td>负数：-1.797693E+308 到 -4.9000000E-324正数： 4.9000000E-324 到 1.797693E+308</td>
+<td></td>
+</tr>
+<tr>
+<td>字符型</td>
+<td>char</td>
+<td>2</td>
+<td>0-65535</td>
+</tr>
+<tr>
+<td>布尔型</td>
+<td>boolean</td>
+<td>1</td>
+<td>true,false</td>
+</tr>
+</tbody></table>
+<h2 id="5-变量"><a href="#5-变量" class="headerlink" title="5.变量"></a>5.变量</h2><h3 id="5-1-概述"><a href="#5-1-概述" class="headerlink" title="5.1 概述"></a>5.1 概述</h3><p>变量：在程序运行过程中，其值可以发生改变的量。 从本质上讲，变量是内存中的一小块区域，其值可以在一定范围内变化。</p>
+<p>格式为：数据类型 变量名 = 初始化值;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 int a = 1;</span><br><span class="line">2 </span><br><span class="line">3 String str = &quot;Hello world&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>或者也可分开写</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1 String str;</span><br><span class="line">2 </span><br><span class="line">3 str = &quot;hello world&quot;;</span><br></pre></td></tr></table></figure>
+
+<p>还可以在同一行定义多个同一种数据类型的变量，中间使用逗号隔开。但在实际的开发中不建议使用这种方式，因为会降低程序的可读性。</p>
+<h3 id="5-2-使用变量时的注意事项"><a href="#5-2-使用变量时的注意事项" class="headerlink" title="5.2 使用变量时的注意事项"></a>5.2 使用变量时的注意事项</h3><p>1）.在同一对花括号中，变量名不能重复。</p>
+<p>2）.变量在使用之前，必须初始化（赋值）。</p>
+<p>3）.定义long类型的变量时，需要在整数的后面加L（大小写均可，建议大写）。因为整数默认是int类型，整数太大可能超出int范围。</p>
+<p>4）.定义float类型的变量时，需要在小数的后面加F（大小写均可，建议大写）。因为浮点数的默认类型是 double， double的取值范围是大于float的，类型不兼容。</p>
+<h2 id="6-标识符"><a href="#6-标识符" class="headerlink" title="6.标识符"></a>6.标识符</h2><p>标识符是用户编程时使用的名字，用于给类、方法、变量、常量等命名。</p>
+<p>Java中标识符的组成规则：</p>
+<p>由字母、数字、下划线“_”、美元符号“$”组成，第一个字符不能是数字。</p>
+<p>不能使用java中的关键字作为标识符。</p>
+<p>标识符对大小写敏感（区分大小写）。</p>
+<p>Java中标识符的命名约定：</p>
+<p>小驼峰式命名：变量名、方法名 首字母小写，从第二个单词开始每个单词的首字母大写。</p>
+<p>大驼峰式命名：类名 每个单词的首字母都大写。 另外，标识符的命名最好可以做到见名知意。</p>
+<h2 id="7-类型转换"><a href="#7-类型转换" class="headerlink" title="7.类型转换"></a>7.类型转换</h2><p>在Java中，一些数据类型之间是可以相互转换的。分为两种情况：<strong>自动类型转换</strong>和<strong>强制类型转换</strong>。</p>
+<h3 id="7-1-自动类型转换"><a href="#7-1-自动类型转换" class="headerlink" title="7.1 自动类型转换"></a>7.1 自动类型转换</h3><p>把一个表示数据范围小的数值或者变量赋值给另一个表示数据范围大的变量。这种转换方式是自动的，直接书写即可。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">double</span> a = <span class="number">10</span>;    <span class="comment">//将整型10赋给double类型的变量a</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="7-2-强制类型转换"><a href="#7-2-强制类型转换" class="headerlink" title="7.2 强制类型转换"></a>7.2 强制类型转换</h3><p>把一个表示数据范围大的数值或者变量赋值给另一个表示数据范围小的变量。</p>
+<p>强制类型转换格式：目标数据类型 变量名 = (目标数据类型)值或者变量;</p>
+<p>注意：这种转换可能会丢失精度。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">double</span> num1 = <span class="number">1.5</span>;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">int</span> num2 = (<span class="keyword">int</span>) num1; <span class="comment">// 将double类型的num1强制转换为int类型</span></span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> System.out.println(num2); <span class="comment">// 输出1（小数位直接舍弃）</span></span><br></pre></td></tr></table></figure>
+
+<p>数据范围大小：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">double</span> &gt; <span class="keyword">float</span> &gt; <span class="keyword">long</span> &gt; <span class="keyword">int</span> &gt; <span class="keyword">short</span> = <span class="keyword">char</span> &gt; <span class="keyword">byte</span></span><br></pre></td></tr></table></figure>
+
+<p>注：</p>
+<ol>
+<li>char类型的数据转换为int类型是按照码表中对应的int值进行计算的。</li>
+</ol>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> a = <span class="string">&#x27;a&#x27;</span>;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> System.out.println(a); <span class="comment">// 将输出97</span></span><br></pre></td></tr></table></figure>
+
+<p>\2. 整数默认是int类型，byte、short和char类型数据参与运算均会自动转换为int类型。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">byte</span> b1 = <span class="number">1</span>;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">byte</span> b2 = <span class="number">2</span>;</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span> <span class="keyword">byte</span> b3 = b1 + b2;</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span> <span class="comment">// 第三行代码会报错，b1和b2会自动转换为int类型，计算结果为int，int赋值给byte需要强制类型转换。</span></span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span> <span class="comment">// 修改为:</span></span><br><span class="line"><span class="number">10</span> </span><br><span class="line"><span class="number">11</span> <span class="keyword">byte</span> b3 = (<span class="keyword">byte</span>) (b1 + b2);</span><br></pre></td></tr></table></figure>
+
+<ol start="3">
+<li>boolean类型不能与其他基本数据类型相互转换。</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/07/JavaSE-2-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JavaSE-1-概述" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -572,6 +800,88 @@
 
 
   
+    <article id="post-2021-03-02-多线程、多进程与协程的选择" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/">多线程、多进程与协程的选择</a>
+    </h1>
+  
+
+        
+        <a href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/" class="archive-article-date">
+  	<time datetime="2021-03-01T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="多线程、多进程与协程的选择"><a href="#多线程、多进程与协程的选择" class="headerlink" title="多线程、多进程与协程的选择"></a>多线程、多进程与协程的选择</h1><p>协程和多线程的区别</p>
+<p>协程是实现并发编程的一种方式。一说并发，你肯定想到了多线程 / 多进程模型，没错，多线程 / 多进程，正是解决并发问题的经典模型之一。最初的互联网世界，多线程 / 多进程在服务器并发中，起到举足轻重的作用。</p>
+<p>我们知道，在处理 I/O 操作时，使用多线程与普通的单线程相比，效率得到了极大的提高。你可能会想，既然这样，为什么还需要协程（Asyncio）？</p>
+<p>诚然，多线程有诸多优点且应用广泛，但也存在一定的局限性：</p>
+<p>比如，多线程运行过程容易被打断，因此有可能出现竞争条件 (race condition) 的情况；再如，线程切换本身存在一定的损耗，线程数不能无限增加，因此，如果你的 I/O 操作非常耗时，多线程很有可能满足不了高效率、高质量的需求。</p>
+<p>因此，协程是更轻量级的线程，它的切换成本非常低，相对比协程更高效一些。</p>
+<p>那么什么场景使用多线程，什么场景使用协程呢（Asyncio）？</p>
+<p>如果是 I/O 密集型，且 I/O 请求比较耗时的话，使用协程。<br>如果是 I/O 密集型，且 I/O 请求比较快的话，使用多线程。<br>如果是 计算 密集型，考虑可以使用多核 CPU，使用多进程。</p>
+<p>但是因为Python本身的特性，实际上这个语言并不是太适合计算密集型操作，所以如果是规模巨大的计算密集型场景，还是要更换编程语言。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-2021-03-02-事件驱动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -651,35 +961,35 @@
 
 
   
-    <article id="post-2021-03-02-多线程、多进程与协程的选择" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-2021-03-01-迅雷解析思路" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/">多线程、多进程与协程的选择</a>
+      <a class="article-title" href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/">迅雷链接解析为真实链接</a>
     </h1>
   
 
         
-        <a href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/" class="archive-article-date">
-  	<time datetime="2021-03-01T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-02</time>
+        <a href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/" class="archive-article-date">
+  	<time datetime="2021-02-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-01</time>
 </a>
         
       </header>
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="多线程、多进程与协程的选择"><a href="#多线程、多进程与协程的选择" class="headerlink" title="多线程、多进程与协程的选择"></a>多线程、多进程与协程的选择</h1><p>协程和多线程的区别</p>
-<p>协程是实现并发编程的一种方式。一说并发，你肯定想到了多线程 / 多进程模型，没错，多线程 / 多进程，正是解决并发问题的经典模型之一。最初的互联网世界，多线程 / 多进程在服务器并发中，起到举足轻重的作用。</p>
-<p>我们知道，在处理 I/O 操作时，使用多线程与普通的单线程相比，效率得到了极大的提高。你可能会想，既然这样，为什么还需要协程（Asyncio）？</p>
-<p>诚然，多线程有诸多优点且应用广泛，但也存在一定的局限性：</p>
-<p>比如，多线程运行过程容易被打断，因此有可能出现竞争条件 (race condition) 的情况；再如，线程切换本身存在一定的损耗，线程数不能无限增加，因此，如果你的 I/O 操作非常耗时，多线程很有可能满足不了高效率、高质量的需求。</p>
-<p>因此，协程是更轻量级的线程，它的切换成本非常低，相对比协程更高效一些。</p>
-<p>那么什么场景使用多线程，什么场景使用协程呢（Asyncio）？</p>
-<p>如果是 I/O 密集型，且 I/O 请求比较耗时的话，使用协程。<br>如果是 I/O 密集型，且 I/O 请求比较快的话，使用多线程。<br>如果是 计算 密集型，考虑可以使用多核 CPU，使用多进程。</p>
-<p>但是因为Python本身的特性，实际上这个语言并不是太适合计算密集型操作，所以如果是规模巨大的计算密集型场景，还是要更换编程语言。</p>
+        <p>最近因为“先审后播”的风声，觉得国内又进入资源大航海时代了，于是想借课下休息的时候写个综合下载工具，第一个练手的模块自然是令我不爽的迅雷哈哈哈</p>
+<p>首先观察迅雷下载链接，本来我还以为要用到十分复杂的工具和繁琐的步骤来研究它的链接，结果我看到。。。。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==</span><br></pre></td></tr></table></figure>
+
+<p>这俩等号真眼熟，莫不是base64???<br>抱着试一试的想法，我去转换了一下，结果得到</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AAhttp://dl14.x570.com/3DMGAME_NEKOPARA_Vol.0.CHT.Green.rarZZ</span><br></pre></td></tr></table></figure>
+<p>真有你的啊迅雷。。。。。<br>于是就是人民群众喜闻乐见的掐头去尾，蛋白质含量是牛肉的三倍。。。。。。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># coding:utf-8</span><br><span class="line"># @Author:ZhiyDevQAQ</span><br><span class="line"># @Name:ThunderDecode.py</span><br><span class="line"># @Date:2021/4/9 9:03</span><br><span class="line">import binascii</span><br><span class="line">import re</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class thunderdecode(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self) -&gt; None:</span><br><span class="line">        self.THUNDER_HEADER = &#x27;thunder://&#x27;</span><br><span class="line">        self.THUNDER_PREFIX = &#x27;AA&#x27;</span><br><span class="line">        self.THUNDER_SUFFIX = &#x27;ZZ&#x27;</span><br><span class="line"></span><br><span class="line">    def __str__(self) -&gt; str:</span><br><span class="line">        msg = &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">        本类用于实现迅雷链接的解析，首先你要实例化对象，然后定义一个变量接收调用thunder2reallink方法传回的解析结果</span><br><span class="line">        例如:</span><br><span class="line">            th = thunderdecode()</span><br><span class="line">            result = th.thunder2reallink(&#x27;thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==&#x27;)</span><br><span class="line">            print(result)</span><br><span class="line"></span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        return msg</span><br><span class="line"></span><br><span class="line">    def check_url(func):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        本装饰器用于实现对迅雷链接的检查</span><br><span class="line">        :return wapper的内存地址:</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">        def wapper(self, url):</span><br><span class="line">            #  匹配模式:http | https | ftp | ed2k | thunder</span><br><span class="line">            if re.search(r&#x27;^[thunder://]&#x27;, url):</span><br><span class="line">                return func(self, url)</span><br><span class="line">            else:</span><br><span class="line">                return &#x27;灵能信号有误，请检查&#x27;</span><br><span class="line"></span><br><span class="line">        return wapper</span><br><span class="line"></span><br><span class="line">    @check_url</span><br><span class="line">    def thunder2reallink(self, url):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        本方法实现对迅雷链接的解析</span><br><span class="line">        :param url: 迅雷链接</span><br><span class="line">        :return url:经过解析的真实链接</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        url = url[len(self.THUNDER_HEADER):]</span><br><span class="line">        url = url.encode(&#x27;utf-8&#x27;)</span><br><span class="line">        try:</span><br><span class="line">            url = base64.b64decode(url)</span><br><span class="line">        except binascii.Error as e:</span><br><span class="line">            print(&#x27;灵能信号有误，具体信息如下:%s&#x27; % e)</span><br><span class="line">        url = url.decode(&#x27;utf-8&#x27;)</span><br><span class="line">        url = url[len(self.THUNDER_PREFIX):-len(self.THUNDER_SUFFIX)]</span><br><span class="line">        return url</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    th = thunderdecode()</span><br><span class="line">    print(th)</span><br><span class="line">    tk = th.thunder2reallink(&#x27;thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==&#x27;)</span><br><span class="line">    print(tk)</span><br></pre></td></tr></table></figure>
+<p>无伤通关。。。。。。</p>
 
       
 
@@ -703,7 +1013,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/">展开全文 >></a>
         </p>
       
 
@@ -837,88 +1147,6 @@
       
         <p class="article-more-link">
           <a class="article-more-a" href="/2021/03/01/2021-03-01-Python(%E4%B8%80)/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-2021-03-01-迅雷解析思路" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/">迅雷链接解析为真实链接</a>
-    </h1>
-  
-
-        
-        <a href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/" class="archive-article-date">
-  	<time datetime="2021-02-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近因为“先审后播”的风声，觉得国内又进入资源大航海时代了，于是想借课下休息的时候写个综合下载工具，第一个练手的模块自然是令我不爽的迅雷哈哈哈</p>
-<p>首先观察迅雷下载链接，本来我还以为要用到十分复杂的工具和繁琐的步骤来研究它的链接，结果我看到。。。。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==</span><br></pre></td></tr></table></figure>
-
-<p>这俩等号真眼熟，莫不是base64???<br>抱着试一试的想法，我去转换了一下，结果得到</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AAhttp://dl14.x570.com/3DMGAME_NEKOPARA_Vol.0.CHT.Green.rarZZ</span><br></pre></td></tr></table></figure>
-<p>真有你的啊迅雷。。。。。<br>于是就是人民群众喜闻乐见的掐头去尾，蛋白质含量是牛肉的三倍。。。。。。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># coding:utf-8</span><br><span class="line"># @Author:ZhiyDevQAQ</span><br><span class="line"># @Name:ThunderDecode.py</span><br><span class="line"># @Date:2021/4/9 9:03</span><br><span class="line">import binascii</span><br><span class="line">import re</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class thunderdecode(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self) -&gt; None:</span><br><span class="line">        self.THUNDER_HEADER = &#x27;thunder://&#x27;</span><br><span class="line">        self.THUNDER_PREFIX = &#x27;AA&#x27;</span><br><span class="line">        self.THUNDER_SUFFIX = &#x27;ZZ&#x27;</span><br><span class="line"></span><br><span class="line">    def __str__(self) -&gt; str:</span><br><span class="line">        msg = &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">        本类用于实现迅雷链接的解析，首先你要实例化对象，然后定义一个变量接收调用thunder2reallink方法传回的解析结果</span><br><span class="line">        例如:</span><br><span class="line">            th = thunderdecode()</span><br><span class="line">            result = th.thunder2reallink(&#x27;thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==&#x27;)</span><br><span class="line">            print(result)</span><br><span class="line"></span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        return msg</span><br><span class="line"></span><br><span class="line">    def check_url(func):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        本装饰器用于实现对迅雷链接的检查</span><br><span class="line">        :return wapper的内存地址:</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">        def wapper(self, url):</span><br><span class="line">            #  匹配模式:http | https | ftp | ed2k | thunder</span><br><span class="line">            if re.search(r&#x27;^[thunder://]&#x27;, url):</span><br><span class="line">                return func(self, url)</span><br><span class="line">            else:</span><br><span class="line">                return &#x27;灵能信号有误，请检查&#x27;</span><br><span class="line"></span><br><span class="line">        return wapper</span><br><span class="line"></span><br><span class="line">    @check_url</span><br><span class="line">    def thunder2reallink(self, url):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        本方法实现对迅雷链接的解析</span><br><span class="line">        :param url: 迅雷链接</span><br><span class="line">        :return url:经过解析的真实链接</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        url = url[len(self.THUNDER_HEADER):]</span><br><span class="line">        url = url.encode(&#x27;utf-8&#x27;)</span><br><span class="line">        try:</span><br><span class="line">            url = base64.b64decode(url)</span><br><span class="line">        except binascii.Error as e:</span><br><span class="line">            print(&#x27;灵能信号有误，具体信息如下:%s&#x27; % e)</span><br><span class="line">        url = url.decode(&#x27;utf-8&#x27;)</span><br><span class="line">        url = url[len(self.THUNDER_PREFIX):-len(self.THUNDER_SUFFIX)]</span><br><span class="line">        return url</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    th = thunderdecode()</span><br><span class="line">    print(th)</span><br><span class="line">    tk = th.thunder2reallink(&#x27;thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==&#x27;)</span><br><span class="line">    print(tk)</span><br></pre></td></tr></table></figure>
-<p>无伤通关。。。。。。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/">展开全文 >></a>
         </p>
       
 
@@ -1093,115 +1321,6 @@
 
 
   
-    <article id="post-2020-11-02-psql常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">psql常用命令</a>
-    </h1>
-  
-
-        
-        <a href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
-  	<time datetime="2020-11-01T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-02</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="psql介绍"><a href="#psql介绍" class="headerlink" title="psql介绍"></a>psql介绍</h2><p><code>psql</code> 是 <code>PgSQL</code> 中的一个命令行交互式客户端工具，允许我们键入SQL或命令，然后把他们发出给 PgSQL服务器，再显示SQL或命令的结果。</p>
-<h2 id="psql的常用命令"><a href="#psql的常用命令" class="headerlink" title="psql的常用命令"></a>psql的常用命令</h2><ul>
-<li><p><code>\l</code> 列出所有数据库</p>
-</li>
-<li><p><code>\c dbname</code> 连接指定数据库</p>
-</li>
-<li><p><code>\timing on</code>: 显示SQL执行时间</p>
-</li>
-<li><p><code>\d</code> <code>\dt</code>: 列出当前数据库中的所有表</p>
-</li>
-<li><p><code>\d &lt;tableName&gt;</code>: 显示这个表的结构定义, tebleName还可以换成索引、序列、视图、函数这些对象类型</p>
-</li>
-<li><p><code>\d+</code>: 显示比<code>\d</code> 更详细的信息</p>
-</li>
-<li><p><code>\dn</code>: 列出所有的schema</p>
-</li>
-<li><p><code>\db</code>: 显示所有表空间</p>
-<p>  tips: PgSQL的表空间就是对应一个目录，放在这个表空间的表，就是把表的数据文件放到这个表空间目录下</p>
-</li>
-<li><p><code>\du</code> <code>\dg</code>:  显示数据库中所有角色或用户</p>
-</li>
-<li><p><code>\dp</code> <code>\z</code>: 显示表的权限分配情况</p>
-</li>
-<li><p><code>\x</code>: 把表中每一行的每列数据都拆分为单行显示</p>
-</li>
-<li><p><code>\i &lt;文件名&gt;</code> 执行存储在外部文件中的sql语句或命令。</p>
-</li>
-<li><p><code>\echo &lt;content&gt;</code>: 用于输出一行信息，常用于.sql脚本文件中输出一些提示信息</p>
-</li>
-<li><p><code>\?</code> 更多命令</p>
-</li>
-</ul>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SQL</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PgSQL</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &amp;raquo;</a>
@@ -1295,15 +1414,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PgSQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">

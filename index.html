@@ -165,6 +165,725 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-CSS基础" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/10/CSS%E5%9F%BA%E7%A1%80/">CSS基础</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/10/CSS%E5%9F%BA%E7%A1%80/" class="archive-article-date">
+  	<time datetime="2021-10-10T07:03:51.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-什么是CSS"><a href="#1-什么是CSS" class="headerlink" title="1.什么是CSS"></a>1.什么是CSS</h2><p>CSS：Cascading style sheet，层叠样式表，为页面添加样式效果。</p>
+<h2 id="2-引入CSS的目的"><a href="#2-引入CSS的目的" class="headerlink" title="2.引入CSS的目的"></a>2.引入CSS的目的</h2><p>达到结构和样式分离的效果</p>
+<h2 id="3-引入CSS的好处"><a href="#3-引入CSS的好处" class="headerlink" title="3.引入CSS的好处"></a>3.引入CSS的好处</h2><p>减少结构层代码量、提供丰富效果、增加兼容性等</p>
+<h2 id="4-CSS语法"><a href="#4-CSS语法" class="headerlink" title="4.CSS语法"></a>4.CSS语法</h2><p>CSS包括选择器（选择哪个标签进行样式设置）和样式规则（给标签添加什么属性）</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">选择器｛</span><br><span class="line">	样式：样式值</span><br><span class="line">｝</span><br></pre></td></tr></table></figure>
+
+<p>注意：<strong>给内容添加样式用于美化，给盒子添加样式用于布局。</strong></p>
+<p>​            CSS对于换行空行缩进也不敏感，所以发送给服务器前可以将代码压缩为一行，减小文件体积，加快加载速度。</p>
+<h2 id="5-引入CSS的四种方式"><a href="#5-引入CSS的四种方式" class="headerlink" title="5.引入CSS的四种方式"></a>5.引入CSS的四种方式</h2><h3 id="１）行内式"><a href="#１）行内式" class="headerlink" title="１）行内式"></a>１）行内式</h3><p>即在标签的style属性里定义CSS。</p>
+<p>缺点：结构与样式无法分类，高耦合，维护成本高。</p>
+<h3 id="2）内嵌式"><a href="#2）内嵌式" class="headerlink" title="2）内嵌式"></a>2）内嵌式</h3><p>在head中使用style标签引入。</p>
+<p>缺点：结构与样式无法分类，高耦合，维护成本高。</p>
+<p>​            html从上往下加载，嵌入样式过多时会影响加载速度。</p>
+<h3 id="3）外链式（最常用）"><a href="#3）外链式（最常用）" class="headerlink" title="3）外链式（最常用）"></a>3）外链式（最常用）</h3><p>在head中使用link引入，与html文件并行下载，不影响页面加载，也不影响样式渲染。</p>
+<h3 id="4）导入式"><a href="#4）导入式" class="headerlink" title="4）导入式"></a>4）导入式</h3><p>在style标签里，使用import url(“CSS路径”)导入。</p>
+<p>因为是在html页面加载结束后再加载样式，会影响样式渲染。</p>
+<p>一般是在CSS里导入其他CSS时，才会用这个。</p>
+<h2 id="6-选择器"><a href="#6-选择器" class="headerlink" title="6.选择器"></a>6.选择器</h2><h3 id="1）通配符选择器"><a href="#1）通配符选择器" class="headerlink" title="1）通配符选择器"></a>1）通配符选择器</h3><p>也叫全局选择器，对全局所有标签统一的样式应用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2）标签选择器"><a href="#2）标签选择器" class="headerlink" title="2）标签选择器"></a>2）标签选择器</h3><p>匹配全部该标签，统一应用样式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">标签名&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3）类选择器"><a href="#3）类选择器" class="headerlink" title="3）类选择器"></a>3）类选择器</h3><p>匹配使用指定类名的元素，统一应用样式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">.类名&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4）id选择器"><a href="#4）id选择器" class="headerlink" title="4）id选择器"></a>4）id选择器</h3><p>匹配使用指定id的元素，统一应用样式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">#id&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="5）高级选择器-后代选择器"><a href="#5）高级选择器-后代选择器" class="headerlink" title="5）高级选择器-后代选择器"></a>5）高级选择器-后代选择器</h3><p>利用基本选择器划定一个大的范围，然后在这个范围中再划定一个小的范围，符合条件的应用样式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">父代选择器 后代选择器&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：后代不只是子代，子子孙孙在内的所有后代符合的都属于。</p>
+<p>​            一层不够可以写多层。</p>
+<h3 id="6）高级选择器-子代选择器"><a href="#6）高级选择器-子代选择器" class="headerlink" title="6）高级选择器-子代选择器"></a>6）高级选择器-子代选择器</h3><p>利用基本选择器划定一个大的范围，然后在这个范围中再划定一个小的范围，符合条件的应用样式。但是，这个必须是子代，孙代开始的后代都不匹配。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">父代选择器 &gt; 子代选择器&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="7）高级选择器-交集选择器"><a href="#7）高级选择器-交集选择器" class="headerlink" title="7）高级选择器-交集选择器"></a>7）高级选择器-交集选择器</h3><p>选中两个选择器同时匹配的元素，应用样式。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">选择器A.选择器B&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：可以取连续交集。</p>
+<h3 id="8）高级选择器-并集选择器"><a href="#8）高级选择器-并集选择器" class="headerlink" title="8）高级选择器-并集选择器"></a>8）高级选择器-并集选择器</h3><p>选中所有匹配已列出选择器的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">选择器A,选择器B,选择器C……&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="9）高级选择器-相邻兄弟选择器"><a href="#9）高级选择器-相邻兄弟选择器" class="headerlink" title="9）高级选择器-相邻兄弟选择器"></a>9）高级选择器-相邻兄弟选择器</h3><p>选中紧接在某一元素后的有相同父元素的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">选择器A+选择器B&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="10）高级选择器-所有兄弟选择器"><a href="#10）高级选择器-所有兄弟选择器" class="headerlink" title="10）高级选择器-所有兄弟选择器"></a>10）高级选择器-所有兄弟选择器</h3><p>选中某一元素后的所有具有相同父元素的元素。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">选择器A~选择器B&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="11）高级选择器-属性选择器"><a href="#11）高级选择器-属性选择器" class="headerlink" title="11）高级选择器-属性选择器"></a>11）高级选择器-属性选择器</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">选择器[属性]&#123;样式:样式值;……&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="12）高级选择器-伪类选择器"><a href="#12）高级选择器-伪类选择器" class="headerlink" title="12）高级选择器-伪类选择器"></a>12）高级选择器-伪类选择器</h3><p>同一个标签，根据其<strong>不同的种状态，有不同的样式</strong>。这就叫做“伪类”。伪类选择器主要可以分为：动态伪类选择器、UI元素状态伪类选择器、结构伪类选择器、否定伪类选择器。</p>
+<h4 id="1-动态伪类选择器"><a href="#1-动态伪类选择器" class="headerlink" title="1.动态伪类选择器"></a>1.动态伪类选择器</h4><p>主要针对超链接。</p>
+<p>E:link（链接伪类选择器）：选择匹配的E元素，而且匹配元素被定义了超链接并未被访问过。常用于链接描点上（<strong>访问之前</strong>）</p>
+<p>E:visited（链接伪类选择器 ）：选择匹配的E元素，而且匹配元素被定义了超链接并已被访问过。常用于链接描点上（<strong>访问之后</strong>）</p>
+<p>E:active（用户行为选择器）：选择匹配的E元素，且匹配元素被激活。常用于链接描点和按钮上（<strong>点击</strong>）</p>
+<p>E:hover （用户行为选择器）： 选择匹配的E元素，且用户鼠标停留在元素E上。IE6及以下浏览器仅支持a:hover（<strong>悬停</strong>）</p>
+<p>E:focus （用户行为选择器）： 选择匹配的E元素，而且匹配元素获取焦点（<strong>获得焦点</strong>）</p>
+<p>书写顺序：LV，HA</p>
+<h4 id="2-UI元素状态伪类选择器"><a href="#2-UI元素状态伪类选择器" class="headerlink" title="2.UI元素状态伪类选择器"></a>2.UI元素状态伪类选择器</h4><p>主要针对Form元素进行操作。</p>
+<p>E:checked（选中状态伪类选择器）：匹配选中的复选按钮或者单选按钮表单元素</p>
+<p>E:enabled（启用状态伪类选择器 ）：匹配所有启用的表单元素</p>
+<p>E:disabled（不可用状态伪类选择器）：匹配所有禁用的表单元素</p>
+<h4 id="3-结构伪类选择器"><a href="#3-结构伪类选择器" class="headerlink" title="3.结构伪类选择器"></a>3.结构伪类选择器</h4><p>E:fisrt-child ：作为父元素的第一个子元素的元素E。与E:nth-child(1)等同</p>
+<p>E:last-child ：作为父元素的最后一个子元素的元素E。与E:nth-last-child(1)等同</p>
+<p>E:root：选择匹配元素E所在文档的根元素。在HTML文档中，根元素始终是html，此时该选择器与html类型选择器匹配的内容相同</p>
+<p>E F:nth-child(n)：选择父元素E的第n个子元素F。其中n可以是整数（1，2，3）、关键字（even，odd）、可以是公式（2n+1）,而且n值起始值为1，而不是0.</p>
+<p>E F:nth-last-child(n)：选择父元素E的倒数第n个子元素F。此选择器与E:nth-child(n)选择器计算顺序刚好相反，但使用方法都是一样的，其中：nth-last-child(1)始终匹配最后一个元素，与last-child等同</p>
+<p>E:nth-of-type(n) ：选择父元素内具有指定类型的第n个E元素</p>
+<p>E:nth-last-of-type(n)：选择父元素内具有指定类型的倒数第n个E元素</p>
+<p>E:first-of-type：选择父元素内具有指定类型的第一个E元素，与E:nth-of-type(1)等同</p>
+<p>E:last-of-type ：选择父元素内具有指定类型的最后一个E元素，与E:nth-last-of-type(1)等同</p>
+<p>E:only-child ：选择父元素只包含一个子元素，且该子元素匹配E元素</p>
+<p>E:only-of-type：选择父元素只包含一个同类型子元素，且该子元素匹配E元素</p>
+<p>E:empty： 选择没有子元素的元素，而且该元素也不包含任何文本节点</p>
+<h4 id="4-否定伪类选择器"><a href="#4-否定伪类选择器" class="headerlink" title="4.否定伪类选择器"></a>4.否定伪类选择器</h4><p>E:not(F)：匹配所有除元素F外的E元素</p>
+<h3 id="13）高级选择器-伪元素选择器"><a href="#13）高级选择器-伪元素选择器" class="headerlink" title="13）高级选择器-伪元素选择器"></a>13）高级选择器-伪元素选择器</h3><p>E::first-line：为所有匹配E的首行应用样式</p>
+<p>E::first-letter：为所有匹配E的首字母应用样式</p>
+<p>E::before：在匹配E的元素之前插入一个元素（必须有属性content指定插入的内容）</p>
+<p>E::after：在匹配E的元素之后插入一个元素（必须有属性content指定插入的内容）</p>
+<p>::selection：设定被用户选中的文本效果，属性有color、background、cursor、outline</p>
+<h2 id="7-CSS代码规范"><a href="#7-CSS代码规范" class="headerlink" title="7.CSS代码规范"></a>7.CSS代码规范</h2><p>1）缩进统一四个空格</p>
+<p>2）选择器与{}间必须包含空格</p>
+<p>3）属性名与：间不能有空格，但是：和属性值之间要有空格</p>
+<p>4）列表型属性值在书写单行时，逗号后必须跟一个空格</p>
+<p>5）当一组样式包含多个选择器时，每个选择器必须独占一行</p>
+<p>6）&gt;、+、~两边要有空格</p>
+<p>7）属性选择器中的值必须用双引号包围，文本内容必须用双引号包围</p>
+<p>8）属性定义必须另起一行，属性定义后必须用分号结尾</p>
+<h2 id="8-继承性"><a href="#8-继承性" class="headerlink" title="8.继承性"></a>8.继承性</h2><p>某些元素在父代元素设置了某些属性后，会继承这一属性。</p>
+<p><strong>文字属性</strong>：color、font-系列、line-系列、text-系列</p>
+<p><strong>盒子属性</strong>：background-系列、width、height、border-系列、浮动、定位等</p>
+<p><strong>注意：只有文字属性能继承，盒子属性不能继承！</strong></p>
+<h2 id="9-权重"><a href="#9-权重" class="headerlink" title="9.权重"></a>9.权重</h2><p>针对同一个元素设置了不同的选择器时，要计算权重，应用权重高的样式。</p>
+<p>其大小为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">!important（无限大）&gt;行内style（1000）&gt;id（100）&gt;类、属性、伪类（10）&gt;标签、伪元素（1）&gt;通配符、继承（0）&gt;浏览器默认</span><br></pre></td></tr></table></figure>
+
+<p>权重大小公式：按各种选择器的个数分别乘它们的权值然后相加得到权重值。</p>
+<p><strong>注意</strong>：权重大小计算不进位。</p>
+<p>​            如果权重大小相同，那么最后一个定义的样式就是最终样式。</p>
+<h2 id="10-什么是层叠样式表的层叠性"><a href="#10-什么是层叠样式表的层叠性" class="headerlink" title="10.什么是层叠样式表的层叠性"></a>10.什么是层叠样式表的层叠性</h2><p>针对同一个元素标签，当设置了不同的选择器时，权重高的会层叠掉权重低的。</p>
+<h2 id="11-文字样式"><a href="#11-文字样式" class="headerlink" title="11.文字样式"></a>11.文字样式</h2><p><strong>color</strong>：文本颜色</p>
+<p><strong>font-size</strong>：文字大小</p>
+<p><strong>font-family</strong>：字体，默认是宋体</p>
+<p><strong>font-style</strong>：字体风格，italic和normal，一般是用来清除斜体</p>
+<p><strong>font-weight</strong>：字体粗细，可以写为lighter（细体）、normal（普通）、bold（粗体）、bolder（更粗体），也可以写为100-700的百整数，其中400相当于normal，700等同于bold</p>
+<p><strong>line-hight</strong>：行高。当line-height等于盒子的height时，文字垂直居中。</p>
+<p><strong>font</strong>：font系列的综合写法，有固定顺序，顺序是：font-style font-weight font-size/line-height font-family</p>
+<p>如：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">font</span>:normal <span class="number">400</span> <span class="number">25px</span>/<span class="number">30px</span> arial,<span class="string">&quot;Microsoft Yahei&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<h2 id="12-文本样式"><a href="#12-文本样式" class="headerlink" title="12.文本样式"></a>12.文本样式</h2><p><strong>text-decoration</strong>：文本修饰。值：underline（下划线）、Overline（上划线）、line-through（删除线）、none（清除修饰）</p>
+<p><strong>text-indent</strong>：首行文本缩进。一般设为2em，指标准的两个汉字的缩进。单位em指文字个数。</p>
+<p><strong>text-align</strong>：水平对齐</p>
+<p><strong>letter-spacing</strong>：字符间距</p>
+<p><strong>word-spacing</strong>：字间距</p>
+<p><strong>如何区分以上两者？</strong></p>
+<p>​        word-spacing 属性增加或减少单词间的空白（字间隔）。letter-spacing 属性增加或减少字符间的空白（字符间距）。word-spacing意思是设置单词间的间距，如何区别是不是为一个单词呢，用空格隔开的视为一个单词，使用字间距之后，空格会更大。</p>
+<p><strong>vertical-align</strong>：元素的垂直对齐方式</p>
+<table>
+<thead>
+<tr>
+<th align="center">对齐方式</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">baseline</td>
+<td align="center">默认，元素放置在父元素的基线上</td>
+</tr>
+<tr>
+<td align="center">sub</td>
+<td align="center">垂直对齐文本的下标</td>
+</tr>
+<tr>
+<td align="center">super</td>
+<td align="center">垂直对齐文本的上标</td>
+</tr>
+<tr>
+<td align="center">top</td>
+<td align="center">把元素的顶端与行中最高元素的顶端对齐</td>
+</tr>
+<tr>
+<td align="center">text-top</td>
+<td align="center">把元素的顶端与父元素字体的顶端对齐</td>
+</tr>
+<tr>
+<td align="center">middle</td>
+<td align="center">把此元素放置在父元素的中部</td>
+</tr>
+<tr>
+<td align="center">bottom</td>
+<td align="center">把元素的顶端与行中最低的元素的顶端对齐</td>
+</tr>
+<tr>
+<td align="center">text-bottom</td>
+<td align="center">把元素的底端与父元素字体的底端对齐</td>
+</tr>
+</tbody></table>
+<p>​                        还有length，%的形式</p>
+<p><strong>white-space</strong>：元素内留白怎么处理</p>
+<table>
+<thead>
+<tr>
+<th align="center">留白方式</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">normal</td>
+<td align="center">默认，空白会忽略</td>
+</tr>
+<tr>
+<td align="center">pre</td>
+<td align="center">文本会被保留</td>
+</tr>
+<tr>
+<td align="center">nowrap</td>
+<td align="center">文本不会换行</td>
+</tr>
+<tr>
+<td align="center">pre-wrap</td>
+<td align="center">保留空白且正常换行</td>
+</tr>
+<tr>
+<td align="center">pre-line</td>
+<td align="center">合并空白，保留换行</td>
+</tr>
+</tbody></table>
+<p><strong>text-overflow</strong>：文本溢出包含元素时的处理</p>
+<table>
+<thead>
+<tr>
+<th align="center">处理方式</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">clip</td>
+<td align="center">修建文本</td>
+</tr>
+<tr>
+<td align="center">ellipsis</td>
+<td align="center">显示省略号</td>
+</tr>
+</tbody></table>
+<h2 id="13-列表样式"><a href="#13-列表样式" class="headerlink" title="13.列表样式"></a>13.列表样式</h2><p><strong>list-style-type</strong>：设置列表项目符号类型</p>
+<p><strong>list-style-image</strong>：设置列表项目符号为图片，值：url（”图片路径”）</p>
+<p><strong>list-style-position</strong>：设置列表项目符号位置，值：inside|outside</p>
+<p><strong>list-style</strong>：简写。无具体顺序。</p>
+<h2 id="14-盒模型"><a href="#14-盒模型" class="headerlink" title="14.盒模型"></a>14.盒模型</h2><p>所有HTML元素可以看作盒子，在CSS中，”box model”这一术语是用来设计和布局时使用。</p>
+<p>CSS盒模型本质上是一个盒子，封装周围的HTML元素，盒模型从内到外分为：content、padding、border、margin</p>
+<p>盒模型允许我们在其它元素和周围元素边框之间的空间放置元素。</p>
+<h2 id="15-盒模型宽高计算"><a href="#15-盒模型宽高计算" class="headerlink" title="15.盒模型宽高计算"></a>15.盒模型宽高计算</h2><p>盒模型有两种，<strong>标准盒模型</strong>和<strong>怪异（IE）盒模型</strong>，两种盒模型的计算公式有略微不同。</p>
+<p>标准盒模型：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">content</span>|<span class="attribute">width</span>|<span class="attribute">height</span> + <span class="attribute">padding</span> + <span class="attribute">border</span> + <span class="attribute">margin</span></span><br></pre></td></tr></table></figure>
+
+<p>怪异盒模型：</p>
+<p>怪异盒模型的height和width已经包含了content、padding和border。</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">width</span>|<span class="attribute">height</span>(<span class="attribute">content</span> + <span class="attribute">padding</span> + <span class="attribute">border</span>) + <span class="attribute">margin</span></span><br></pre></td></tr></table></figure>
+
+<p>CSS3之后，可以通过box-sizing切换这两种模型，值为：content-box（标准盒模型）和border-box（怪异盒模型）</p>
+<h2 id="16-元素宽高"><a href="#16-元素宽高" class="headerlink" title="16.元素宽高"></a>16.元素宽高</h2><p>左右留白：网站左边内边距是固定的，内容在右侧甩出的空白不一样，可以给定一个足够的宽度，只设置左边的内边距，右边空白区域自动剩余。</p>
+<p>在实际的使用中，一般不设置高度，是为了让内部的内容撑开盒子，达到让盒子自动撑高减小。当然，这不绝对，要视情况而定。</p>
+<h2 id="17-外边距（margin）"><a href="#17-外边距（margin）" class="headerlink" title="17.外边距（margin）"></a>17.外边距（margin）</h2><p>同级元素之间的边距，或者距离父元素之间的边距。</p>
+<h3 id="1）数值法设置margin"><a href="#1）数值法设置margin" class="headerlink" title="1）数值法设置margin"></a>1）数值法设置margin</h3><p><strong>单值法：</strong>margin:1px，统一设置盒子上下左右的margin值。</p>
+<p><strong>双值法：</strong>margin:1px 2px，第一个值是上下margin，第二个值是左右margin。</p>
+<p><strong>三值法：</strong>margin:1px 2px 3px，第一个值是上margin，第二个是左右margin，第三个是下margin。</p>
+<p><strong>四值法：</strong>margin:1px 2px 3px 4px，分别是上、右、下、左，顺时针。</p>
+<h3 id="2）方向法"><a href="#2）方向法" class="headerlink" title="2）方向法"></a>2）方向法</h3><p><strong>margin-top：</strong>上</p>
+<p><strong>margin-bottom：</strong>下</p>
+<p><strong>margin-left：</strong>左</p>
+<p><strong>margin-right：</strong>右</p>
+<h2 id="18-margin塌陷"><a href="#18-margin塌陷" class="headerlink" title="18.margin塌陷"></a>18.margin塌陷</h2><p>margin塌陷现象：在垂直方向（左右不会引起塌陷）如果有两个元素的外边距有相遇，在浏览器中加载的真正的外边距不是两个间距的加和，而是两个边距中值比较大的，边距小的塌陷到了边距值大的值内部。</p>
+<h3 id="1）同级元素塌陷"><a href="#1）同级元素塌陷" class="headerlink" title="1）同级元素塌陷"></a>1）同级元素塌陷</h3><p>上面的元素有下边距，下面的元素有上边距，两个边距相遇，真正盒子间距离是较大的那个值。</p>
+<p><strong>解决方案：</strong></p>
+<p>如果两个元素垂直方向有间距，只需要设置给一个元素完整的间距，不要拆分给两个元素。</p>
+<h3 id="2）父子元素塌陷"><a href="#2）父子元素塌陷" class="headerlink" title="2）父子元素塌陷"></a>2）父子元素塌陷</h3><p>在父元素没有设置padding、border、overflow的情况下，给子级设置margin-top时，他不会相对父级一起动，只有他的margin超过父级的margin时，才会生效，但会带着父级一起移动。</p>
+<p><strong>解决方案：</strong></p>
+<p>（1）为父盒子设置border，为外层添加border后父子盒子就不是真正意义上的贴合。</p>
+<p>（2）为父盒子添加overflow : hidden；</p>
+<p>（3）为父盒子设定padding值，而非使用子盒子的margin。</p>
+<h2 id="19-border边框"><a href="#19-border边框" class="headerlink" title="19.border边框"></a>19.border边框</h2><p>用于设置盒子的边框。</p>
+<h3 id="1）按方向设置大小"><a href="#1）按方向设置大小" class="headerlink" title="1）按方向设置大小"></a>1）按方向设置大小</h3><p>border-top：上</p>
+<p>border-bottom：下</p>
+<p>border-left：左</p>
+<p>border-right：右</p>
+<h3 id="2）设置属性"><a href="#2）设置属性" class="headerlink" title="2）设置属性"></a>2）设置属性</h3><p>border-style：边框线形</p>
+<table>
+<thead>
+<tr>
+<th align="center">属性值</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">solid</td>
+<td align="center">实线</td>
+</tr>
+<tr>
+<td align="center">dotted</td>
+<td align="center">点线</td>
+</tr>
+<tr>
+<td align="center">dashed</td>
+<td align="center">虚线</td>
+</tr>
+<tr>
+<td align="center">double</td>
+<td align="center">双线</td>
+</tr>
+</tbody></table>
+<p>border-width：边框宽度像素值</p>
+<table>
+<thead>
+<tr>
+<th align="center">属性值</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">thick</td>
+<td align="center">粗线</td>
+</tr>
+<tr>
+<td align="center">thin</td>
+<td align="center">细线</td>
+</tr>
+<tr>
+<td align="center">medium</td>
+<td align="center">中等宽线</td>
+</tr>
+</tbody></table>
+<p>border-color：边框颜色</p>
+<p>综合写法：</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attribute">border</span>: style width color;</span><br></pre></td></tr></table></figure>
+
+<h2 id="20-内边距（padding）"><a href="#20-内边距（padding）" class="headerlink" title="20.内边距（padding）"></a>20.内边距（padding）</h2><p>元素内容和边框之间的间距。</p>
+<h3 id="1）数值法设置padding"><a href="#1）数值法设置padding" class="headerlink" title="1）数值法设置padding"></a>1）数值法设置padding</h3><p><strong>单值法：</strong>padding:1px，统一设置盒子上下左右的padding值。</p>
+<p><strong>双值法：</strong>padding:1px 2px，第一个值是上下padding，第二个值是左右padding。</p>
+<p><strong>三值法：</strong>padding:1px 2px 3px，第一个值是上padding，第二个是左右padding，第三个是下padding。</p>
+<p><strong>四值法：</strong>padding:1px 2px 3px 4px，分别是上、右、下、左，顺时针。</p>
+<h3 id="2）方向法-1"><a href="#2）方向法-1" class="headerlink" title="2）方向法"></a>2）方向法</h3><p><strong>padding-top：</strong>上</p>
+<p><strong>padding-bottom：</strong>下</p>
+<p><strong>padding-left：</strong>左</p>
+<p><strong>padding-right：</strong>右</p>
+<p><strong>注意：当使用百分比设置margin和padding时，无论哪个方向都是参照父元素设置的。</strong></p>
+<h2 id="21-标准文档流"><a href="#21-标准文档流" class="headerlink" title="21.标准文档流"></a>21.标准文档流</h2><p><strong>文档流</strong>指的是元素排版布局过程中，元素会<strong>默认</strong>自动从左往右，从上往下的<strong>流式排列方式</strong>。并最终窗体自上而下分成一行行，并在每行中从左至右的顺序排放元素。</p>
+<p><strong>标准文档流的特征：</strong></p>
+<p>1）文本内容具有空白折叠现象。</p>
+<p>2）文本内容高低不齐，底边对齐（baseline）。</p>
+<p>3）文本内容如果超过了盒子的宽度会自动换行。</p>
+<p><strong>标准文档流的分类：</strong></p>
+<p>分为行内元素和块级元素。</p>
+<p>所有的文本级标签，除了&lt;P&gt;都是行内元素。</p>
+<p>所有的容器级标签还有&lt;p&gt;都是块级元素。</p>
+<h2 id="22-块级元素"><a href="#22-块级元素" class="headerlink" title="22.块级元素"></a>22.块级元素</h2><p>1）特征：</p>
+<p>可以设置宽高，有换行符。</p>
+<p>独占一行，如果设置了宽高，那么容器范围是设置的宽高；如果没有设置宽度，默认是撑满父容器，即父容器宽度的100%。</p>
+<p>非块级元素可以使用display:block属性设为块级元素。</p>
+<p>可以包含块级元素和行内元素。</p>
+<p>2）块级元素有：</p>
+<p>&lt;address&gt;、&lt;div&gt;、&lt;h1&gt;~&lt;h6&gt;、&lt;hr&gt;、&lt;p&gt;、&lt;pre&gt;、&lt;ul&gt;、&lt;ol&gt;、&lt;dl&gt;、&lt;table&gt;、&lt;form&gt;等</p>
+<h2 id="23-行内元素"><a href="#23-行内元素" class="headerlink" title="23.行内元素"></a>23.行内元素</h2><p>1）特征：</p>
+<p>不可以设置宽高，与其他行内元素在一行内从左到右依次排列。</p>
+<p>容器默认包裹内容，宽度由内容撑开。</p>
+<p>行内元素设置上下margin、padding不生效（不占位置但是背景色能呈现），左右生效。</p>
+<p>非行内元素可以通过display:inline属性设为行内元素。</p>
+<p>只能包含行内元素。</p>
+<p>2）行内元素有：</p>
+<p>&lt;span&gt;、&lt;a&gt;、&lt;br&gt;、&lt;strong&gt;、&lt;sup&gt;、&lt;sub&gt;、&lt;em&gt;、&lt;del&gt;、&lt;select&gt;、&lt;label&gt;等</p>
+<h2 id="24-行内块元素"><a href="#24-行内块元素" class="headerlink" title="24.行内块元素"></a>24.行内块元素</h2><p>1）特征：</p>
+<p>可以设置宽高，与其他行内元素在一行内从左到右依次排列。</p>
+<p>容器默认包裹内容，宽度由内容撑开。如果设置了宽高，那么容器的范围是设置的宽高。</p>
+<p>非行内块元素可以通过display:inline-block属性设为行内块元素。</p>
+<p>2）行内块元素有：</p>
+<p>&lt;img&gt;、&lt;input&gt;、&lt;textarea&gt;等</p>
+<h2 id="25-元素隐藏"><a href="#25-元素隐藏" class="headerlink" title="25.元素隐藏"></a>25.元素隐藏</h2><p><strong>三种方式：</strong></p>
+<p>1）display:none，设置元素消失，不占位。（常用）</p>
+<p>2）visibility:hidden，设置元素消失，占位。（不常用）</p>
+<p>3）opacity：0，设置元素不透明度为0，消失占位。（实现透明度渐变效果常用）</p>
+<p><strong>区别：</strong></p>
+<p>1、<strong>空间占据</strong></p>
+<p>display:none隐藏后不占据额外空间，它会产生回流和重绘，而visibility:hidden和opacity:0元素虽然隐藏了，但它们仍然占据着空间，它们俩只会引起页面重绘。</p>
+<p>2、<strong>子元素继承</strong></p>
+<p>display:none不会被子元素继承，但是父元素都不在了，子元素也就不会显示了</p>
+<p>visibility:hidden 会被子元素继承，可以通过设置子元素visibility:visible 使子元素显示出来</p>
+<p>opacity: 0 也会被子元素继承，但是不能通过设置子元素opacity: 1使其重新显示<br>3、<strong>事件绑定</strong></p>
+<p>display:none 的元素都已经不再页面存在了，因此肯定也无法触发它上面绑定的事件；</p>
+<p>visibility:hidden 元素上绑定的事件也无法触发；</p>
+<p>opacity: 0元素上面绑定的事件是可以触发的。</p>
+<p>4、<strong>过渡动画</strong></p>
+<p>transition对于display无效，</p>
+<p>transition对于visibility也是无效的，</p>
+<p>transition对于opacity有效。</p>
+<h2 id="26-居中"><a href="#26-居中" class="headerlink" title="26.居中"></a>26.居中</h2><p><strong>单行文本：</strong>设置height和line-height相同。</p>
+<p><strong>多行文本：</strong>不设置高度，通过padding双值法设置上下padding，左右设为0。</p>
+<p><strong>子容器：</strong>水平居中使用margin：0 auto；垂直居中，若父容器已知高度，使用margin-top（注意塌陷问题）。如果父容器高度不一定，则可以在父容器中使用上下padding。</p>
+<p><strong>行内块：</strong>水平text-align；垂直vartical-align：middle；</p>
+<h2 id="27-浮动"><a href="#27-浮动" class="headerlink" title="27.浮动"></a>27.浮动</h2><p>浮动不同于标准文档流，浮动按元素的类型排列；</p>
+<p>浮动的元素都脱离了标准文档流，不再占据以前的位置。</p>
+<p>浮动出现的初衷是为了实现文字环绕效果。</p>
+<p>浮动分为：left（左浮动）、right（右浮动）、none（无，标准文档流）</p>
+<h3 id="1）特征"><a href="#1）特征" class="headerlink" title="1）特征"></a>1）<strong>特征</strong></h3><p>浮动可以按照从左到右紧密排列。</p>
+<p>浮动的元素具有块级元素的部分特点，可以设置宽高、padding、margin但是没有换行符。</p>
+<p>浮动的元素不存在上下margin合并的问题。</p>
+<p>浮动的元素都脱离了标准文档流，不再占据以前的位置。</p>
+<p>一个元素设置浮动后，其他同级元素都要设置浮动。</p>
+<p>元素设置浮动后，原有的自适应占父元素宽度百分百的宽度变为包裹的内容的宽度。</p>
+<p>元素设置浮动后，会影响后面元素的布局，所以要及时清除浮动。</p>
+<h3 id="2）浮动的元素塌陷问题"><a href="#2）浮动的元素塌陷问题" class="headerlink" title="2）浮动的元素塌陷问题"></a>2）<strong>浮动的元素塌陷问题</strong></h3><p>在父元素不设置宽高的情况下，若是子元素都设置了浮动，则会呈现出父元素塌陷的问题。</p>
+<p><strong>解决方案：</strong></p>
+<p>1、给父元素设置高度：在确定宽高的情况下可以使用，但是一般情况下，父元素的宽高由内容撑起，因此此方案有效但是不常用。</p>
+<p>2、外墙法：在父元素后面加入一个同级的空元素（div），然后在这个空元素中设置清除浮动。这种方法会添加很多无用元素，增加结构层代码量，且我们完全可以直接在后面的元素中清除浮动。</p>
+<p>3、内墙法：在父元素内部的最后加入一个空元素（div），然后在这个空元素中设置清除浮动。问题类似于外墙法，但是撑起了父元素的高度也解决了塌陷。</p>
+<p>4、给浮动的元素的容器添加浮动：给浮动元素的容器也添加上浮动属性即可清除内部浮动，但是这样会使其整体浮动，影响布局，不推荐使用。</p>
+<p>5、父元素设置display:inline-block，达不到想要的布局效果</p>
+<p>6、使用CSS的overflow属性：</p>
+<p>给浮动元素的容器添加overflow:hidden;（溢出隐藏）或overflow:auto;（溢出自适应）可以清除浮动，另外在 IE6 中还需要触发 hasLayout ，例如为父元素设置容器宽高或设置 zoom:1。</p>
+<p>在添加overflow属性后，浮动元素又回到了容器层，把容器高度撑起，达到了清理浮动的效果。</p>
+<p>但是这种方式在需要内容溢出盒子时，可能会影响内容的显示效果。</p>
+<p>7、使用邻接元素处理：什么都不做，给浮动元素后面的元素添加clear属性。</p>
+<p>8、使用CSS的:after伪元素</p>
+<p>结合 :after 伪元素（注意这不是伪类，而是伪元素，代表一个元素之后最近的元素）和 IEhack ，可以完美兼容当前主流的各大浏览器，这里的 IEhack 指的是触发 hasLayout。</p>
+<p>给浮动元素的容器添加一个clearfix的class，然后给这个class添加一个:after伪元素实现元素末尾添加一个看不见的块元素（Block element）清理浮动。</p>
+<p>也可以直接用父元素:after直接加给父元素，但是最好还是写一个clearfix类</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::after</span>&#123;</span><br><span class="line">  <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>; </span><br><span class="line">  <span class="attribute">display</span>: block; </span><br><span class="line">  <span class="attribute">height</span>: <span class="number">0</span>; </span><br><span class="line">  <span class="attribute">clear</span>: both; </span><br><span class="line">  <span class="attribute">visibility</span>: hidden;  </span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">  <span class="comment">/* 触发 hasLayout */</span> </span><br><span class="line">  zoom: <span class="number">1</span>; </span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>通过CSS伪元素在容器的内部元素最后添加了一个看不见的空格”020”或点”.”，并且赋予clear属性来清除浮动。需要注意的是为了IE6和IE7浏览器，要给clearfix这个class添加一条zoom:1;触发haslayout。</p>
+<p>9、双伪元素清除浮动</p>
+<figure class="highlight css"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::after</span>,</span><br><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::before</span> &#123;</span><br><span class="line">    <span class="attribute">content</span>: <span class="string">&quot;&quot;</span>;</span><br><span class="line">    <span class="attribute">display</span>: table;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.clearfix</span><span class="selector-pseudo">::after</span> &#123;</span><br><span class="line">    <span class="attribute">clear</span>: both;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="selector-class">.clearfix</span> &#123;</span><br><span class="line">    *zoom: <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="28-伪元素和伪类的区别"><a href="#28-伪元素和伪类的区别" class="headerlink" title="28.伪元素和伪类的区别"></a>28.伪元素和伪类的区别</h2><p>1）伪类允许出现在选择器的任何位置，伪元素只能跟在选择器的最后一个简单选择器后面。</p>
+<p>2）伪类操作的对象是文档树中已有的元素，而伪元素则创建了一个文档树之外的新元素（本质）。</p>
+<p>3）伪类是类，伪元素是元素，权重不同。</p>
+<h2 id="29-浮动元素依次贴边"><a href="#29-浮动元素依次贴边" class="headerlink" title="29.浮动元素依次贴边"></a>29.浮动元素依次贴边</h2><p>默认盒子会按照顺序排列，如果前面有兄弟，则紧贴着兄弟。如果没有兄弟，盒子将贴在父亲的边上。如果一行容不下，会另起一行然后渲染。方向永远是从左到右，从上到下，在另起一行后即使发现上面有空隙容得下，也不会挤进去。</p>
+<h2 id="30-浮动与行内块的区别"><a href="#30-浮动与行内块的区别" class="headerlink" title="30.浮动与行内块的区别"></a>30.浮动与行内块的区别</h2><p>浮动：使元素脱离标准文档流，向指定的方向移动，遇到其他相邻浮动元素或者父元素的边就会停下来。</p>
+<p>行内块：同时具有行内元素和块元素的特点，可以实现对元素的有序排列。不会贴边，会另起一行。</p>
+<p><strong>两者区别：</strong></p>
+<p>1）当标签高度不一致时，浮动会改变排列的顺序，行内块会依旧遵循排列的顺序。</p>
+<p>2）浮动元素脱离标准文档流，不占用空间，行内块会抢占空间。</p>
+<h2 id="31-margin对元素宽度的影响"><a href="#31-margin对元素宽度的影响" class="headerlink" title="31.margin对元素宽度的影响"></a>31.margin对元素宽度的影响</h2><p>如果块元素没有设置宽度，其宽度默认为父元素宽度。此时如果修改margin值，会影响元素的宽度，正值宽度减小，负值宽度加大。</p>
+<p>如果设置了宽度，则宽度恒定不受margin值影响，只改变元素位置。在其中，margin-left改变位置的优先级大于margin-right。</p>
+<h2 id="32-margin对浮动元素的影响"><a href="#32-margin对浮动元素的影响" class="headerlink" title="32.margin对浮动元素的影响"></a>32.margin对浮动元素的影响</h2><p>对于标准文档流来说，块元素默认占满整行，因此设置水平方向的margin不会影响后面的元素。</p>
+<p>margin是相对于原有位置移动的。</p>
+<p>如果让盒子浮动，此时设置盒子的边距会影响后面的元素，前面的元素不受影响.</p>
+<p>​    1）如果浮动的盒子通过margin移动是受前面元素影响的，那么盒子移动的距离就是前面所有盒子移动的距离。</p>
+<p>​    2）如果盒子2要移动到盒子1前面，移动的距离与盒子1的移动距离无关，与两个盒子的宽度有关：盒子1+盒子2</p>
+<p>​    3）当盒子2移动到盒子1前面，盒子3与盒子1贴边，为盒子3设置margin时，其移动距离为盒子1移动距离+盒子2宽度+自身移动距离（margin）</p>
+<p>公式：</p>
+<p>设定w为盒子自身宽度，w1代表盒子1的宽……</p>
+<p>​        d为移动距离，d1代表盒子1的移动距离……</p>
+<p>2贴1边：d2=w1+w2</p>
+<p>2溢出，3贴1边:d3=d1+w2+d3</p>
+<h2 id="33-背景属性"><a href="#33-背景属性" class="headerlink" title="33.背景属性"></a>33.背景属性</h2><p><strong>background-color：</strong>背景色。</p>
+<p><strong>background-image：</strong>背景图。</p>
+<p><strong>background-repeat：</strong>背景平铺。值：no-repeat，不平铺。</p>
+<p>​                                                                repeat，重复平铺。</p>
+<p>​                                                                repeat-x，水平平铺。</p>
+<p>​                                                                repeat-y，垂直平铺。</p>
+<p>对于设置了背景色和背景图的元素，背景色从border开始渲染，背景图从padding开始渲染。</p>
+<p><strong>background-position：</strong>用于背景定位，将整个页面视为倒置的坐标轴，三种使用方法。</p>
+<p>数值法：直接以像素为单位赋值。</p>
+<p>特殊变量法：水平：left center right    垂直：top center bottom，其中最常用的是top center</p>
+<p>百分比法：（盒子高度|宽度 + padding * 2 - 背景图片宽度|高度）* 百分比</p>
+<p>也可以写为background-position-x和background-position-y单独设置</p>
+<p><strong>background-attachment：</strong>页面滚动。值有：scroll（背景图片随着页面的滚动而滚动，这是默认的）、fixed（背景不动）、local（背景图片会随着元素内容的滚动而滚动）。其中local不是很常用。</p>
+<p><strong>background：</strong>综合写法。顺序为：背景色 背景图 平铺 定位 滚动</p>
+<h2 id="34-精灵图"><a href="#34-精灵图" class="headerlink" title="34.精灵图"></a>34.精灵图</h2><p>精灵图（CSS sprites）：网页上的每张图片，无论大小，在网页加载时都会发起一次http请求，所以数量越多，http请求也就越多，这大大拖慢了网页的加载速度。将所有碎片图放置在一张大的图片上，使用时通过background-position定位，这样只会发起一次http请求，提高网页加载速度，这就是精灵图技术。</p>
+<p><strong>制作要点：</strong></p>
+<p>1）所有碎片图片必须是PNG</p>
+<p>2）精灵图大小不要太大，保证所有碎片能放下即可。</p>
+<p>3）小精灵图摆放，从上到下摆放（最好是颜色相近的摆在一起）。</p>
+<p><strong>分类：</strong></p>
+<p>1）水平精灵图：将所有碎片打包在一行。其特点是：</p>
+<p>​        1）宽度受约束，其范围是前一张图的终止位置–后一张图的起始位置</p>
+<p>​        2）高度自由，可在垂直方向平铺，实现渐变效果。</p>
+<p>​        3）调整精灵图的位置，就是调整背景图的横坐标。</p>
+<p>垂直精灵图：将所有碎片打包在一列。其特点是：</p>
+<p>​        1）高度受约束，其范围是上一张图的终止位置–下一张图的起始位置</p>
+<p>​        2）宽度自由，可水平平铺实现渐变效果。</p>
+<p>​        3）调整精灵图的位置，就是调整背景图的纵坐标。</p>
+<p>定点精灵图：实际工作中最常用到的一种精灵图，是在一张精灵图中任意放置碎片，使用时找准位置。特点：</p>
+<p>​        1）宽高都受限制，通常将容器宽高设置成ICON图片的宽高</p>
+<p>​        2）无论水平还是垂直，都不能平铺。</p>
+<h2 id="35-定位概述"><a href="#35-定位概述" class="headerlink" title="35.定位概述"></a>35.定位概述</h2><p>CSS定位有三种定位机制，分别是普通流，定位和浮动。</p>
+<p>脱离标准文档流有三种方式：浮动，绝对定位，固定定位。</p>
+<p>定位其实就是确定一个元素的渲染位置，确定元素是基于什么方式进行渲染的。</p>
+<p>属性为position，值为：</p>
+<table>
+<thead>
+<tr>
+<th align="center">值</th>
+<th align="center">效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">static</td>
+<td align="center">静态定位，渲染在文档流中，默认方式</td>
+</tr>
+<tr>
+<td align="center">relative</td>
+<td align="center">相对定位，相对于其原有位置进行定位</td>
+</tr>
+<tr>
+<td align="center">absolute</td>
+<td align="center">绝对定位，绝对定位的元素的位置相对于最近的已定位父元素，如果元素没有已定位的父元素，那么它的位置相对于body</td>
+</tr>
+<tr>
+<td align="center">fixed</td>
+<td align="center">固定定位，元素的位置相对于浏览器窗口是固定位置，即使窗口是滚动的它也不会移动；Fixed 定位在 IE7 和 IE8 下需要描述 !DOCTYPE 才能支持。Fixed定位使元素的位置与文档流无关，因此不占据空间。Fixed定位的元素和其他元素重叠</td>
+</tr>
+<tr>
+<td align="center">sticky</td>
+<td align="center">粘性定位，基于用户的滚动位置来定位。粘性定位的元素是依赖于用户的滚动，在 <strong>position:relative</strong> 与 <strong>position:fixed</strong> 定位之间切换。它的行为就像 <strong>position:relative;</strong> 而当页面滚动超出目标区域时，它的表现就像 **position:fixed;**，它会固定在目标位置。Internet Explorer, Edge 15 及更早 IE 版本不支持 sticky 定位。 Safari 需要使用 -webkit- prefix</td>
+</tr>
+</tbody></table>
+<h2 id="36-relative相对定位"><a href="#36-relative相对定位" class="headerlink" title="36.relative相对定位"></a>36.relative相对定位</h2><p>相对于其原有位置进行定位，没有脱离文档流，不会影响其他元素，相当于在原位置占了个坑但是人不在。</p>
+<p>除static外，四种方式都能通过top、bottom、left、right设置偏移量。</p>
+<p>注意在CSS中，坐标系为倒置坐标系，左负右正，上负下正。</p>
+<p>在水平方向，left优先级高于right；在垂直方向，top优先级高于bottom。所以工作时，尽量设置top和left。</p>
+<p>相对定位有坑,所以一般不用于做”遮盖”效果.页面中,效果极小.就两个作用:</p>
+<p>​        1）微调元素</p>
+<p>​        2）做绝对定位的参考，<strong>子绝父相</strong></p>
+<h2 id="37-absolute绝对定位"><a href="#37-absolute绝对定位" class="headerlink" title="37.absolute绝对定位"></a>37.absolute绝对定位</h2><p>绝对定位的元素的位置相对于<strong>最近</strong>的<strong>已定位</strong>父元素（没有定位不能算），如果元素没有已定位的父元素，那么它的位置相对于body左上角的一点，不受padding影响。</p>
+<p>在水平方向，left优先级高于right；在垂直方向，top优先级高于bottom。所以工作时，尽量设置top和left。</p>
+<p>在元素不设置宽高的情况下，会按照方向偏移的情况下，撑开盒子。</p>
+<p><strong>特性：</strong></p>
+<p>1）包裹性</p>
+<p>　　元素绝对定位后，会为其后代元素建立一个包含块。且若该绝对定位元素不设置宽度，宽度由内容撑开。</p>
+<p>　　[注意]浮动的包含块会延伸，进而包含所有后代浮动元素，但绝对定位的包含块并不会包含后代的定位元素，只是作为后代定位元素的定位父级</p>
+<p>2）破坏性</p>
+<p>　　元素绝对定位后，会脱离文档流，若父级不设置高度，则父级高度塌陷；若父级为行内元素，无其他内容，则父级宽度也将塌陷</p>
+<p>3）去除性</p>
+<p>　　元素绝对定位后，元素原来的浮动效果和display属性将失效</p>
+<p>4）偏移特性</p>
+<p>　　如果使用top、right、bottom、left这4个偏移特性来描述元素4个边的放置位置，那么元素的高度和宽度将由这些偏移隐含确定，元素将会拉伸</p>
+<p>　　使用偏移属性拉伸的绝对定位元素，其内部元素支持百分比width/height值。通常情况下，元素高度百分比要想起作用，需要父级窗口的高度值不是auto；但是如果容器由绝对定位拉伸形成，百分比高度值也是支持的</p>
+<h2 id="38、fixed固定定位"><a href="#38、fixed固定定位" class="headerlink" title="38、fixed固定定位"></a>38、fixed固定定位</h2><p>固定定位的位置相对于浏览器窗口。</p>
+<p><strong>特性：</strong></p>
+<p>1）定位相对于浏览器窗口，与父元素无关。</p>
+<p>2）脱离文档流，影响其他元素。</p>
+<p>3）无论inline还是block可以直接设置宽高。</p>
+<p>4）display属性失效</p>
+<p>5）在元素不设置宽高的情况下，会按照方向偏移的情况下，撑开盒子。</p>
+<p>6）在水平方向，left优先级高于right；在垂直方向，top优先级高于bottom。所以工作时，尽量设置top和left。</p>
+<p>7）偏移一旦设置为负，会离开窗口，脱离视线（最好不要这样做）。</p>
+<h2 id="39-遮盖现象"><a href="#39-遮盖现象" class="headerlink" title="39.遮盖现象"></a>39.遮盖现象</h2><p>盒子一旦设置了定位，就会产生遮盖现象。</p>
+<p>对于没有设置定位的元素，设置了定位的元素会遮盖在它们上面，包括浮动的元素。</p>
+<p>对于同样设置了定位的元素，后来的元素会压在前面的元素上。</p>
+<p>没有设置定位的元素无法改变遮盖顺序，但是对于全部设置了定位的元素，可以通过z-index改变遮盖顺序。</p>
+<h2 id="40-z-index"><a href="#40-z-index" class="headerlink" title="40.z-index"></a>40.z-index</h2><p>默认情况下，如果盒子都设置了定位，遮盖的顺序是按照元素创建的顺序，后面的会遮盖前面的。为了让盒子遮盖的顺序自定义，设置了定位的盒子会激活z-index属性，来设置盒子遮盖的顺序。</p>
+<p>z-index的值是一个不带单位的数字，遮盖的顺序是由数值大小决定的，其特点是：</p>
+<p>1）只有设置了定位的盒子才有z-index，因此定位的盒子可以设置，没有定位的盒子，包括浮动在内都不能设置。</p>
+<p>2）z-index默认值是auto，可以看成是0，没有定位的盒子不能设置z-index，但是可以将其看成是0，如果z-index小于0，会渲染在其他盒子（包括未定位的盒子）底部，只有大于等于0时，才会渲染在上面。</p>
+<p>3）设置的z-index值越大，就会渲染在最前面，谁打谁在前，注意：z-index属性值通常是整数。</p>
+<p>4）如果盒子设置了相同的z-index，此时盒子会根据创建的顺序决定谁在前面。不管是正数还是负数，后创建的盒子会渲染在最前面。</p>
+<p>5）盒子的渲染顺序不仅与自己的z-index相关，还与设置了定位的父盒子有关，父盒子z-index高的不论子盒子的z-index高低，都会渲染在父盒子z-index低的子盒子的前面，这一现象是CSS界的“拼爹”。</p>
+<h2 id="41-CSShack"><a href="#41-CSShack" class="headerlink" title="41.CSShack"></a>41.CSShack</h2><p>注：其实随着时代的发展，现在需要兼容IE10以下的浏览器的情况已经很少了，所以此部分做了解。</p>
+<hr />
+
+<p>HACK从hacker延伸而来，指我们针对不同浏览器写不同代码的行为。</p>
+<p>由于不同的浏览器，比如Internet Explorer 6,Internet Explorer 7,Mozilla Firefox等，对CSS的解析认识不一样，因此会导致生成的页面效果不一样，得不到我们所需要的页面效果。</p>
+<p>这个时候我们就需要针对不同的浏览器去写不同的CSS，让它能够同时兼容不同的浏览器，能在不同的浏览器中也能得到我们想要的页面效果。</p>
+<p>这个针对不同的浏览器写不同的CSS code的过程，就叫CSS hack,也叫写CSS hack。</p>
+<p>CSS Hack常见的有三种形式：CSS属性值Hack、CSS选择符Hack以及IE条件注释Hack， Hack主要针对IE浏览器。</p>
+<h3 id="1）中外主要浏览器（截至2021-3）与兼容性"><a href="#1）中外主要浏览器（截至2021-3）与兼容性" class="headerlink" title="1）中外主要浏览器（截至2021.3）与兼容性"></a>1）中外主要浏览器（截至2021.3）与兼容性</h3><p>境外（占比从大到小）：Chrome、Safari、Firefox、Edge、Opera</p>
+<p>国内（占比从大到小）：Chrome、Edge、QQ、搜狗、firefox、safari、360、IE、UC</p>
+<p>浏览器兼容性不同，在写代码时，要考虑到兼容性问题。</p>
+<p>哆啦A梦兼容性测试地址：<a target="_blank" rel="noopener" href="https://www1.pconline.com.cn/pcedu/specialtopic/css3-doraemon/">CSS3哆啦A梦测试 (pconline.com.cn)</a></p>
+<h3 id="2）IE条件注释HACK"><a href="#2）IE条件注释HACK" class="headerlink" title="2）IE条件注释HACK"></a>2）IE条件注释HACK</h3><p>在同一个html文件里，针对不同的浏览器写不同的html结构。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!--[if IE]&gt;此处内容只有IE可见&lt;![endif]--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--[if IE 6]&gt;此处内容只有IE6.0可见&lt;![endif]--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--[if IE 7]&gt;此处内容只有IE7.0可见&lt;![endif]--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--[if !IE 7]&gt;此处内容只有IE7不能识别，其他版本都能识别，当然要在IE5以上。&lt;![endif]--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--[if gt IE 6]&gt; IE6以上版本可识别,IE6无法识别 &lt;![endif]--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--[if gte IE 7]&gt; IE7以及IE7以上版本可识别 &lt;![endif]--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--[if lt IE 7]&gt; 低于IE7的版本才能识别，IE7无法识别。 &lt;![endif]--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--[if lte IE 7]&gt; IE7以及IE7以下版本可识别&lt;![endif]--&gt;</span></span><br><span class="line"><span class="comment">&lt;!--[if !IE]&gt;此处内容只有非IE可见&lt;![endif]--&gt;</span></span><br></pre></td></tr></table></figure>
+
+<table>
+<thead>
+<tr>
+<th align="center">符号</th>
+<th align="center">判断条件</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">lt</td>
+<td align="center">小于</td>
+</tr>
+<tr>
+<td align="center">gt</td>
+<td align="center">大于</td>
+</tr>
+<tr>
+<td align="center">lte</td>
+<td align="center">小于等于</td>
+</tr>
+<tr>
+<td align="center">gte</td>
+<td align="center">大于等于</td>
+</tr>
+<tr>
+<td align="center">!</td>
+<td align="center">不等于</td>
+</tr>
+</tbody></table>
+<p>因为这一部分是写在HTML里的，所以也能叫HTML HACK。</p>
+<h3 id="3）CSS属性值HACK"><a href="#3）CSS属性值HACK" class="headerlink" title="3）CSS属性值HACK"></a>3）CSS属性值HACK</h3><p>所有浏览器可识别：color:red;</p>
+<p>IE6识别：-和_，如：_color:red;</p>
+<p>IE6、IE7识别：!、$、&amp;、*、(、)、=、%、+、@、,、.、/、`、[、]、#、~、?、:、&lt;、&gt;、|，如：!color:red;</p>
+<p>IE8、IE9识别：\0，如：color:red\0;</p>
+<p>IE6、IE7、IE8、IE9、IE10识别：\9，如：color:red\9;</p>
+<p>IE6不识别:<strong>!important</strong>,在考虑IE6兼容性的情况下尽量少用</p>
+<h3 id="4）CSS选择符HACK"><a href="#4）CSS选择符HACK" class="headerlink" title="4）CSS选择符HACK"></a>4）CSS选择符HACK</h3><p>IE6识别：*html选择器{}，如：*html div{}</p>
+<p>IE7识别：选择器,{}，如：div,{}</p>
+<p>除IE6之外：html&gt;body 选择器，如：html&gt;body div{}</p>
+<h2 id="42-IE6兼容性问题及解决"><a href="#42-IE6兼容性问题及解决" class="headerlink" title="42.IE6兼容性问题及解决"></a>42.IE6兼容性问题及解决</h2><p>1）IE6不支持交集选择器里面的选择器连写，如div.cx.cs的格式就不支持。</p>
+<p>解决方案：使用标签和一个类的交集。</p>
+<p>2）如果不写DTD，IE6的盒子是內减的，其他浏览器盒子是外扩的</p>
+<p>解决方案：定义DTD。</p>
+<p>3）不能有小于字号的盒子，如果盒子高度小于默认字号则无法正常显示，高度会是最小字号。</p>
+<p>解决方案：给IE6强制定义一个最小的字号。</p>
+<p>4）不浮动的盒子不会到浮动盒子下，而是继续占据标准流中原来的位置。</p>
+<p>解决方案：同级元素之间，要么都浮动要么都不浮动。</p>
+<p>​                    不使用浮动做遮盖效果，而是用定位。</p>
+<p>5）双倍margin问题，一些浮动的元素，如果给它一个与浮动方向相同方向的margin，那么这些元素的第一个margin会出现双边距问题。</p>
+<p>只有相对于其父对象的浮动对象才会出现这样的问题。第一个对象是相对父对象的，而第二个对象是相对第一 个对象的，所以第二个对象在设置后不会出现问题。</p>
+<p>解决方案：1、不能使用儿子去撑开和父亲的间距，要使用父亲的padding去解决。</p>
+<p>​                    2、设置与浮动方向相反的margin。</p>
+<p>​                    3、将其display属性设置为inline。在一些特殊布局中，可能需要组合使用display:block;和display:inline; 才能达到预期效果。</p>
+<p>​                    4、最坏的情况下，可以使用“标准属性;_IE6识别属性”HACK方式解决，如：“margin:10px 0 0 10px;_margin:10px 0 0 5px”</p>
+<p>6）IE6不识别固定定位</p>
+<p>解决方案：JS模拟。</p>
+<p>7）IE6、IE7、IE8不支持opacity</p>
+<p>解决方案：filter:progid:DXImageTransform.Microsoft.Alpha(opacity=数值);            数值是0-100的整数值。</p>
+<h2 id="43-CSS单位"><a href="#43-CSS单位" class="headerlink" title="43.CSS单位"></a>43.CSS单位</h2><p><strong>（常用）％：百分比。相对于父元素宽高的百分比。</strong></p>
+<p><strong>（常用）px：像素。指屏幕上的一个点。</strong></p>
+<p>in：英寸。像素与英寸之间的转化关系与分辨率有关，分辨率是96像素即一英寸屏幕有96个像素点。</p>
+<p>cm：厘米。</p>
+<p>转换规律：<strong>1m=100cm，1 in = 2.54cm，1cm=37.78px（96/2.54）</strong></p>
+<p>pt：磅。1pt=1/72 in，即1pt大约是1.33px。</p>
+<p>pc：派卡。包含12个点活字。相当于我国新四号铅字的尺寸。</p>
+<p>q：1/4毫米。</p>
+<p><strong>1in = 2.54cm = 25.4 mm = 101.6q = 72pt = 6pc = 96px</strong></p>
+<p><strong>（常用）em：相对于父元素的字体大小的单位。</strong></p>
+<p>ex：相当于字母x的高度。</p>
+<p><strong>（常用）rem：相对于根元素的字体大小的单位。</strong></p>
+<p><strong>（常用）vw：相对于视口的宽度。视口宽度被均分为100单位的vw。</strong></p>
+<p><strong>（常用）vh：相对于视口的高度。视口高度被均分为100单位的vh。</strong></p>
+<p>vmax：相对于视口的宽度或高度中较大的那个。其中最大的那个被均分为100单位的vmax。</p>
+<p>vmin：相对于视口的宽度或高度中较小的那个。其中最小的那个被均分为100单位的vmin。</p>
+<p><strong>ps：视口 (viewport) 代表当前可见的计算机图形区域。在 Web 浏览器术语中，通常与浏览器窗口相同，但不包括浏览器的 UI， 菜单栏等——即指你正在浏览的文档的那一部分。</strong></p>
+<h2 id="44-px、vw、rem之间的换算"><a href="#44-px、vw、rem之间的换算" class="headerlink" title="44.px、vw、rem之间的换算"></a>44.px、vw、rem之间的换算</h2><p>1.我们假设pad的设计稿是以1920px为标准的。那么：<br> 100vw = 1920px<br> 1vw = 19.2px<br> 我们想要： 1rem = 100px（这样方便我们在写代码的时候换算）<br> 那么:<br> 100px = 100vw / 19.2 = 1rem<br> 所以：<br> 1rem = 5.208vw。<br> 这时候，我们只要给html的根元素设置：<br> font-size: 5.208vw即可。</p>
+<p>2.同理的，手机端我们假设设计稿是以750px为标准的，那么:<br> 100vw = 750px<br> 1vw = 7.5px<br> 我们想要： 1rem = 100px<br> 那么：<br> 100px = 100vw / 7.5 = 1rem<br> 那么：<br> 1rem = 13.33vw</p>
+<h2 id="45-FC"><a href="#45-FC" class="headerlink" title="45.FC"></a>45.FC</h2><p>FC的全称是：Formatting Contexts，<strong>格式化上下文</strong>。它是W3C CSS2.1规范中的一个概念。它是页面中的一块渲染区域，并且有一套渲染规则，它决定了其子元素将如何定位，以及和其他元素的关系、相互作用。<br>格式化上下文指的是初始化元素定义的环境。包含两个要点，元素定义的环境和初始化。<br>　　在 CSS 中，元素定义的环境有两种，一种是块格式化上下文( Block formatting context )，另一种是行内格式化上下文( Inline formatting context )。 这两种上下文定义了在 CSS 中元素所处的环境，格式化则表明了在这个环境中，元素处于此环境中应当被初始化，即元素在此环境中应当如何布局等。</p>
+<p>常见的FC有：</p>
+<p>　    <strong>BFC</strong>：块级格式化上下文( Block formatting contexts )<br>　　<strong>IFC</strong>：行内格式化上下文( Inline formatting contexts )<br>　　<strong>FFC</strong>：自适应格式化上下文( Flex Formatting Contexts )（CSS3新增）<br>　　<strong>GFC</strong>：网格布局格式化上下文( GridLayout Formatting Contexts )（CSS3新增）</p>
+<h3 id="1）BFC"><a href="#1）BFC" class="headerlink" title="1）BFC"></a>1）BFC</h3><p>BFC，块级格式化上下文( Block formatting contexts )。其布局规则如下：</p>
+<p>​        1、内部的盒子会在垂直方向，一个一个的布局。</p>
+<p>​        2、盒子垂直方向的距离由margin决定，同属于一个BFC的两个相邻盒子会发生margin合并。</p>
+<p>​        3、每个盒子的左边缘与父盒子的左边缘相接触，包括浮动的盒子。</p>
+<p>​        4、BFC的区域不会与浮动重叠。</p>
+<p>​        5、BFC就是页面上一个隔离的独立容器单元，容器里面的的子元素不会影响到外面的元素，反之亦然。</p>
+<p>​        6、计算BFC的高度时，浮动的元素也参与计算。</p>
+<p>元素产生BFC的原因：</p>
+<p>　　1、根元素</p>
+<p>　　2、float属性不为none</p>
+<p>　　3、position为absolute或fixed</p>
+<p>　　4、display为inline-block, table-cell, table-caption, flex, inline-flex</p>
+<p>　　5、overflow不为visible</p>
+<h3 id="2）IFC"><a href="#2）IFC" class="headerlink" title="2）IFC"></a>2）IFC</h3><p>IFC，行内格式化上下文( Inline formatting contexts )。</p>
+<p>与块级元素形成对比，当元素的 CSS 属性 display 的计算值为 inline，inline-block，inline-table，inline-flex 或 inline-grid 时，它是行内级元素。视觉上它将内容与其它行内级元素排列为一行，直到该行被占满然后换行。典型的如段落内容，文本或图片，都是行内级元素。</p>
+<p>行内级元素生成行内级盒，参与行内格式化上下文（inline formatting context），被渲染为水平排列, 直到当行被占满然后换行。</p>
+<p>行内级盒分为行内盒（inline boxes）和原子行内级盒(atomic inline-level boxes)。前者由非置换元素且 display 值为 inline 的元素生成；后者由行内级置换元素，或 display 值为 inline-block, inline-table, inline-flex, inline-grid 的元素生成。</p>
+<p>其布局规则如下：</p>
+<p>​        1、盒子一个接一个地水平摆放，当容器宽度不够时就会换行</p>
+<p>​        2、在水平方向上，这些盒的外边距、边框、内边距所占用的空间都会被计算，但行内盒的垂直的border，padding 与 margin 都不会撑开行盒的高度</p>
+<p>​        3、在垂直方向上，这些盒可能会以不同形式来对齐，可通过 vertical-align 来设置，默认对齐为 baseline</p>
+<p>​        4、每一行将生成一个行盒（line box），包括该行所有的盒子，行盒的宽度是由包含块和存在的浮动来决定</p>
+<p>​        5、行盒一般左右边都贴紧其包含块，但是会因为浮动盒（float 元素）的存在而发生变化。浮动盒会位于包含块边缘与行盒边缘之间，这样行盒的可用宽度就小于包含块的宽度</p>
+<p>​        6、当所有盒的总宽度小于行盒的宽度，那么行盒中的水平方向排版由 text-align 属性来决定</p>
+<p>​        7、当所有盒的总宽度超过一个行盒时，就会形成多个行盒，多个行盒相互之间垂直方向不能分离，不能重叠</p>
+<p>​        8、当一个行内盒超过行盒的宽度时，它会被分割成多个盒，这些盒被分布在多个行盒里。如果一个行内盒不能被分割（比如只包含单个字符，或word-breaking机制被禁用，或该行内框受white-space属性值为nowrap或pre的影响），那么这个行内盒将溢出这个行盒</p>
+<p>​        9、当一个行内盒发生分割时，分割处的 margins, borders 和 padding 不会有任何视觉效果（或者其他任何分裂，只要是有多个行盒）</p>
+<p>​        10、行盒的高度由内部元素中实际高度最高的元素计算出来。每个行盒的高度由于内容不一样，所以高度也可能不一样</p>
+<p>​        11、在一个行盒中，当他包含的内部容器的高度小于行盒的高度的时候，内部容器的垂直位置可由自己的 vertical-align 属性来确定</p>
+<p>​        12、在 IFC 的环境中，是不能存在块级元素的，如果将块级元素插入到 IFC 中，那么此 IFC 将会被破坏掉变成 BFC，而块级元素前的元素或文本和块级元素后的元素或文本将会各自自动产生一个匿名块盒其包围。</p>
+<p>作用：</p>
+<p>​        1、水平居中：当一个块要在环境中水平居中时，设置其为inline-box则会在外层产生IFC，通过text-align则可以使他水平居中。</p>
+<p>​        2、垂直居中：创建一个IFC，用其中一个元素撑开父元素的高度，然后设置其vertical-align:middle，其他行内元素可以在此父元素下垂直居中。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">CSS</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/10/CSS%E5%9F%BA%E7%A1%80/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-HTML基础" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -3435,180 +4154,6 @@
 
 
   
-    <article id="post-JavaSE-22-Lambda与方法引用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/08/JavaSE-22-Lambda%E4%B8%8E%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/">JavaSE-22-Lambda与方法引用</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/08/JavaSE-22-Lambda%E4%B8%8E%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:25:50.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-Lambda表达式"><a href="#1-Lambda表达式" class="headerlink" title="1.Lambda表达式"></a>1.Lambda表达式</h2><h3 id="1-1-Lambda表达式的标准格式"><a href="#1-1-Lambda表达式的标准格式" class="headerlink" title="1.1 Lambda表达式的标准格式"></a>1.1 Lambda表达式的标准格式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 (形式参数) -&gt; &#123;代码块&#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　<strong>形式参数</strong>：如果有多个参数，参数之间用逗号隔开；如果没有参数，留空即可</p>
-<p>　　**-&gt;**：由英文中画线和大于符号组成，固定写法。代表指向动作</p>
-<p>　　<strong>代码块</strong>：是我们具体要做的事情，也就是以前我们写的方法体内容</p>
-<p>组成Lambda表达式的三要素：</p>
-<p>　　<strong>形式参数，箭头，代码块</strong></p>
-<h3 id="1-2-Lambda表达式的省略模式"><a href="#1-2-Lambda表达式的省略模式" class="headerlink" title="1.2 Lambda表达式的省略模式"></a>1.2 Lambda表达式的省略模式</h3><p><strong>省略的规则</strong></p>
-<p>　　参数类型可以省略。但是有多个参数的情况下，不能只省略一个</p>
-<p>　　如果参数有且仅有一个，那么小括号可以省略</p>
-<p>　　如果代码块的语句只有一条，可以省略大括号和分号，和return关键字</p>
-<h3 id="1-3-Lambda表达式的注意事项"><a href="#1-3-Lambda表达式的注意事项" class="headerlink" title="1.3 Lambda表达式的注意事项"></a>1.3 Lambda表达式的注意事项</h3><p>使用Lambda必须要有接口，并且要求接口中有且仅有一个抽象方法</p>
-<p>必须有上下文环境，才能推导出Lambda对应的接口</p>
-<p>　　根据局部变量的赋值得知Lambda对应的接口</p>
-<p>　　Runnable r = () -&gt; System.out.println(“Lambda表达式”);</p>
-<p>　　根据调用方法的参数得知Lambda对应的接口</p>
-<p>　　new Thread(() -&gt; System.out.println(“Lambda表达式”)).start();</p>
-<h3 id="1-4-Lambda表达式和匿名内部类的区别"><a href="#1-4-Lambda表达式和匿名内部类的区别" class="headerlink" title="1.4 Lambda表达式和匿名内部类的区别"></a>1.4 Lambda表达式和匿名内部类的区别</h3><p><strong>所需类型不同</strong></p>
-<p>　　匿名内部类：可以是接口，也可以是抽象类，还可以是具体类</p>
-<p>　　Lambda表达式：只能是接口</p>
-<p><strong>使用限制不同</strong></p>
-<p>　　如果接口中有且仅有一个抽象方法，可以使用Lambda表达式，也可以使用匿名内部类</p>
-<p>　　如果接口中多于一个抽象方法，只能使用匿名内部类，而不能使用Lambda表达式</p>
-<p><strong>实现原理不同</strong></p>
-<p>　　匿名内部类：编译之后，产生一个单独的.class字节码文件</p>
-<p>　　Lambda表达式：编译之后，没有一个单独的.class字节码文件。对应的字节码会在运行的时候动态生成</p>
-<h2 id="2-接口组成更新"><a href="#2-接口组成更新" class="headerlink" title="2.接口组成更新"></a>2.接口组成更新</h2><h3 id="2-1-接口组成更新概述"><a href="#2-1-接口组成更新概述" class="headerlink" title="2.1 接口组成更新概述"></a>2.1 接口组成更新概述</h3><p><strong>常量</strong></p>
-<p>　　public static final</p>
-<p><strong>抽象方法</strong></p>
-<p>　　public abstract</p>
-<p><strong>默认方法(Java 8)</strong></p>
-<p><strong>静态方法(Java 8)</strong></p>
-<p><strong>私有方法(Java 9)</strong></p>
-<h3 id="2-2-接口中默认方法"><a href="#2-2-接口中默认方法" class="headerlink" title="2.2 接口中默认方法"></a>2.2 接口中默认方法</h3><p><strong>格式</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 public default 返回值类型 方法名(参数列表) &#123; &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项</strong></p>
-<p>　　默认方法不是抽象方法，所以不强制被重写。但是可以被重写，重写的时候去掉default关键字</p>
-<p>　　public可以省略，default不能省略</p>
-<h3 id="2-3-接口中静态方法"><a href="#2-3-接口中静态方法" class="headerlink" title="2.3 接口中静态方法"></a>2.3 接口中静态方法</h3><p><strong>格式</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 public static 返回值类型 方法名(参数列表) &#123; &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项</strong></p>
-<p>　　静态方法只能通过接口名调用，不能通过实现类名或者对象名调用</p>
-<p>　　public可以省略，static不能省略</p>
-<p><strong>2.4 接口中私有方法</strong></p>
-<p><strong>私有方法产生原因</strong></p>
-<p>Java 9中新增了带方法体的私有方法，这其实在Java 8中就埋下了伏笔：Java 8允许在接口中定义带方法体的默认方法和静态方法。这样可能就会引发一个问题：当两个默认方法或者静态方法中包含一段相同的代码实现时，程序必然考虑将这段实现代码抽取成一个共性方法，而这个共性方法是不需要让别人使用的，因此用私有给隐藏起来，这就是Java 9增加私有方法的必然性.</p>
-<p><strong>格式1</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 private 返回值类型 方法名(参数列表) &#123; &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>格式2</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 private static 返回值类型 方法名(参数列表) &#123; &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项</strong></p>
-<p>　　默认方法可以调用私有的静态方法和非静态方法</p>
-<p>　　静态方法只能调用私有的静态方法</p>
-<h2 id="3-方法引用"><a href="#3-方法引用" class="headerlink" title="3.方法引用"></a>3.方法引用</h2><h3 id="3-1-方法引用符"><a href="#3-1-方法引用符" class="headerlink" title="3.1 方法引用符"></a>3.1 方法引用符</h3><p><strong>方法引用符</strong></p>
-<p>　　:: 符号为引用运算符，而它所在的表达式被称为方法引用</p>
-<p><strong>推导与省略</strong></p>
-<p>　　如果使用Lambda，那么根据“可推导就是可省略”的原则，无需指定参数类型，也无需指定的重载形式， 它们都将被自动推导</p>
-<p>　　如果使用方法引用，也是同样可以根据上下文进行推导</p>
-<p>　　方法引用是Lambda的孪生兄弟</p>
-<h3 id="3-2-引用类方法"><a href="#3-2-引用类方法" class="headerlink" title="3.2 引用类方法"></a>3.2 引用类方法</h3><p>引用类方法，其实就是引用类的静态方法</p>
-<p><strong>格式</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 类名::静态方法</span><br></pre></td></tr></table></figure>
-
-<p><strong>接口</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Convert</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">int</span> <span class="title">convert</span><span class="params">(String s)</span></span>;</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConvertDemo</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"><span class="number">3</span>         useConvert(Integer::parseInt);</span><br><span class="line"><span class="number">4</span>     &#125;</span><br><span class="line"><span class="number">5</span> </span><br><span class="line"><span class="number">6</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">useConvert</span><span class="params">(Convert c)</span> </span>&#123;</span><br><span class="line"><span class="number">7</span>         System.out.println(c.convert(<span class="string">&quot;100&quot;</span>));</span><br><span class="line"><span class="number">8</span>     &#125;</span><br><span class="line"><span class="number">9</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-3-引用对象的实例方法"><a href="#3-3-引用对象的实例方法" class="headerlink" title="3.3 引用对象的实例方法"></a>3.3 引用对象的实例方法</h3><p>引用对象的实例方法，其实就引用类中的成员方法</p>
-<p><strong>格式</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 对象::成员方法</span><br></pre></td></tr></table></figure>
-
-<p><strong>接口</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Printer</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">void</span> <span class="title">print</span><span class="params">(String s)</span></span>;</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Uppdemo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">toUpper</span><span class="params">(String s)</span></span>&#123;</span><br><span class="line"> <span class="number">3</span>         System.out.println(s.toUpperCase());</span><br><span class="line"> <span class="number">4</span>     &#125;</span><br><span class="line"> <span class="number">5</span> &#125;</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span> <span class="class"><span class="keyword">class</span> <span class="title">Upper</span></span>&#123;</span><br><span class="line"> <span class="number">8</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">9</span>         Uppdemo ud = <span class="keyword">new</span> Uppdemo();</span><br><span class="line"><span class="number">10</span> </span><br><span class="line"><span class="number">11</span>         usePrint(ud::toUpper);</span><br><span class="line"><span class="number">12</span> </span><br><span class="line"><span class="number">13</span>     &#125;</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">usePrint</span><span class="params">(Printer p)</span> </span>&#123;</span><br><span class="line"><span class="number">16</span>         p.print(<span class="string">&quot;hello world&quot;</span>);</span><br><span class="line"><span class="number">17</span>     &#125;</span><br><span class="line"><span class="number">18</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>使用说明</strong></p>
-<p>　　Lambda表达式被对象的实例方法替代的时候，它的形式参数全部传递给该方法作为参数</p>
-<h3 id="3-4-引用类的实例方法"><a href="#3-4-引用类的实例方法" class="headerlink" title="3.4 引用类的实例方法"></a>3.4 引用类的实例方法</h3><p>引用类的实例方法，其实就是引用类中的成员方法</p>
-<p><strong>格式</strong></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 类名::成员方法</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyStr</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function">String <span class="title">mySub</span><span class="params">(String s,<span class="keyword">int</span> x,<span class="keyword">int</span> y)</span></span>;</span><br><span class="line"> <span class="number">3</span> &#125;</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span> <span class="class"><span class="keyword">class</span> <span class="title">MyStrDemo</span></span>&#123;</span><br><span class="line"> <span class="number">6</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">7</span>         useMyStr(String::substring);</span><br><span class="line"> <span class="number">8</span>     &#125;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">useMyStr</span><span class="params">(MyStr ms)</span> </span>&#123;</span><br><span class="line"><span class="number">11</span>         System.out.println(ms.mySub(<span class="string">&quot;hello world&quot;</span>,<span class="number">2</span>,<span class="number">5</span>));</span><br><span class="line"><span class="number">12</span>     &#125;</span><br><span class="line"><span class="number">13</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用说明</p>
-<p>　　Lambda表达式被类的实例方法替代的时候 第一个参数作为调用者 后面的参数全部传递给该方法作为参数</p>
-<p><strong>3.5 引用构造器</strong></p>
-<p>引用构造器，其实就是引用构造方法</p>
-<p><strong>格式</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 类名::<span class="keyword">new</span></span><br></pre></td></tr></table></figure>
-
-<p><strong>使用说明</strong></p>
-<p>　　Lambda表达式被构造器替代的时候，它的形式参数全部传递给构造器作为参数</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/08/JavaSE-22-Lambda%E4%B8%8E%E6%96%B9%E6%B3%95%E5%BC%95%E7%94%A8/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -3702,15 +4247,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PgSQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">

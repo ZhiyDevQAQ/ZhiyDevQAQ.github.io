@@ -165,6 +165,115 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-2020-11-02-psql常用命令" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">psql常用命令</a>
+    </h1>
+  
+
+        
+        <a href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/" class="archive-article-date">
+  	<time datetime="2020-11-01T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-11-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="psql介绍"><a href="#psql介绍" class="headerlink" title="psql介绍"></a>psql介绍</h2><p><code>psql</code> 是 <code>PgSQL</code> 中的一个命令行交互式客户端工具，允许我们键入SQL或命令，然后把他们发出给 PgSQL服务器，再显示SQL或命令的结果。</p>
+<h2 id="psql的常用命令"><a href="#psql的常用命令" class="headerlink" title="psql的常用命令"></a>psql的常用命令</h2><ul>
+<li><p><code>\l</code> 列出所有数据库</p>
+</li>
+<li><p><code>\c dbname</code> 连接指定数据库</p>
+</li>
+<li><p><code>\timing on</code>: 显示SQL执行时间</p>
+</li>
+<li><p><code>\d</code> <code>\dt</code>: 列出当前数据库中的所有表</p>
+</li>
+<li><p><code>\d &lt;tableName&gt;</code>: 显示这个表的结构定义, tebleName还可以换成索引、序列、视图、函数这些对象类型</p>
+</li>
+<li><p><code>\d+</code>: 显示比<code>\d</code> 更详细的信息</p>
+</li>
+<li><p><code>\dn</code>: 列出所有的schema</p>
+</li>
+<li><p><code>\db</code>: 显示所有表空间</p>
+<p>  tips: PgSQL的表空间就是对应一个目录，放在这个表空间的表，就是把表的数据文件放到这个表空间目录下</p>
+</li>
+<li><p><code>\du</code> <code>\dg</code>:  显示数据库中所有角色或用户</p>
+</li>
+<li><p><code>\dp</code> <code>\z</code>: 显示表的权限分配情况</p>
+</li>
+<li><p><code>\x</code>: 把表中每一行的每列数据都拆分为单行显示</p>
+</li>
+<li><p><code>\i &lt;文件名&gt;</code> 执行存储在外部文件中的sql语句或命令。</p>
+</li>
+<li><p><code>\echo &lt;content&gt;</code>: 用于输出一行信息，常用于.sql脚本文件中输出一些提示信息</p>
+</li>
+<li><p><code>\?</code> 更多命令</p>
+</li>
+</ul>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">SQL</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">PgSQL</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/11/02/2020-11-02-psql%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-2020-09-27-SQL的连接查询" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -612,15 +721,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PgSQL</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
