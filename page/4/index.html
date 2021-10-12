@@ -165,6 +165,126 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaSE-5-数组" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/07/JavaSE-5-%E6%95%B0%E7%BB%84/">JavaSE-5-数组</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/07/JavaSE-5-%E6%95%B0%E7%BB%84/" class="archive-article-date">
+  	<time datetime="2021-10-07T14:54:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-概念"><a href="#1-概念" class="headerlink" title="1.概念"></a>1.概念</h2><p>同一种类型数据的集合。其实数组就是一个容器。</p>
+<h2 id="2-优点"><a href="#2-优点" class="headerlink" title="2.优点"></a>2.优点</h2><p>可以自动给数组中的元素从0开始编号，方便操作这些元素。</p>
+<h2 id="3-格式"><a href="#3-格式" class="headerlink" title="3.格式"></a>3.格式</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 元素类型[] 数组名 = <span class="keyword">new</span> 元素类型[元素个数或数组长度];</span><br></pre></td></tr></table></figure>
+
+<p>或者</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 元素类型[] 数组名 = <span class="keyword">new</span> 元素类型[]&#123;元素，元素，……&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="4-数组遍历"><a href="#4-数组遍历" class="headerlink" title="4.数组遍历"></a>4.数组遍历</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> x[] = &#123;<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>&#125;;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>;i &lt; x.length;i++)&#123;</span><br><span class="line"><span class="number">4</span> 　　System.out.println(x[i]);</span><br><span class="line"><span class="number">5</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="5-常见异常"><a href="#5-常见异常" class="headerlink" title="5.常见异常"></a>5.常见异常</h2><ol>
+<li>NullPointerException 空指针异常<br>原因： 引用类型变量没有指向任何对象，而访问了对象的属性或者是调用了对象的方法。</li>
+</ol>
+<ol start="2">
+<li>ArrayIndexOutOfBoundsException 索引值越界。<br>原因：访问了不存在的索引值。</li>
+</ol>
+<h2 id="6-二维数组"><a href="#6-二维数组" class="headerlink" title="6.二维数组"></a>6.二维数组</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 元素类型[][] 数组名 = <span class="keyword">new</span> 元素类型[一维数组的个数][每一个一维数组中元素的个数];</span><br></pre></td></tr></table></figure>
+
+<h2 id="7-Arrays类"><a href="#7-Arrays类" class="headerlink" title="7.Arrays类"></a>7.Arrays类</h2><p>java.util.Arrays 类能方便地操作数组，它提供的所有方法都是静态的。</p>
+<table>
+<thead>
+<tr>
+<th><strong>方法</strong></th>
+<th><strong>作用</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>public static int binarySearch(Object[] a, Object key)</strong></td>
+<td>查找数组元素</td>
+<td>用二分查找算法在给定数组中搜索给定值的对象(Byte,Int,double等)。数组在调用前必须排序好的。如果查找值包含在数组中，则返回搜索键的索引；否则返回 (-(<em>插入点</em>) - 1)。</td>
+</tr>
+<tr>
+<td><strong>public static boolean equals(long[] a, long[] a2)</strong></td>
+<td>比较数组</td>
+<td>如果两个指定的 long 型数组彼此<em>相等</em>，则返回 true。如果两个数组包含相同数量的元素，并且两个数组中的所有相应元素对都是相等的，则认为这两个数组是相等的。换句话说，如果两个数组以相同顺序包含相同的元素，则两个数组是相等的。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。</td>
+</tr>
+<tr>
+<td><strong>public static void fill(int[] a, int val)</strong></td>
+<td>给数组赋值</td>
+<td>将指定的 int 值分配给指定 int 型数组指定范围中的每个元素。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。</td>
+</tr>
+<tr>
+<td><strong>public static void sort(Object[] a)</strong></td>
+<td>对数组排序</td>
+<td>对指定对象数组根据其元素的自然顺序进行升序排列。同样的方法适用于所有的其他基本数据类型（Byte，short，Int等）。</td>
+</tr>
+</tbody></table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/07/JavaSE-5-%E6%95%B0%E7%BB%84/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JavaSE-4-Switch和循环语句" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1429,88 +1549,6 @@
 
 
   
-    <article id="post-2021-03-01-迅雷解析思路" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/">迅雷链接解析为真实链接</a>
-    </h1>
-  
-
-        
-        <a href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/" class="archive-article-date">
-  	<time datetime="2021-02-28T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>最近因为“先审后播”的风声，觉得国内又进入资源大航海时代了，于是想借课下休息的时候写个综合下载工具，第一个练手的模块自然是令我不爽的迅雷哈哈哈</p>
-<p>首先观察迅雷下载链接，本来我还以为要用到十分复杂的工具和繁琐的步骤来研究它的链接，结果我看到。。。。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==</span><br></pre></td></tr></table></figure>
-
-<p>这俩等号真眼熟，莫不是base64???<br>抱着试一试的想法，我去转换了一下，结果得到</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">AAhttp://dl14.x570.com/3DMGAME_NEKOPARA_Vol.0.CHT.Green.rarZZ</span><br></pre></td></tr></table></figure>
-<p>真有你的啊迅雷。。。。。<br>于是就是人民群众喜闻乐见的掐头去尾，蛋白质含量是牛肉的三倍。。。。。。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">#!/usr/bin/env python</span><br><span class="line"># coding:utf-8</span><br><span class="line"># @Author:ZhiyDevQAQ</span><br><span class="line"># @Name:ThunderDecode.py</span><br><span class="line"># @Date:2021/4/9 9:03</span><br><span class="line">import binascii</span><br><span class="line">import re</span><br><span class="line">import base64</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">class thunderdecode(object):</span><br><span class="line"></span><br><span class="line">    def __init__(self) -&gt; None:</span><br><span class="line">        self.THUNDER_HEADER = &#x27;thunder://&#x27;</span><br><span class="line">        self.THUNDER_PREFIX = &#x27;AA&#x27;</span><br><span class="line">        self.THUNDER_SUFFIX = &#x27;ZZ&#x27;</span><br><span class="line"></span><br><span class="line">    def __str__(self) -&gt; str:</span><br><span class="line">        msg = &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">        本类用于实现迅雷链接的解析，首先你要实例化对象，然后定义一个变量接收调用thunder2reallink方法传回的解析结果</span><br><span class="line">        例如:</span><br><span class="line">            th = thunderdecode()</span><br><span class="line">            result = th.thunder2reallink(&#x27;thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==&#x27;)</span><br><span class="line">            print(result)</span><br><span class="line"></span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        return msg</span><br><span class="line"></span><br><span class="line">    def check_url(func):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        本装饰器用于实现对迅雷链接的检查</span><br><span class="line">        :return wapper的内存地址:</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line"></span><br><span class="line">        def wapper(self, url):</span><br><span class="line">            #  匹配模式:http | https | ftp | ed2k | thunder</span><br><span class="line">            if re.search(r&#x27;^[thunder://]&#x27;, url):</span><br><span class="line">                return func(self, url)</span><br><span class="line">            else:</span><br><span class="line">                return &#x27;灵能信号有误，请检查&#x27;</span><br><span class="line"></span><br><span class="line">        return wapper</span><br><span class="line"></span><br><span class="line">    @check_url</span><br><span class="line">    def thunder2reallink(self, url):</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        本方法实现对迅雷链接的解析</span><br><span class="line">        :param url: 迅雷链接</span><br><span class="line">        :return url:经过解析的真实链接</span><br><span class="line">        &#x27;&#x27;&#x27;</span><br><span class="line">        url = url[len(self.THUNDER_HEADER):]</span><br><span class="line">        url = url.encode(&#x27;utf-8&#x27;)</span><br><span class="line">        try:</span><br><span class="line">            url = base64.b64decode(url)</span><br><span class="line">        except binascii.Error as e:</span><br><span class="line">            print(&#x27;灵能信号有误，具体信息如下:%s&#x27; % e)</span><br><span class="line">        url = url.decode(&#x27;utf-8&#x27;)</span><br><span class="line">        url = url[len(self.THUNDER_PREFIX):-len(self.THUNDER_SUFFIX)]</span><br><span class="line">        return url</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">if __name__ == &#x27;__main__&#x27;:</span><br><span class="line">    th = thunderdecode()</span><br><span class="line">    print(th)</span><br><span class="line">    tk = th.thunder2reallink(&#x27;thunder://QUFodHRwOi8vZGwxNC54NTcwLmNvbS8zRE1HQU1FX05FS09QQVJBX1ZvbC4wLkNIVC5HcmVlbi5yYXJaWg==&#x27;)</span><br><span class="line">    print(tk)</span><br></pre></td></tr></table></figure>
-<p>无伤通关。。。。。。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/01/2021-03-01-%E8%BF%85%E9%9B%B7%E8%A7%A3%E6%9E%90%E6%80%9D%E8%B7%AF/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/3/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="page-number current">4</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/5/">Next &amp;raquo;</a>
@@ -1625,6 +1663,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">HTML5</a>
               </li>
              
               <li class="article-tag-list-item">

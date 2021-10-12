@@ -6,19 +6,17 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://example.com">
-  <title>JavaSE-13-包装类和异常处理 | 无殇阁</title>
+  <title>Tag: HTML5 | 无殇阁</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1.包装类1.1 基本类型包装类基本类型包装类的作用 　　将基本数据类型封装成对象的好处在于可以在对象中定义更多的功能方法操作该数据 　　常用的操作之一：用于基本数据类型与字符串之间的转换    基本类型 包装类    byte Byte   short Short   int Integer   long Long   float Float   double Double   char Cha">
-<meta property="og:type" content="article">
-<meta property="og:title" content="JavaSE-13-包装类和异常处理">
-<meta property="og:url" content="http://example.com/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/index.html">
+  <meta name="description" content="山东现代学院2017级，自由开发者。不擅长Java和各项前端技能，从没深入研究移动端开发与前端性能。此为树洞一个。">
+<meta property="og:type" content="website">
+<meta property="og:title" content="无殇阁">
+<meta property="og:url" content="http://example.com/tags/HTML5/index.html">
 <meta property="og:site_name" content="无殇阁">
-<meta property="og:description" content="1.包装类1.1 基本类型包装类基本类型包装类的作用 　　将基本数据类型封装成对象的好处在于可以在对象中定义更多的功能方法操作该数据 　　常用的操作之一：用于基本数据类型与字符串之间的转换    基本类型 包装类    byte Byte   short Short   int Integer   long Long   float Float   double Double   char Cha">
+<meta property="og:description" content="山东现代学院2017级，自由开发者。不擅长Java和各项前端技能，从没深入研究移动端开发与前端性能。此为树洞一个。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2021-10-07T15:12:19.000Z">
-<meta property="article:modified_time" content="2021-10-07T15:12:59.797Z">
 <meta property="article:author" content="zh1y">
-<meta property="article:tag" content="JavaSE">
+<meta property="article:tag" content="Java,前端,js,jquery,javascript,html5,开发者,程序猿,程序媛,极客,编程,代码,开源,IT网站,Developer,Programmer,Coder,Geek,html,css,css3,用户体验">
 <meta name="twitter:card" content="summary">
   
     <link rel="alternative" href="/atom.xml" title="无殇阁" type="application/atom+xml">
@@ -165,412 +163,60 @@
             <canvas data-colors="#eaeaea" data-sectionHeight="100" data-contentId="js-content" id="myCanvas1" class="anm-canvas"></canvas>
           </div>
           <div id="js-content" class="content-ll">
-            <article id="post-JavaSE-13-包装类和异常处理" class="article article-type-post " itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
+            
   
-    <h1 class="article-title" itemprop="name">
-      JavaSE-13-包装类和异常处理
+  
+    
+    
+      
+      
+      <section class="archives-wrap">
+        <div class="archive-year-wrap">
+          <a href="/archives/2021" class="archive-year">2021</a>
+        </div>
+        <div class="archives">
+    
+    <article class="archive-article archive-type-post">
+  <div class="archive-article-inner">
+    <header class="archive-article-header">
+      	<div class="article-meta">
+	      	<a href="/2021/10/12/HTML5%E5%9F%BA%E7%A1%80/" class="archive-article-date">
+  	<time datetime="2021-10-12T11:12:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-12</time>
+</a>
+        </div>
+    	 
+  
+    <h1 itemprop="name">
+      <a class="archive-article-title" href="/2021/10/12/HTML5%E5%9F%BA%E7%A1%80/">HTML5基础</a>
     </h1>
   
 
-        
-        <a href="/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="archive-article-date">
-  	<time datetime="2021-10-07T15:12:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-包装类"><a href="#1-包装类" class="headerlink" title="1.包装类"></a>1.包装类</h2><h3 id="1-1-基本类型包装类"><a href="#1-1-基本类型包装类" class="headerlink" title="1.1 基本类型包装类"></a>1.1 基本类型包装类</h3><p><strong>基本类型包装类的作用</strong></p>
-<p>　　将基本数据类型封装成对象的好处在于可以在对象中定义更多的功能方法操作该数据</p>
-<p>　　常用的操作之一：用于基本数据类型与字符串之间的转换</p>
-<table>
-<thead>
-<tr>
-<th><strong>基本类型</strong></th>
-<th><strong>包装类</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>Byte</td>
-</tr>
-<tr>
-<td>short</td>
-<td>Short</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Integer</td>
-</tr>
-<tr>
-<td>long</td>
-<td>Long</td>
-</tr>
-<tr>
-<td>float</td>
-<td>Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>char</td>
-<td>Character</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>Boolean</td>
-</tr>
-</tbody></table>
-<h3 id="1-2-Integer"><a href="#1-2-Integer" class="headerlink" title="1.2 Integer"></a>1.2 Integer</h3><p><strong>Integer类概述</strong></p>
-<p>　　包装一个对象中的原始类型 int 的值</p>
-<p><strong>构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public Integer(int value)</td>
-<td>根据 int 值创建 Integer 对象(过时)</td>
-</tr>
-<tr>
-<td>public Integer(String s)</td>
-<td>根据 String 值创建 Integer 对象(过时)</td>
-</tr>
-<tr>
-<td>public static Integer valueOf(int i)</td>
-<td>返回表示指定的 int 值的 Integer 实例</td>
-</tr>
-<tr>
-<td>public static Integer valueOf(String s)</td>
-<td>返回一个保存指定值的 Integer 对象 String</td>
-</tr>
-</tbody></table>
-<h3 id="1-3-int和String类型的相互转换"><a href="#1-3-int和String类型的相互转换" class="headerlink" title="1.3 int和String类型的相互转换"></a>1.3 int和String类型的相互转换</h3><p><strong>int转换为String 转换方式</strong></p>
-<p>　　方式一：直接在数字后加一个空字符串</p>
-<p>　　方式二：通过String类静态方法valueOf()</p>
-<p><strong>String转换为int</strong> </p>
-<p>　　方式一：先将字符串数字转成Integer，再调用valueOf()方法</p>
-<p>　　方式二：通过Integer静态方法parseInt()进行转换</p>
-<h3 id="1-4-自动拆箱和自动装箱"><a href="#1-4-自动拆箱和自动装箱" class="headerlink" title="1.4 自动拆箱和自动装箱"></a>1.4 自动拆箱和自动装箱</h3><p><strong>自动装箱</strong></p>
-<p>　　把基本数据类型转换为对应的包装类类型</p>
-<p><strong>自动拆箱</strong></p>
-<p>　　把包装类类型转换为对应的基本数据类型</p>
-<h2 id="2-时间日期类"><a href="#2-时间日期类" class="headerlink" title="2.时间日期类"></a>2.时间日期类</h2><h3 id="2-1-Date类"><a href="#2-1-Date类" class="headerlink" title="2.1 Date类"></a>2.1 Date类</h3><p><strong>Date类概述</strong></p>
-<p>　　Date 代表了一个特定的时间，精确到毫秒</p>
-<p><strong>Date类构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public Date()</td>
-<td>分配一个 Date对象，并初始化，以便它代表它被分配的时间，精确到毫秒</td>
-</tr>
-<tr>
-<td>public Date(long date)</td>
-<td>分配一个 Date对象，并将其初始化为表示从标准基准时间起指定的毫秒数</td>
-</tr>
-</tbody></table>
-<h3 id="2-2-Date类常用方法"><a href="#2-2-Date类常用方法" class="headerlink" title="2.2 Date类常用方法"></a>2.2 Date类常用方法</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public long getTime()</td>
-<td>获取的是日期对象从1970年1月1日 00:00:00到现在的毫秒值</td>
-</tr>
-<tr>
-<td>public void setTime(long time)</td>
-<td>设置时间，给的是毫秒值</td>
-</tr>
-</tbody></table>
-<h3 id="2-3-SimpleDateFormat类"><a href="#2-3-SimpleDateFormat类" class="headerlink" title="2.3 SimpleDateFormat类"></a>2.3 SimpleDateFormat类</h3><p><strong>SimpleDateFormat类概述</strong></p>
-<p>　　SimpleDateFormat是一个具体的类，用于以区域设置敏感的方式格式化和解析日期。</p>
-<p>　　我们重点学习日期格式化和解析</p>
-<p><strong>SimpleDateFormat类构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public SimpleDateFormat()</td>
-<td>构造一个SimpleDateFormat，使用默认模式和日期格式</td>
-</tr>
-<tr>
-<td>public SimpleDateFormat(String pattern)</td>
-<td>构造一个SimpleDateFormat使用给定的模式和默认的日期格式</td>
-</tr>
-</tbody></table>
-<p><strong>SimpleDateFormat类的常用方法</strong></p>
-<p>　　格式化(从Date到String)</p>
-<p>　　　　public final String format(Date date)：将日期格式化成日期/时间字符串</p>
-<p>　　解析(从String到Date)</p>
-<p>　　　　public Date parse(String source)：从给定字符串的开始解析文本以生成日期</p>
-<h3 id="2-5-Calendar类"><a href="#2-5-Calendar类" class="headerlink" title="2.5 Calendar类"></a>2.5 Calendar类</h3><p><strong>Calendar类概述</strong></p>
-<p>　　Calendar 为特定瞬间与一组日历字段之间的转换提供了一些方法，并为操作日历字段提供了一些方法</p>
-<p>　　Calendar 提供了一个类方法 getInstance 用于获取这种类型的一般有用的对象。 该方法返回一个Calendar 对象。</p>
-<p><strong>Calendar类常用方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public int get(int field)</td>
-<td>返回给定日历字段的值</td>
-</tr>
-<tr>
-<td>public abstract void add(int field, int amount)</td>
-<td>根据日历的规则，将指定的时间量添加或减去给定的日历字段</td>
-</tr>
-<tr>
-<td>public final void set(int year,int month,int date)</td>
-<td>设置当前日历的年月日</td>
-</tr>
-</tbody></table>
-<p><strong>二月天案例</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CalendarTest</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         <span class="comment">//键盘录入任意的年份</span></span><br><span class="line"> <span class="number">4</span>         Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line"> <span class="number">5</span>         System.out.println(<span class="string">&quot;请输入年：&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         <span class="keyword">int</span> year = sc.nextInt();</span><br><span class="line"> <span class="number">7</span>         <span class="comment">//设置日历对象的年、月、日</span></span><br><span class="line"> <span class="number">8</span>         Calendar c = Calendar.getInstance();</span><br><span class="line"> <span class="number">9</span>         c.set(year, <span class="number">2</span>, <span class="number">1</span>);</span><br><span class="line"><span class="number">10</span>         <span class="comment">//3月1日往前推一天，就是2月的最后一天</span></span><br><span class="line"><span class="number">11</span>         c.add(Calendar.DATE, -<span class="number">1</span>);</span><br><span class="line"><span class="number">12</span>         <span class="comment">//获取这一天输出即可</span></span><br><span class="line"><span class="number">13</span>         <span class="keyword">int</span> date = c.get(Calendar.DATE);</span><br><span class="line"><span class="number">14</span>         System.out.println(year + <span class="string">&quot;年的2月份有&quot;</span> + date + <span class="string">&quot;天&quot;</span>);</span><br><span class="line"><span class="number">15</span>     &#125;</span><br><span class="line"><span class="number">16</span> &#125;           </span><br></pre></td></tr></table></figure>
-
-<h2 id="3-异常"><a href="#3-异常" class="headerlink" title="3.异常"></a>3.异常</h2><h3 id="3-1-异常"><a href="#3-1-异常" class="headerlink" title="3.1 异常"></a>3.1 异常</h3><p><strong>异常的概述</strong></p>
-<p>　　异常就是程序出现了不正常的情况</p>
-<p><strong>异常的体系结构</strong></p>
-<p>Throwable</p>
-<p>　　Error:严重的错误，我们无法处理</p>
-<p>　　Exception：程序本身可以处理的错误</p>
-<p>　　　　RuntimeException：在编译期不做检查，等到发现错误时由我们回来修改程序</p>
-<p>　　　　非RuntimeException：编译期就必须处理，否则无法通过编译</p>
-<h3 id="3-2-JVM默认处理异常的方式"><a href="#3-2-JVM默认处理异常的方式" class="headerlink" title="3.2 JVM默认处理异常的方式"></a>3.2 JVM默认处理异常的方式</h3><p>如果程序出现了问题，我们没有做任何处理，最终JVM 会做默认的处理，处理方式有如下两个步骤：</p>
-<p>　　把异常的名称，错误原因及异常出现的位置等信息输出在了控制台</p>
-<p>　　程序停止执行</p>
-<h3 id="3-3-try-catch方式处理异常"><a href="#3-3-try-catch方式处理异常" class="headerlink" title="3.3 try-catch方式处理异常"></a>3.3 try-catch方式处理异常</h3><p><strong>定义格式</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">2</span> 　　可能出现异常的代码;</span><br><span class="line"><span class="number">3</span> &#125; <span class="keyword">catch</span>(异常类名 变量名) &#123;</span><br><span class="line"><span class="number">4</span> 　　异常的处理代码;</span><br><span class="line"><span class="number">5</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行流程</strong></p>
-<p>　　程序从 try 里面的代码开始执行</p>
-<p>　　出现异常，就会跳转到对应的 catch 里面去执行</p>
-<p>　　执行完毕之后，程序还可以继续往下执行</p>
-<h3 id="3-4-Throwable成员方法"><a href="#3-4-Throwable成员方法" class="headerlink" title="3.4 Throwable成员方法"></a>3.4 Throwable成员方法</h3><p><strong>常用方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public String getMessage()</td>
-<td>返回此 throwable 的详细消息字符串</td>
-</tr>
-<tr>
-<td>public String toString()</td>
-<td>返回此可抛出的简短描述</td>
-</tr>
-<tr>
-<td>public void printStackTrace()</td>
-<td>把异常的错误信息输出在控制台</td>
-</tr>
-</tbody></table>
-<h3 id="3-5-编译时异常和运行时异常的区别"><a href="#3-5-编译时异常和运行时异常的区别" class="headerlink" title="3.5 编译时异常和运行时异常的区别"></a>3.5 编译时异常和运行时异常的区别</h3><p><strong>编译时异常</strong></p>
-<p>　　都是Exception类及其子类</p>
-<p>　　必须显示处理，否则程序就会发生错误，无法通过编译</p>
-<p><strong>运行时异常</strong></p>
-<p>　　都是RuntimeException类及其子类</p>
-<p>　　无需显示处理，也可以和编译时异常一样处理</p>
-<h3 id="3-6-throws方式处理异常"><a href="#3-6-throws方式处理异常" class="headerlink" title="3.6 throws方式处理异常"></a>3.6 throws方式处理异常</h3><p><strong>定义格式</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="keyword">void</span> 方法() <span class="keyword">throws</span> 异常类名 &#123;</span><br><span class="line"><span class="number">2</span>     ……</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项</strong></p>
-<p>　　这个throws格式是跟在方法的括号后面的</p>
-<p>　　编译时异常必须要进行处理，两种处理方案：try…catch …或者 throws，如果采用 throws 这种方案， 将来谁调用谁处理</p>
-<p>　　运行时异常可以不处理，出现问题后，需要我们回来修改代码</p>
-<h3 id="3-7-throws和throw的区别"><a href="#3-7-throws和throw的区别" class="headerlink" title="3.7 throws和throw的区别"></a>3.7 throws和throw的区别</h3><p><strong>Throws</strong></p>
-<p>　　用在方法声明的后面，跟着的是异常类名</p>
-<p>　　表示抛出异常，由该方法的调用者来处理</p>
-<p>　　表示出现异常的一种可能，并不一定会出现这个异常</p>
-<p><strong>Throw</strong></p>
-<p>　　用在方法体内，跟着的是异常类名</p>
-<p>　　表示抛出异常，由方法体内语句处理</p>
-<p>　　执行throw一定抛出了某种异常</p>
-<h3 id="3-8-自定义异常"><a href="#3-8-自定义异常" class="headerlink" title="3.8 自定义异常"></a>3.8 自定义异常</h3><p><strong>自定义异常类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">iNumberLargeException</span> <span class="keyword">extends</span> <span class="title">Exception</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="title">iNumberLargeException</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"><span class="number">3</span> </span><br><span class="line"><span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="title">iNumberLargeException</span><span class="params">(String message)</span></span>&#123;</span><br><span class="line"><span class="number">5</span>         <span class="keyword">super</span>(message);</span><br><span class="line"><span class="number">6</span>     &#125;</span><br><span class="line"><span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>检测类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Check</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> sorce)</span> <span class="keyword">throws</span> iNumberLargeException </span>&#123;</span><br><span class="line"><span class="number">3</span>         <span class="keyword">if</span> (sorce &lt; <span class="number">0</span> || sorce &gt; <span class="number">100</span>) &#123;</span><br><span class="line"><span class="number">4</span>             <span class="keyword">throw</span> <span class="keyword">new</span> iNumberLargeException(<span class="string">&quot;分数异常！&quot;</span>);</span><br><span class="line"><span class="number">5</span>         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="number">6</span>             System.out.println(<span class="string">&quot;正常&quot;</span>);</span><br><span class="line"><span class="number">7</span>         &#125;</span><br><span class="line"><span class="number">8</span>     &#125;</span><br><span class="line"><span class="number">9</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">iExceptionDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">int</span> sorce = sc.nextInt();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Check.check(sorce);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (iNumberLargeException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-        <div class="page-reward">
-          <a href="javascript:;" class="page-reward-btn tooltip-top">
-            <div class="tooltip tooltip-east">
-            <span class="tooltip-item">
-              赏
-            </span>
-            <span class="tooltip-content">
-              <span class="tooltip-text">
-                <span class="tooltip-inner">
-                  <p class="reward-p"><i class="icon icon-quo-left"></i>谢谢你请我吃糖果<i class="icon icon-quo-right"></i></p>
-                  <div class="reward-box">
-                    
-                    
-                  </div>
-                </span>
-              </span>
-            </span>
-          </div>
-          </a>
-        </div>
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
+        <div class="article-info info-on-right">
+          
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">HTML5</a>
         		</li>
       		
 		</ul>
 	</div>
 
-      
+          
 
-      
-
-      
-        
-<div class="share-btn share-icons tooltip-left">
-  <div class="tooltip tooltip-east">
-    <span class="tooltip-item">
-      <a href="javascript:;" class="share-sns share-outer">
-        <i class="icon icon-share"></i>
-      </a>
-    </span>
-    <span class="tooltip-content">
-      <div class="share-wrap">
-        <div class="share-icons">
-          <a class="weibo share-sns" href="javascript:;" data-type="weibo">
-            <i class="icon icon-weibo"></i>
-          </a>
-          <a class="weixin share-sns wxFab" href="javascript:;" data-type="weixin">
-            <i class="icon icon-weixin"></i>
-          </a>
-          <a class="qq share-sns" href="javascript:;" data-type="qq">
-            <i class="icon icon-qq"></i>
-          </a>
-          <a class="douban share-sns" href="javascript:;" data-type="douban">
-            <i class="icon icon-douban"></i>
-          </a>
-          <a class="qzone share-sns" href="javascript:;" data-type="qzone">
-            <i class="icon icon-qzone"></i>
-          </a>
-          <a class="facebook share-sns" href="javascript:;" data-type="facebook">
-            <i class="icon icon-facebook"></i>
-          </a>
-          <a class="twitter share-sns" href="javascript:;" data-type="twitter">
-            <i class="icon icon-twitter"></i>
-          </a>
-          <a class="google share-sns" href="javascript:;" data-type="google">
-            <i class="icon icon-google"></i>
-          </a>
         </div>
-      </div>
-    </span>
-  </div>
-</div>
-
-<div class="page-modal wx-share js-wx-box">
-    <a class="close js-modal-close" href="javascript:;"><i class="icon icon-close"></i></a>
-    <p>扫一扫，分享到微信</p>
-    <div class="wx-qrcode">
-      <img src="//pan.baidu.com/share/qrcode?url=http://example.com/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" alt="微信分享二维码">
-    </div>
-</div>
-
-<div class="mask js-mask"></div>
-      
-      <div class="clearfix"></div>
-    </div>
+        <div class="clearfix"></div>
+    </header>
   </div>
 </article>
-
-  
-<nav id="article-nav">
-  
-    <a href="/2021/10/07/JavaSE-14-%E9%9B%86%E5%90%88%EF%BC%88%E5%A3%B9%EF%BC%89/" id="article-nav-newer" class="article-nav-link-wrap">
-      <i class="icon-circle-left"></i>
-      <div class="article-nav-title">
-        
-          JavaSE-14-集合（壹）
-        
-      </div>
-    </a>
   
   
-    <a href="/2021/10/07/JavaSE-12-%E5%86%85%E9%83%A8%E7%B1%BB%E5%92%8C%E5%B8%B8%E7%94%A8API/" id="article-nav-older" class="article-nav-link-wrap">
-      <div class="article-nav-title">JavaSE-12-内部类和常用API</div>
-      <i class="icon-circle-right"></i>
-    </a>
-  
-</nav>
-
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-  
+    </div></section>
   
 
-  
-
-  
-
-  
+    
 
 
           </div>
@@ -593,9 +239,9 @@
 	var yiliaConfig = {
 		mathjax: false,
 		isHome: false,
-		isPost: true,
+		isPost: false,
 		isArchive: false,
-		isTag: false,
+		isTag: true,
 		isCategory: false,
 		open_in_new: false,
 		toc_hide_index: true,

@@ -35,7 +35,10 @@
 
   
 
-<meta name="generator" content="Hexo 5.4.0"></head>
+<meta name="generator" content="Hexo 5.4.0"><link rel="stylesheet" href="\assets\css\APlayer.min.css" class="aplayer-style-marker">
+<script src="\assets\js\APlayer.min.js" class="aplayer-script-marker"></script>
+<script src="\assets\js\Meting.min.js" class="meting-script-marker"></script>
+</head>
 
 <body>
   <div id="container" q-class="show:isCtnShow">
@@ -164,6 +167,338 @@
           </div>
           <div id="js-content" class="content-ll">
             
+  
+    <article id="post-HTML5基础" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/12/HTML5%E5%9F%BA%E7%A1%80/">HTML5基础</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/12/HTML5%E5%9F%BA%E7%A1%80/" class="archive-article-date">
+  	<time datetime="2021-10-12T11:12:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-12</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        
+    <div id="aplayer-ksrvSTOj" class="aplayer aplayer-tag-marker meting-tag-marker"
+         data-id="520459688" data-server="netease" data-type="song" data-mode="circulation" data-autoplay="false" data-mutex="true" data-listmaxheight="340px" data-preload="auto" data-theme="#555"
+    ></div>
+
+<h2 id="1、HTML5语法"><a href="#1、HTML5语法" class="headerlink" title="1、HTML5语法"></a>1、HTML5语法</h2><p>1）正确使用DTD</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：H5的DTD不包含数字5，采用标准模式解析。对于不认识的标签或属性，浏览器按默认方式处理，不报错；对于认识的标签会直接渲染。</p>
+<p>2）简化的字符集定义</p>
+<p>HTML：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">http-equiv</span>=<span class="string">&quot;Content-Type&quot;</span> <span class="attr">content</span>=<span class="string">&quot;text/html;  charset=utf-8&quot;</span> /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>HTML5:</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;utf-8&quot;</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>3）单标签可以不写封闭符号。</p>
+<p>4）双标签可以不关闭<strong>，但是坚决不允许这样做。</strong></p>
+<p>5）标签的type属性可以不书写。</p>
+<p>6）标签的属性值可以不使用双引号包裹<strong>，但是坚决不允许这样做。</strong></p>
+<p>7）标签可以使用大写字母<strong>，但是坚决不允许这样做。</strong></p>
+<h2 id="2、H5新增语义化标签"><a href="#2、H5新增语义化标签" class="headerlink" title="2、H5新增语义化标签"></a>2、H5新增语义化标签</h2><p>​        在H4中我们使用的一般是div+CSS布局，但是div负责的内容太多太杂，没有语义。为了使目的更明确，出现了新的语义化标签，实际上就是将div拆分成语义明确的这些部分。这些标签都是容器级标签，都是块级元素，可以相互嵌套包含。</p>
+<table>
+<thead>
+<tr>
+<th align="center">标签</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">&lt;article&gt;</td>
+<td align="center">定义文章。</td>
+</tr>
+<tr>
+<td align="center">&lt;aside&gt;</td>
+<td align="center">定义页面内容以外的内容。</td>
+</tr>
+<tr>
+<td align="center">&lt;details&gt;</td>
+<td align="center">定义用户能够查看或隐藏的额外细节。</td>
+</tr>
+<tr>
+<td align="center">&lt;summary&gt;</td>
+<td align="center">定义 &lt;details&gt; 元素的可见标题。</td>
+</tr>
+<tr>
+<td align="center">&lt;figure&gt;</td>
+<td align="center">规定自包含内容，比如图示、图表、照片、代码清单等。</td>
+</tr>
+<tr>
+<td align="center">&lt;figcaption&gt;</td>
+<td align="center">定义 &lt;figure&gt; 元素的标题。</td>
+</tr>
+<tr>
+<td align="center">&lt;header&gt;</td>
+<td align="center">规定文档或节的页眉。</td>
+</tr>
+<tr>
+<td align="center">&lt;footer&gt;</td>
+<td align="center">定义文档或节的页脚。</td>
+</tr>
+<tr>
+<td align="center">&lt;main&gt;</td>
+<td align="center">规定文档的主内容。</td>
+</tr>
+<tr>
+<td align="center">&lt;mark&gt;</td>
+<td align="center">定义重要的或强调的文本。</td>
+</tr>
+<tr>
+<td align="center">&lt;nav&gt;</td>
+<td align="center">定义导航链接。</td>
+</tr>
+<tr>
+<td align="center">&lt;section&gt;</td>
+<td align="center">定义文档中的节。</td>
+</tr>
+<tr>
+<td align="center">&lt;time&gt;</td>
+<td align="center">定义日期/时间。</td>
+</tr>
+</tbody></table>
+<h2 id="3、H5表单扩展"><a href="#3、H5表单扩展" class="headerlink" title="3、H5表单扩展"></a>3、H5表单扩展</h2><p>1）form可以不包裹表单元素，需要通过id定义名称，表单控件通过form属性绑定表单id。</p>
+<p>2）label标签可以不使用for进行绑定，直接包裹相应单选或者多选也行。</p>
+<p>3）placeholder属性定义输入框的提示文案。</p>
+<p>4）autofocus属性可以自动获取焦点。</p>
+<p>5）required属性可以定义必填项。</p>
+<p>6）智能感应：使用datalist标签定义可能的option，然后表单元素利用list属性进行绑定。</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">id</span>=<span class="string">&quot;myCar&quot;</span> <span class="attr">list</span>=<span class="string">&quot;cars&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">datalist</span> <span class="attr">id</span>=<span class="string">&quot;cars&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;BMW&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;Ford&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">option</span> <span class="attr">value</span>=<span class="string">&quot;Volvo&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">datalist</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>注意：H5的表单不只是语义化，在提交时还会进行正则验证。</p>
+<h2 id="4、H5输入框"><a href="#4、H5输入框" class="headerlink" title="4、H5输入框"></a>4、H5输入框</h2><h3 id="1）类型"><a href="#1）类型" class="headerlink" title="1）类型"></a>1）类型</h3><p>search：搜索框</p>
+<p>tel：电话</p>
+<p>url：统一资源定位符</p>
+<p>number：数字</p>
+<p>email：电子邮箱</p>
+<p>range：拖拽条</p>
+<p>date：日期</p>
+<p>week：周</p>
+<p>color：颜色</p>
+<h3 id="2）其他属性"><a href="#2）其他属性" class="headerlink" title="2）其他属性"></a>2）其他属性</h3><table>
+<thead>
+<tr>
+<th align="center">属性</th>
+<th align="center">作用</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">disabled</td>
+<td align="center">规定输入字段应该被禁用。</td>
+</tr>
+<tr>
+<td align="center">max</td>
+<td align="center">规定输入字段的最大值。</td>
+</tr>
+<tr>
+<td align="center">maxlength</td>
+<td align="center">规定输入字段的最大字符数。</td>
+</tr>
+<tr>
+<td align="center">min</td>
+<td align="center">规定输入字段的最小值。</td>
+</tr>
+<tr>
+<td align="center">pattern</td>
+<td align="center">规定通过其检查输入值的正则表达式。</td>
+</tr>
+<tr>
+<td align="center">readonly</td>
+<td align="center">规定输入字段为只读（无法修改）。</td>
+</tr>
+<tr>
+<td align="center">required</td>
+<td align="center">规定输入字段是必需的（必需填写）。</td>
+</tr>
+<tr>
+<td align="center">size</td>
+<td align="center">规定输入字段的宽度（以字符计）。</td>
+</tr>
+<tr>
+<td align="center">step</td>
+<td align="center">规定输入字段的合法数字间隔。</td>
+</tr>
+<tr>
+<td align="center">value</td>
+<td align="center">规定输入字段的默认值。</td>
+</tr>
+</tbody></table>
+<h2 id="5、H5多媒体"><a href="#5、H5多媒体" class="headerlink" title="5、H5多媒体"></a>5、H5多媒体</h2><h3 id="1）视频"><a href="#1）视频" class="headerlink" title="1）视频"></a>1）视频</h3><p>&lt;video&gt; 元素提供了 播放、暂停和音量控件来控制视频。</p>
+<p>同时 &lt;video&gt; 元素也提供了 width 和 height 属性控制视频的尺寸.如果设置的高度和宽度，所需的视频空间会在页面加载时保留。如果没有设置这些属性，浏览器不知道大小的视频，浏览器就不能再加载时保留特定的空间，页面就会根据原始视频的大小而改变。</p>
+<p>&lt;video&gt; 与&lt;/video&gt; 标签之间插入的内容是提供给不支持 video 元素的浏览器显示的。</p>
+<p>&lt;video&gt; 元素支持多个 &lt;source&gt; 元素. &lt;source&gt; 元素可以链接不同的视频文件。浏览器将使用第一个可识别的格式：MP4, WebM, 和 Ogg。</p>
+<p>&lt;track&gt; 标签为媒体元素（比如 &lt;audio&gt; and &lt;video&gt;）规定外部文本轨道，也就是字幕，字幕格式有 WebVTT 格式（.vtt 格式文件）。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">video</span> <span class="attr">width</span>=<span class="string">&quot;宽度&quot;</span> <span class="attr">height</span>=<span class="string">&quot;高度&quot;</span> <span class="attr">controls</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;movie.mp4&quot;</span> <span class="attr">type</span>=<span class="string">&quot;video/mp4&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;movie.ogg&quot;</span> <span class="attr">type</span>=<span class="string">&quot;video/ogg&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">track</span> <span class="attr">default</span></span></span><br><span class="line"><span class="tag">         <span class="attr">kind</span>=<span class="string">&quot;captions&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">srclang</span>=<span class="string">&quot;en&quot;</span></span></span><br><span class="line"><span class="tag">         <span class="attr">src</span>=<span class="string">&quot;vtt.vtt&quot;</span> /&gt;</span> </span><br><span class="line">  <span class="comment">&lt;!-- 可以没有字幕 --&gt;</span></span><br><span class="line">您的浏览器不支持Video标签。</span><br><span class="line"><span class="tag">&lt;/<span class="name">video</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>属性：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">属性</th>
+<th align="center">值</th>
+<th align="center">说明</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">autoplay</td>
+<td align="center">autoplay</td>
+<td align="center">如果出现该属性，则视频在就绪后马上播放。</td>
+</tr>
+<tr>
+<td align="center">controls</td>
+<td align="center">controls</td>
+<td align="center">如果出现该属性，则向用户显示控件，比如播放按钮。</td>
+</tr>
+<tr>
+<td align="center">height</td>
+<td align="center">pixels</td>
+<td align="center">设置视频播放器的高度。</td>
+</tr>
+<tr>
+<td align="center">width</td>
+<td align="center">pixels</td>
+<td align="center">设置视频播放器的宽度。</td>
+</tr>
+<tr>
+<td align="center">loop</td>
+<td align="center">loop</td>
+<td align="center">如果出现该属性，则当媒介文件完成播放后再次开始播放。</td>
+</tr>
+<tr>
+<td align="center">muted</td>
+<td align="center">muted</td>
+<td align="center">规定视频的音频输出应该被静音。</td>
+</tr>
+<tr>
+<td align="center">poster</td>
+<td align="center">URL</td>
+<td align="center">规定视频下载时显示的图像，或者在用户点击播放按钮前显示的图像。</td>
+</tr>
+<tr>
+<td align="center">preload</td>
+<td align="center">preload</td>
+<td align="center">如果出现该属性，则视频在页面加载时进行加载，并预备播放。如果使用 “autoplay”，则忽略该属性。</td>
+</tr>
+<tr>
+<td align="center">src</td>
+<td align="center">url</td>
+<td align="center">要播放的视频的 URL。</td>
+</tr>
+</tbody></table>
+<h3 id="2）音频"><a href="#2）音频" class="headerlink" title="2）音频"></a>2）音频</h3><p>HTML5 规定了在网页上嵌入音频元素的标准，即使用 &lt;audio&gt; 元素。</p>
+<p>与视频一样，&lt;audio&gt; 元素支持多个 &lt;source&gt; 元素. &lt;source&gt; 元素可以链接不同的视频文件。浏览器将使用第一个可识别的格式：MP3, wav, 和 Ogg。</p>
+<p><strong>语法：</strong></p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">audio</span> <span class="attr">controls</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;music.ogg&quot;</span> <span class="attr">type</span>=<span class="string">&quot;audio/ogg&quot;</span>&gt;</span></span><br><span class="line">  <span class="tag">&lt;<span class="name">source</span> <span class="attr">src</span>=<span class="string">&quot;music.mp3&quot;</span> <span class="attr">type</span>=<span class="string">&quot;audio/mpeg&quot;</span>&gt;</span></span><br><span class="line">您的浏览器不支持 audio 元素。</span><br><span class="line"><span class="tag">&lt;/<span class="name">audio</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>属性：</strong></p>
+<table>
+<thead>
+<tr>
+<th align="center">属性</th>
+<th align="center">值</th>
+<th align="center">描述</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">autoplay</td>
+<td align="center">autoplay</td>
+<td align="center">如果出现该属性，则音频在就绪后马上播放。</td>
+</tr>
+<tr>
+<td align="center">controls</td>
+<td align="center">controls</td>
+<td align="center">如果出现该属性，则向用户显示控件，比如播放按钮。</td>
+</tr>
+<tr>
+<td align="center">loop</td>
+<td align="center">loop</td>
+<td align="center">如果出现该属性，则每当音频结束时重新开始播放。</td>
+</tr>
+<tr>
+<td align="center">muted</td>
+<td align="center">muted</td>
+<td align="center">规定视频输出应该被静音。</td>
+</tr>
+<tr>
+<td align="center">preload</td>
+<td align="center">preload</td>
+<td align="center">如果出现该属性，则音频在页面加载时进行加载，并预备播放。如果使用 “autoplay”，则忽略该属性。</td>
+</tr>
+<tr>
+<td align="center">src</td>
+<td align="center">url</td>
+<td align="center">要播放的音频的 URL。</td>
+</tr>
+</tbody></table>
+<h2 id="6、H5Canvas"><a href="#6、H5Canvas" class="headerlink" title="6、H5Canvas"></a>6、H5Canvas</h2><p>HTML5 &lt;canvas&gt; 元素用于图形的绘制，通过脚本 (通常是JavaScript)来完成.</p>
+<p>&lt;canvas&gt; 标签只是图形容器，您必须使用脚本来绘制图形。</p>
+<p>你可以通过多种方法使用 canvas 绘制路径,盒、圆、字符以及添加图像。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">HTML5</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/12/HTML5%E5%9F%BA%E7%A1%80/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
   
     <article id="post-Less基础" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
@@ -4758,135 +5093,6 @@ bootstrap中less教程：http://www.bootcss.com/p/lesscss/
 
 
   
-    <article id="post-JavaSE-25-Junit和注解" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/08/JavaSE-25-Junit%E5%92%8C%E6%B3%A8%E8%A7%A3/">JavaSE-25-Junit和注解</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/08/JavaSE-25-Junit%E5%92%8C%E6%B3%A8%E8%A7%A3/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:31:34.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-Junit单元测试"><a href="#1-Junit单元测试" class="headerlink" title="1.Junit单元测试"></a>1.Junit单元测试</h2><h3 id="1-1-测试分类"><a href="#1-1-测试分类" class="headerlink" title="1.1 测试分类"></a>1.1 测试分类</h3><p>　　　　1. 黑盒测试：不需要写代码，给输入值，看程序是否能够输出期望的值。<br>　　　　2. 白盒测试：需要写代码的。关注程序具体的执行流程。</p>
-<p>　　Junit使用：白盒测试</p>
-<p>　　　　步骤：</p>
-<p>　　　　　　1. 定义一个测试类(测试用例)</p>
-<p>　　　　　　　　建议：<br>　　　　　　　　　　测试类名：被测试的类名Test<br>　　　　　　　　　　包名：xxx.xxx.xx.test</p>
-<p>　　　　　　<em>2. 定义测试方法：可以独立运行</em></p>
-<p>　　　　　　　　<em>建议：</em></p>
-<p>　　　　　　　　　　方法名：test测试的方法名 testAdd() </p>
-<p>　　　　　　　　　　返回值：void</p>
-<p>　　　　　　　　　　参数列表：空参</p>
-<p>　　　　　　<strong>3. 给方法加@Test</strong></p>
-<p>　　　　　　<strong>4. 导入junit依赖环境</strong></p>
-<p>　　　　　　</p>
-<p>　　判定结果：<br>　　　　红色：失败<br>　　　　绿色：成功<br>　　　　一般我们会使用断言操作来处理结果<br>　　　　　　Assert.assertEquals(期望的结果,运算的结果);</p>
-<p>　　补充：<br>　　　　@Before:<br>　　　　　　修饰的方法会在测试方法之前被自动执行<br>　　　　@After:<br>　　　　　　修饰的方法会在测试方法执行之后自动被执行</p>
-<h2 id="2-注解"><a href="#2-注解" class="headerlink" title="2.注解"></a>2.注解</h2><h3 id="2-1-概述"><a href="#2-1-概述" class="headerlink" title="2.1 概述"></a>2.1 概述</h3><p>　　　　定义：注解（Annotation），也叫元数据。一种代码级别的说明。它是JDK1.5及以后版本引入的一个特性，与类、接口、枚举是在同一个层次。它可以声明在包、类、字段、方法、局部变量、方法参数等的前面，用来对这些元素进行说明，注释。</p>
-<p>　　　　区别：</p>
-<p>　　　　　　注解：说明程序的。给计算机看的</p>
-<p>　　　　　　注释：用文字描述程序的。给程序员看的</p>
-<h3 id="2-2-作用分类"><a href="#2-2-作用分类" class="headerlink" title="2.2 作用分类"></a>2.2 作用分类</h3><p>　　　　①编写文档：通过代码里标识的注解生成文档【生成文档doc文档】</p>
-<p>　　　　②代码分析：通过代码里标识的注解对代码进行分析【使用反射】<br>　　　　③编译检查：通过代码里标识的注解让编译器能够实现基本的编译检查【Override】</p>
-<h3 id="2-3-JDK中预定义的一些注解"><a href="#2-3-JDK中预定义的一些注解" class="headerlink" title="2.3 JDK中预定义的一些注解"></a>2.3 JDK中预定义的一些注解</h3><p>　　　　@Override ：检测被该注解标注的方法是否是继承自父类(接口)的</p>
-<p>　　　　@Deprecated：该注解标注的内容，表示已过时<br>　　　　@SuppressWarnings：压制警告<br>　　　　　　一般传递参数all @SuppressWarnings(“all”)</p>
-<h4 id="2-4-自定义注解"><a href="#2-4-自定义注解" class="headerlink" title="2.4 自定义注解"></a>2.4 自定义注解</h4><p>　　　　格式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> 元注解</span><br><span class="line"><span class="number">2</span> <span class="keyword">public</span> <span class="meta">@interface</span> 注解名称&#123;</span><br><span class="line"><span class="number">3</span>     属性列表;</span><br><span class="line"><span class="number">4</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　　　本质：</p>
-<p>　　　　　　注解本质上就是一个接口，该接口默认继承Annotation接口</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">MyAnno</span> <span class="keyword">extends</span> <span class="title">java</span>.<span class="title">lang</span>.<span class="title">annotation</span>.<span class="title">Annotation</span> </span>&#123;……&#125;</span><br></pre></td></tr></table></figure>
-
-<p>　　　　属性：接口中的抽象方法</p>
-<p>　　　　　　要求：</p>
-<p>　　　　　　　　1. 属性的返回值类型有下列取值</p>
-<p>　　　　　　　　　　基本数据类型<br>　　　　　　　　　　String<br>　　　　　　　　　　枚举<br>　　　　　　　　　　注解<br>　　　　　　　　　　以上类型的数组</p>
-<p>　　　　　　　　2. 定义了属性，在使用时需要给属性赋值</p>
-<p>　　　　　　　　　　1. 如果定义属性时，使用default关键字给属性默认初始化值，则使用注解时，可以不进行属性的赋值。</p>
-<p>　　　　　　　　　　<em>2.</em> 如果只有一个属性需要赋值，并且属性的名称是value，则value可以省略，直接定义值即可。</p>
-<p>　　　　　　　　　　<em>3.</em> 数组赋值时，值使用{}包裹。如果数组中只有一个值，则{}可以省略。</p>
-<p>　　　　元注解：用于描述注解的注解</p>
-<p>　　　　　　@Target：描述注解能够作用的位置</p>
-<p>　　　　　　　　<em>ElementType取值：</em></p>
-<p>　　　　　　　　　　TYPE：可以作用于类上</p>
-<p>　　　　　　　　　　METHOD：可以作用于方法上<br>　　　　　　　　　　FIELD：可以作用于成员变量上</p>
-<p>　　　　　　@Retention：描述注解被保留的阶段</p>
-<p>　　　　　　　　@Retention(RetentionPolicy.RUNTIME)：当前被描述的注解，会保留到class字节码文件中，并被JVM读取到</p>
-<p>　　　　　　@Documented：描述注解是否被抽取到api文档中</p>
-<p>　　　　　　@Inherited：描述注解是否被子类继承</p>
-<p><strong>Calculator类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">package</span> com.zhiy.Calculator;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Calculator</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="meta">@test</span></span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">add</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         System.out.println(<span class="number">1</span> + <span class="number">0</span>);</span><br><span class="line"> <span class="number">7</span>     &#125;</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>     <span class="meta">@test</span></span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">sub</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">11</span>         System.out.println(<span class="number">1</span> - <span class="number">0</span>);</span><br><span class="line"><span class="number">12</span>     &#125;</span><br><span class="line"><span class="number">13</span> </span><br><span class="line"><span class="number">14</span>     <span class="meta">@test</span></span><br><span class="line"><span class="number">15</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">mul</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">16</span>         System.out.println(<span class="number">1</span> * <span class="number">0</span>);</span><br><span class="line"><span class="number">17</span>     &#125;</span><br><span class="line"><span class="number">18</span> </span><br><span class="line"><span class="number">19</span>     <span class="meta">@test</span></span><br><span class="line"><span class="number">20</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">div</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">21</span>         System.out.println(<span class="number">1</span> / <span class="number">0</span>);</span><br><span class="line"><span class="number">22</span>     &#125;</span><br><span class="line"><span class="number">23</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注解类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">package</span> com.zhiy.Calculator;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.lang.annotation.ElementType;</span><br><span class="line"> <span class="number">4</span> <span class="keyword">import</span> java.lang.annotation.Retention;</span><br><span class="line"> <span class="number">5</span> <span class="keyword">import</span> java.lang.annotation.RetentionPolicy;</span><br><span class="line"> <span class="number">6</span> <span class="keyword">import</span> java.lang.annotation.Target;</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span> <span class="meta">@Target(&#123;ElementType.METHOD&#125;)</span></span><br><span class="line"> <span class="number">9</span> <span class="meta">@Retention(RetentionPolicy.RUNTIME)</span></span><br><span class="line"><span class="number">10</span> <span class="keyword">public</span> <span class="meta">@interface</span> test &#123;</span><br><span class="line"><span class="number">11</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>CalculatorTest类</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">package</span> com.zhiy.Calculator;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.io.BufferedWriter;</span><br><span class="line"> <span class="number">4</span> <span class="keyword">import</span> java.io.File;</span><br><span class="line"> <span class="number">5</span> <span class="keyword">import</span> java.io.FileWriter;</span><br><span class="line"> <span class="number">6</span> <span class="keyword">import</span> java.io.IOException;</span><br><span class="line"> <span class="number">7</span> <span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"> <span class="number">8</span> <span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CalculatorTest</span> </span>&#123;</span><br><span class="line"><span class="number">11</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"><span class="number">12</span>         <span class="keyword">int</span> num = <span class="number">0</span>;</span><br><span class="line"><span class="number">13</span>         File file = <span class="keyword">new</span> File(<span class="string">&quot;Jfanshe\\bug.txt&quot;</span>);</span><br><span class="line"><span class="number">14</span>         BufferedWriter bw = <span class="keyword">new</span> BufferedWriter(<span class="keyword">new</span> FileWriter(file));</span><br><span class="line"><span class="number">15</span> </span><br><span class="line"><span class="number">16</span>         Calculator c = <span class="keyword">new</span> Calculator();</span><br><span class="line"><span class="number">17</span> </span><br><span class="line"><span class="number">18</span>         Class cls = c.getClass();</span><br><span class="line"><span class="number">19</span> </span><br><span class="line"><span class="number">20</span>         Method[] methods = cls.getMethods();</span><br><span class="line"><span class="number">21</span>         <span class="keyword">for</span> (Method method : methods)&#123;</span><br><span class="line"><span class="number">22</span>             <span class="keyword">if</span> (method.isAnnotationPresent(test.class))&#123;</span><br><span class="line"><span class="number">23</span>                 <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">24</span>                     method.invoke(c);</span><br><span class="line"><span class="number">25</span>                 &#125; <span class="keyword">catch</span> (Exception e) &#123;</span><br><span class="line"><span class="number">26</span>                     num++;</span><br><span class="line"><span class="number">27</span>                     bw.write(method.getName()+<span class="string">&quot;方法出现异常&quot;</span>);</span><br><span class="line"><span class="number">28</span>                     bw.newLine();</span><br><span class="line"><span class="number">29</span>                     bw.write(<span class="string">&quot;异常名叫:&quot;</span>+e.getCause().getClass().getSimpleName());</span><br><span class="line"><span class="number">30</span>                     bw.newLine();</span><br><span class="line"><span class="number">31</span>                     bw.write(<span class="string">&quot;异常原因:&quot;</span>+e.getCause().getMessage());</span><br><span class="line"><span class="number">32</span>                     bw.newLine();</span><br><span class="line"><span class="number">33</span>                     bw.write(<span class="string">&quot;--------------------&quot;</span>);</span><br><span class="line"><span class="number">34</span>                 &#125;</span><br><span class="line"><span class="number">35</span>             &#125;</span><br><span class="line"><span class="number">36</span>         &#125;</span><br><span class="line"><span class="number">37</span>         bw.newLine();</span><br><span class="line"><span class="number">38</span>         bw.write(<span class="string">&quot;本次测试共出现&quot;</span>+num+<span class="string">&quot;个Bug&quot;</span>);</span><br><span class="line"><span class="number">39</span>         bw.flush();</span><br><span class="line"><span class="number">40</span>         bw.close();</span><br><span class="line"><span class="number">41</span>     &#125;</span><br><span class="line"><span class="number">42</span> &#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/08/JavaSE-25-Junit%E5%92%8C%E6%B3%A8%E8%A7%A3/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="page-number" href="/page/3/">3</a><span class="space">&hellip;</span><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/2/">Next &amp;raquo;</a>
@@ -5001,6 +5207,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">JavaScript</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">HTML5</a>
               </li>
              
               <li class="article-tag-list-item">
