@@ -16,7 +16,7 @@
 <meta property="og:description" content="1.什么是CSSCSS：Cascading style sheet，层叠样式表，为页面添加样式效果。 2.引入CSS的目的达到结构和样式分离的效果 3.引入CSS的好处减少结构层代码量、提供丰富效果、增加兼容性等 4.CSS语法CSS包括选择器（选择哪个标签进行样式设置）和样式规则（给标签添加什么属性） 123选择器｛	样式：样式值｝  注意：给内容添加样式用于美化，给盒子添加样式用于布局。 ​">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2021-10-10T07:03:51.000Z">
-<meta property="article:modified_time" content="2021-10-11T02:10:37.481Z">
+<meta property="article:modified_time" content="2021-10-11T03:13:13.762Z">
 <meta property="article:author" content="zh1y">
 <meta property="article:tag" content="CSS">
 <meta name="twitter:card" content="summary">
@@ -245,6 +245,7 @@
 <p>E:hover （用户行为选择器）： 选择匹配的E元素，且用户鼠标停留在元素E上。IE6及以下浏览器仅支持a:hover（<strong>悬停</strong>）</p>
 <p>E:focus （用户行为选择器）： 选择匹配的E元素，而且匹配元素获取焦点（<strong>获得焦点</strong>）</p>
 <p>书写顺序：LV，HA</p>
+<p><strong>理由：因为link和visited可以包含链接的所有状态，如果它俩写在后面，就会根据样式表的层叠性覆盖hover和active所定义的效果，因此，它俩必须卸载前面。</strong></p>
 <h4 id="2-UI元素状态伪类选择器"><a href="#2-UI元素状态伪类选择器" class="headerlink" title="2.UI元素状态伪类选择器"></a>2.UI元素状态伪类选择器</h4><p>主要针对Form元素进行操作。</p>
 <p>E:checked（选中状态伪类选择器）：匹配选中的复选按钮或者单选按钮表单元素</p>
 <p>E:enabled（启用状态伪类选择器 ）：匹配所有启用的表单元素</p>
@@ -935,6 +936,15 @@
   
 <nav id="article-nav">
   
+    <a href="/2021/10/11/CSS3%E5%9F%BA%E7%A1%80/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          CSS3基础
+        
+      </div>
+    </a>
+  
   
     <a href="/2021/10/10/HTML%E5%9F%BA%E7%A1%80/" id="article-nav-older" class="article-nav-link-wrap">
       <div class="article-nav-title">HTML基础</div>
@@ -1068,11 +1078,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1089,6 +1099,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">JavaSE</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Less</a>
               </li>
              
               <li class="article-tag-list-item">

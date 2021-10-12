@@ -165,6 +165,578 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaSE-24-类加载器、反射和模块化" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/JavaSE-24-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E3%80%81%E5%8F%8D%E5%B0%84%E5%92%8C%E6%A8%A1%E5%9D%97%E5%8C%96/">JavaSE-24-类加载器、反射和模块化</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/JavaSE-24-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E3%80%81%E5%8F%8D%E5%B0%84%E5%92%8C%E6%A8%A1%E5%9D%97%E5%8C%96/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:30:04.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-类加载器"><a href="#1-类加载器" class="headerlink" title="1.类加载器"></a>1.类加载器</h2><h3 id="1-1-类加载"><a href="#1-1-类加载" class="headerlink" title="1.1 类加载"></a>1.1 类加载</h3><p><strong>类加载的描述</strong></p>
+<p>　　当程序要使用某个类时，如果该类还未被加载到内存中，则系统会通过类的加载，类的连接，类的初始化这三个步骤来对类进行初始化。如果不出现意外情况，JVM将会连续完成这三个步骤，所以有时也把这三个步骤统称为类加载或者类初始化.</p>
+<p><strong>类的加载</strong></p>
+<p>　　就是指将class文件读入内存，并为之创建一个 java.lang.Class 对象</p>
+<p>　　任何类被使用时，系统都会为之建立一个 java.lang.Class对象</p>
+<p><strong>类的连接</strong></p>
+<p>　　验证阶段：用于检验被加载的类是否有正确的内部结构，并和其他类协调一致</p>
+<p>　　准备阶段：负责为类的类变量分配内存，并设置默认初始化值</p>
+<p>　　解析阶段：将类的二进制数据中的符号引用替换为直接引用</p>
+<p><strong>类的初始化</strong></p>
+<p>　　在该阶段，主要就是对类变量进行初始化</p>
+<p><strong>类的初始化步骤</strong></p>
+<p>　　假如类还未被加载和连接，则程序先加载并连接该类</p>
+<p>　　假如该类的直接父类还未被初始化，则先初始化其直接父类</p>
+<p>　　假如类中有初始化语句，则系统依次执行这些初始化语句</p>
+<p>　　注意：在执行第2个步骤的时候，系统对直接父类的初始化步骤也遵循初始化步骤1-3</p>
+<p><strong>类的初始化时机</strong></p>
+<p>　　创建类的实例</p>
+<p>　　调用类的类方法</p>
+<p>　　访问类或者接口的类变量，或者为该类变量赋值</p>
+<p>　　使用反射方式来强制创建某个类或接口对应的java.lang.Class对象</p>
+<p>　　初始化某个类的子类 直接使用java.exe命令来运行某个主类</p>
+<h3 id="1-2-类加载器"><a href="#1-2-类加载器" class="headerlink" title="1.2 类加载器"></a>1.2 类加载器</h3><h4 id="1-2-1-类加载器的作用"><a href="#1-2-1-类加载器的作用" class="headerlink" title="1.2.1 类加载器的作用"></a>1.2.1 类加载器的作用</h4><p>负责将.class文件加载到内存中，并为之生成对应的 java.lang.Class 对象。虽然我们不用过分关心类加载机制，但是了解这个机制我们就能更好的理解程序的运行！</p>
+<h4 id="1-2-2-JVM的类加载机制"><a href="#1-2-2-JVM的类加载机制" class="headerlink" title="1.2.2 JVM的类加载机制"></a>1.2.2 JVM的类加载机制</h4><p><strong>全盘负责</strong>：就是当一个类加载器负责加载某个Class时，该Class所依赖的和引用的其他Class也将由该类加载器负责载入，除非显式使用另外一个类加载器来载入</p>
+<p><strong>父类委托</strong>：就是当一个类加载器负责加载某个Class时，先让父类加载器试图加载该Class，只有在父类加载器无法加载该类时才尝试从自己的类路径中加载该类</p>
+<p><strong>缓存机制</strong>：保证所有加载过的Class都会被缓存，当程序需要使用某个Class对象时，类加载器先从缓存区中搜索该Class，只有当缓存区中不存在该Class对象时，系统才会读取该类对应的二进制数据，并将其转换成Class对象，存储到缓存区</p>
+<h4 id="1-2-3-Java中的内置类加载器"><a href="#1-2-3-Java中的内置类加载器" class="headerlink" title="1.2.3 Java中的内置类加载器"></a>1.2.3 Java中的内置类加载器</h4><p><strong>Bootstrap class loader</strong>：它是虚拟机的内置类加载器，通常表示为null ，并且没有父null</p>
+<p><strong>Platform class loader</strong>：平台类加载器可以看到所有平台类 ，平台类包括由平台类加载器或其祖先定义的Java SE平台API，其实现类和JDK特定的运行时类</p>
+<p><strong>System class loader</strong>：它也被称为应用程序类加载器 ，与平台类加载器不同。 系统类加载器通常用于定义应用程序类路径，模块路径和JDK特定工具上的类</p>
+<p><strong>类加载器的继承关系</strong>：System的父加载器为Platform，而Platform的父加载器为Bootstrap</p>
+<h4 id="1-2-4-ClassLoader-中的两个方法"><a href="#1-2-4-ClassLoader-中的两个方法" class="headerlink" title="1.2.4 ClassLoader 中的两个方法"></a>1.2.4 ClassLoader 中的两个方法</h4><p><strong>方法分类</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>static ClassLoader getSystemClassLoader()</td>
+<td>返回用于委派的系统类加载器</td>
+</tr>
+<tr>
+<td>ClassLoader getParent()</td>
+<td>返回父类加载器进行委派</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">getParentClassLoaderDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         ClassLoader c = ClassLoader.getSystemClassLoader();</span><br><span class="line"> <span class="number">4</span>         System.out.println(c);</span><br><span class="line"> <span class="number">5</span>         </span><br><span class="line"> <span class="number">6</span>         ClassLoader c1 = c.getParent();</span><br><span class="line"> <span class="number">7</span>         System.out.println(c1);</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         ClassLoader c2 = c1.getParent();</span><br><span class="line"><span class="number">10</span>         System.out.println(c2);</span><br><span class="line"><span class="number">11</span>     &#125;</span><br><span class="line"><span class="number">12</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-反射"><a href="#2-反射" class="headerlink" title="2.反射"></a>2.反射</h2><h3 id="2-1-反射的概述"><a href="#2-1-反射的概述" class="headerlink" title="2.1 反射的概述"></a>2.1 反射的概述</h3><p>　　是指在运行时去获取一个类的变量和方法信息。然后通过获取到的信息来创建对象，调用方法的一种机制。</p>
+<p>　　由于这种动态性，可以极大的增强程序的灵活性，程序不用在编译期就完成确定，在运行期仍然可以扩展。</p>
+<h3 id="2-2-获取Class类对象的三种方式"><a href="#2-2-获取Class类对象的三种方式" class="headerlink" title="2.2 获取Class类对象的三种方式"></a>2.2 获取Class类对象的三种方式</h3><h4 id="2-2-1-三种方式分类"><a href="#2-2-1-三种方式分类" class="headerlink" title="2.2.1 三种方式分类"></a>2.2.1 三种方式分类</h4><p>　　类名.class属性</p>
+<p>　　对象名.getClass()方法</p>
+<p>　　Class.forName(全类名)方法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">getParentClassLoaderDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         ClassLoader c = ClassLoader.getSystemClassLoader();</span><br><span class="line"> <span class="number">4</span>         System.out.println(c);</span><br><span class="line"> <span class="number">5</span> </span><br><span class="line"> <span class="number">6</span>         ClassLoader c1 = c.getParent();</span><br><span class="line"> <span class="number">7</span>         System.out.println(c1);</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         ClassLoader c2 = c1.getParent();</span><br><span class="line"><span class="number">10</span>         System.out.println(c2);</span><br><span class="line"><span class="number">11</span>     &#125;</span><br><span class="line"><span class="number">12</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-反射获取构造方法并使用"><a href="#2-3-反射获取构造方法并使用" class="headerlink" title="2.3 反射获取构造方法并使用"></a>2.3 反射获取构造方法并使用</h3><h4 id="2-3-1-Class类获取构造方法对象的方法"><a href="#2-3-1-Class类获取构造方法对象的方法" class="headerlink" title="2.3.1 Class类获取构造方法对象的方法"></a>2.3.1 Class类获取构造方法对象的方法</h4><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Constructor[] getConstructors()</td>
+<td>返回所有公共构造方法对象的数组</td>
+</tr>
+<tr>
+<td>Constructor[] getDeclaredConstructors()</td>
+<td>返回所有构造方法对象的数组</td>
+</tr>
+<tr>
+<td>Constructor getConstructor(Class… parameterTypes)</td>
+<td>返回单个公共构造方法对象</td>
+</tr>
+<tr>
+<td>Constructor getDeclaredConstructor(Class… parameterTypes)</td>
+<td>返回单个构造方法对象</td>
+</tr>
+</tbody></table>
+<h4 id="2-3-2-Constructor类用于创建对象的方法"><a href="#2-3-2-Constructor类用于创建对象的方法" class="headerlink" title="2.3.2 Constructor类用于创建对象的方法"></a>2.3.2 Constructor类用于创建对象的方法</h4><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T newInstance(Object…initargs)</td>
+<td>根据指定的构造方法创建对象</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-反射获取成员变量并使用"><a href="#2-4-反射获取成员变量并使用" class="headerlink" title="2.4 反射获取成员变量并使用"></a>2.4 反射获取成员变量并使用</h3><h4 id="2-4-1-Class类获取成员变量对象的方法"><a href="#2-4-1-Class类获取成员变量对象的方法" class="headerlink" title="2.4.1 Class类获取成员变量对象的方法"></a>2.4.1 Class类获取成员变量对象的方法</h4><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Field[] getFields()</td>
+<td>返回所有公共成员变量对象的数组</td>
+</tr>
+<tr>
+<td>Field[] getDeclaredFields()</td>
+<td>返回所有成员变量对象的数组</td>
+</tr>
+<tr>
+<td>Field getField(String name)</td>
+<td>返回单个公共成员变量对象</td>
+</tr>
+<tr>
+<td>Field getDeclaredField(String name)</td>
+<td>返回单个成员变量对象</td>
+</tr>
+</tbody></table>
+<h4 id="2-4-2-Field类用于给成员变量赋值的方法"><a href="#2-4-2-Field类用于给成员变量赋值的方法" class="headerlink" title="2.4.2 Field类用于给成员变量赋值的方法"></a>2.4.2 Field类用于给成员变量赋值的方法</h4><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>voidset(Object obj,Object value)</td>
+<td>给obj对象的成员变量赋值为value</td>
+</tr>
+</tbody></table>
+<h3 id="2-5-反射获取成员方法并使用"><a href="#2-5-反射获取成员方法并使用" class="headerlink" title="2.5 反射获取成员方法并使用"></a>2.5 反射获取成员方法并使用</h3><h4 id="2-5-1-Class类获取成员方法对象的方法"><a href="#2-5-1-Class类获取成员方法对象的方法" class="headerlink" title="2.5.1 Class类获取成员方法对象的方法"></a>2.5.1 Class类获取成员方法对象的方法</h4><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Method[] getMethods()</td>
+<td>返回所有公共成员方法对象的数组，包括继承的</td>
+</tr>
+<tr>
+<td>Method[] getDeclaredMethods()</td>
+<td>返回所有成员方法对象的数组，不包括继承的</td>
+</tr>
+<tr>
+<td>Method getMethod(String name, Class… parameterTypes)</td>
+<td>返回单个公共成员方法对象</td>
+</tr>
+<tr>
+<td>Method getDeclaredMethod(String name, Class… parameterTypes)</td>
+<td>返回单个成员方法对象</td>
+</tr>
+</tbody></table>
+<h4 id="2-5-2-Method类用于执行方法的方法"><a href="#2-5-2-Method类用于执行方法的方法" class="headerlink" title="2.5.2 Method类用于执行方法的方法"></a>2.5.2 Method类用于执行方法的方法</h4><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Objectinvoke(Object obj,Object… args)</td>
+<td>调用obj对象的成员方法，参数是args,返回值是Object类型</td>
+</tr>
+</tbody></table>
+<h3 id="2-6-运行配置文件中指定类的指定方法"><a href="#2-6-运行配置文件中指定类的指定方法" class="headerlink" title="2.6 运行配置文件中指定类的指定方法"></a>2.6 运行配置文件中指定类的指定方法</h3><p><strong>Student类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="keyword">private</span> String name;</span><br><span class="line"> <span class="number">3</span>     <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">4</span>     <span class="keyword">private</span> String Address;</span><br><span class="line"> <span class="number">5</span> </span><br><span class="line"> <span class="number">6</span>     <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">7</span>     &#125;</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>     <span class="function"><span class="keyword">private</span> <span class="title">Student</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line"><span class="number">10</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">11</span>     &#125;</span><br><span class="line"><span class="number">12</span> </span><br><span class="line"><span class="number">13</span>     Student(String name, <span class="keyword">int</span> age) &#123;</span><br><span class="line"><span class="number">14</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">15</span>         <span class="keyword">this</span>.age = age;</span><br><span class="line"><span class="number">16</span>     &#125;</span><br><span class="line"><span class="number">17</span> </span><br><span class="line"><span class="number">18</span>     <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name, <span class="keyword">int</span> age, String address)</span> </span>&#123;</span><br><span class="line"><span class="number">19</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">20</span>         <span class="keyword">this</span>.age = age;</span><br><span class="line"><span class="number">21</span>         Address = address;</span><br><span class="line"><span class="number">22</span>     &#125;</span><br><span class="line"><span class="number">23</span> </span><br><span class="line"><span class="number">24</span>     <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">25</span>         <span class="keyword">return</span> name;</span><br><span class="line"><span class="number">26</span>     &#125;</span><br><span class="line"><span class="number">27</span> </span><br><span class="line"><span class="number">28</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line"><span class="number">29</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">30</span>     &#125;</span><br><span class="line"><span class="number">31</span> </span><br><span class="line"><span class="number">32</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">33</span>         <span class="keyword">return</span> age;</span><br><span class="line"><span class="number">34</span>     &#125;</span><br><span class="line"><span class="number">35</span> </span><br><span class="line"><span class="number">36</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line"><span class="number">37</span>         <span class="keyword">this</span>.age = age;</span><br><span class="line"><span class="number">38</span>     &#125;</span><br><span class="line"><span class="number">39</span> </span><br><span class="line"><span class="number">40</span>     <span class="function"><span class="keyword">public</span> String <span class="title">getAddress</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">41</span>         <span class="keyword">return</span> Address;</span><br><span class="line"><span class="number">42</span>     &#125;</span><br><span class="line"><span class="number">43</span> </span><br><span class="line"><span class="number">44</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAddress</span><span class="params">(String address)</span> </span>&#123;</span><br><span class="line"><span class="number">45</span>         Address = address;</span><br><span class="line"><span class="number">46</span>     &#125;</span><br><span class="line"><span class="number">47</span> </span><br><span class="line"><span class="number">48</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">print</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="number">49</span>         System.out.println(<span class="string">&quot;好好学习 天天向上&quot;</span>);</span><br><span class="line"><span class="number">50</span>     &#125;</span><br><span class="line"><span class="number">51</span> </span><br><span class="line"><span class="number">52</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">53</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line"><span class="number">54</span>         <span class="keyword">if</span> (<span class="keyword">this</span> == o) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"><span class="number">55</span>         <span class="keyword">if</span> (o == <span class="keyword">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="number">56</span> </span><br><span class="line"><span class="number">57</span>         Student student = (Student) o;</span><br><span class="line"><span class="number">58</span> </span><br><span class="line"><span class="number">59</span>         <span class="keyword">if</span> (age != student.age) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="number">60</span>         <span class="keyword">if</span> (name != <span class="keyword">null</span> ? !name.equals(student.name) : student.name != <span class="keyword">null</span>) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="number">61</span>         <span class="keyword">return</span> Address != <span class="keyword">null</span> ? Address.equals(student.Address) : student.Address == <span class="keyword">null</span>;</span><br><span class="line"><span class="number">62</span>     &#125;</span><br><span class="line"><span class="number">63</span> </span><br><span class="line"><span class="number">64</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">65</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">66</span>         <span class="keyword">int</span> result = name != <span class="keyword">null</span> ? name.hashCode() : <span class="number">0</span>;</span><br><span class="line"><span class="number">67</span>         result = <span class="number">31</span> * result + age;</span><br><span class="line"><span class="number">68</span>         result = <span class="number">31</span> * result + (Address != <span class="keyword">null</span> ? Address.hashCode() : <span class="number">0</span>);</span><br><span class="line"><span class="number">69</span>         <span class="keyword">return</span> result;</span><br><span class="line"><span class="number">70</span>     &#125;</span><br><span class="line"><span class="number">71</span> </span><br><span class="line"><span class="number">72</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">73</span>     <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">74</span>         <span class="keyword">return</span> <span class="string">&quot;Student&#123;&quot;</span> +</span><br><span class="line"><span class="number">75</span>                 <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line"><span class="number">76</span>                 <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line"><span class="number">77</span>                 <span class="string">&quot;, Address=&#x27;&quot;</span> + Address + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line"><span class="number">78</span>                 <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line"><span class="number">79</span>     &#125;</span><br><span class="line"><span class="number">80</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>LoaderDemo类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.File;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.io.FileReader;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.io.IOException;</span><br><span class="line"> <span class="number">4</span> <span class="keyword">import</span> java.lang.reflect.Constructor;</span><br><span class="line"> <span class="number">5</span> <span class="keyword">import</span> java.lang.reflect.InvocationTargetException;</span><br><span class="line"> <span class="number">6</span> <span class="keyword">import</span> java.lang.reflect.Method;</span><br><span class="line"> <span class="number">7</span> <span class="keyword">import</span> java.util.Properties;</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">LoaderDemo</span> </span>&#123;</span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException, NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException </span>&#123;</span><br><span class="line"><span class="number">11</span>         Properties prop = <span class="keyword">new</span> Properties();</span><br><span class="line"><span class="number">12</span>         File file = <span class="keyword">new</span> File(<span class="string">&quot;F:\\config.yz&quot;</span>);</span><br><span class="line"><span class="number">13</span>         FileReader fr = <span class="keyword">new</span> FileReader(file);</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span>         prop.load(fr);</span><br><span class="line"><span class="number">16</span>         fr.close();</span><br><span class="line"><span class="number">17</span> </span><br><span class="line"><span class="number">18</span>         String name = prop.getProperty(<span class="string">&quot;className&quot;</span>);</span><br><span class="line"><span class="number">19</span>         String methodName = prop.getProperty(<span class="string">&quot;methodName&quot;</span>);</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>         Class&lt;?&gt; aClass = Class.forName(name);</span><br><span class="line"><span class="number">22</span>         Constructor&lt;?&gt; cons = aClass.getDeclaredConstructor();</span><br><span class="line"><span class="number">23</span>         cons.setAccessible(<span class="keyword">true</span>);</span><br><span class="line"><span class="number">24</span>         Object o = cons.newInstance();</span><br><span class="line"><span class="number">25</span> </span><br><span class="line"><span class="number">26</span>         Method method = aClass.getDeclaredMethod(methodName);</span><br><span class="line"><span class="number">27</span>         method.invoke(o);</span><br><span class="line"><span class="number">28</span> </span><br><span class="line"><span class="number">29</span>     &#125;</span><br><span class="line"><span class="number">30</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-模块化"><a href="#3-模块化" class="headerlink" title="3.模块化"></a>3.模块化</h2><h3 id="3-1-模块化概述"><a href="#3-1-模块化概述" class="headerlink" title="3.1 模块化概述"></a>3.1 模块化概述</h3><p>Java语言随着这些年的发展已经成为了一门影响深远的编程语言，无数平台，系统都采用Java语言编写。但是，伴 随着发展，Java也越来越庞大，逐渐发展成为一门“臃肿” 的语言。而且，无论是运行一个大型的软件系统，还是运 行一个小的程序，即使程序只需要使用Java的部分核心功能， JVM也要加载整个JRE环境。 为了给Java“瘦身”，让 Java实现轻量化，Java 9正式的推出了模块化系统。Java被拆分为N多个模块，并允许Java程序可以根据需要选择加载程序必须的Java模块，这样就可以让Java以轻量化的方式来运行</p>
+<p>其实，Java 7的时候已经提出了模块化的概念，但由于其过于复杂，Java 7，Java 8都一直未能真正推出，直到Java 9才真正成熟起来。对于Java语言来说，模块化系统是一次真正的自我革新，这种革新使得“古老而庞大”的Java语言 重新焕发年轻的活力。</p>
+<h3 id="3-2-模块的基本使用"><a href="#3-2-模块的基本使用" class="headerlink" title="3.2 模块的基本使用"></a>3.2 模块的基本使用</h3><p>1.创建模块ModuleOne，在其下创建package，名字就叫com</p>
+<p>2.创建一个接口talker</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">package</span> com;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">talker</span> </span>&#123;</span><br><span class="line"><span class="number">4</span>     <span class="function"><span class="keyword">void</span> <span class="title">talk</span><span class="params">()</span></span>;</span><br><span class="line"><span class="number">5</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>3.创建两个类Ftalker与Stalker</p>
+<p>Ftalker</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">package</span> com;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ftalker</span> <span class="keyword">implements</span> <span class="title">talker</span> </span>&#123;</span><br><span class="line"><span class="number">4</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">talk</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">6</span>         System.out.println(<span class="string">&quot;说话人1说话了&quot;</span>);</span><br><span class="line"><span class="number">7</span>     &#125;</span><br><span class="line"><span class="number">8</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>Stalker</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">package</span> com;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Stalker</span> <span class="keyword">implements</span> <span class="title">talker</span> </span>&#123;</span><br><span class="line"><span class="number">4</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">talk</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">6</span>         System.out.println(<span class="string">&quot;说话人2说话了&quot;</span>);</span><br><span class="line"><span class="number">7</span>     &#125;</span><br><span class="line"><span class="number">8</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>4.在ModuleOne中添加Module-info.java，内容如下</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">import</span> com.Ftalker;</span><br><span class="line"><span class="number">2</span> <span class="keyword">import</span> com.Stalker;</span><br><span class="line"><span class="number">3</span> <span class="keyword">import</span> com.talker;</span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> <span class="keyword">module</span> ModuleOne &#123;</span><br><span class="line"><span class="number">6</span>     <span class="keyword">exports</span> com;</span><br><span class="line"><span class="number">7</span> </span><br><span class="line"><span class="number">8</span>     provides talker with Ftalker;</span><br><span class="line"><span class="number">9</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>5.在ModuleTwo新建Module-info.java文件，内容为</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">import</span> com.talker;</span><br><span class="line"><span class="number">2</span> <span class="keyword">module</span> ModuleTwo &#123;</span><br><span class="line"><span class="number">3</span>     <span class="keyword">requires</span> ModuleOne;</span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span>     uses talker;</span><br><span class="line"><span class="number">6</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>6.在ModuleTwo中添加package，名字叫useModule并且新建test类</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">package</span> useModule;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> com.talker;</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span> <span class="keyword">import</span> java.util.ServiceLoader;</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">test</span> </span>&#123;</span><br><span class="line"> <span class="number">8</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">9</span>         ServiceLoader&lt;talker&gt; sl = ServiceLoader.load(talker.class);</span><br><span class="line"><span class="number">10</span> </span><br><span class="line"><span class="number">11</span>         <span class="keyword">for</span> (talker t : sl)&#123;</span><br><span class="line"><span class="number">12</span>             t.talk();</span><br><span class="line"><span class="number">13</span>         &#125;</span><br><span class="line"><span class="number">14</span>     &#125;</span><br><span class="line"><span class="number">15</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>成功运行</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/JavaSE-24-%E7%B1%BB%E5%8A%A0%E8%BD%BD%E5%99%A8%E3%80%81%E5%8F%8D%E5%B0%84%E5%92%8C%E6%A8%A1%E5%9D%97%E5%8C%96/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-23-函数式接口与Stream流" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/JavaSE-23-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3%E4%B8%8EStream%E6%B5%81/">JavaSE-23-函数式接口与Stream流</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/JavaSE-23-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3%E4%B8%8EStream%E6%B5%81/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:27:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-函数式接口"><a href="#1-函数式接口" class="headerlink" title="1.函数式接口"></a>1.函数式接口</h2><h3 id="1-1-函数式接口概述"><a href="#1-1-函数式接口概述" class="headerlink" title="1.1 函数式接口概述"></a>1.1 函数式接口概述</h3><p><strong>概念</strong></p>
+<p>　　有且仅有一个抽象方法的接口</p>
+<p><strong>如何检测一个接口是不是函数式接口</strong></p>
+<p>　　@FunctionalInterface</p>
+<p>　　放在接口定义的上方：如果接口是函数式接口，编译通过；如果不是，编译失败</p>
+<p><strong>注意事项</strong></p>
+<p>　　我们自己定义函数式接口的时候，@FunctionalInterface是可选的，就算我不写这个注解，只要保证满足函数式接口定义的条件，也照样是函数式接口。但是，建议加上该注解。</p>
+<h3 id="1-2-函数式接口作为方法的参数"><a href="#1-2-函数式接口作为方法的参数" class="headerlink" title="1.2 函数式接口作为方法的参数"></a>1.2 函数式接口作为方法的参数</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RunnableDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         startRunnable(() -&gt; &#123;</span><br><span class="line"> <span class="number">4</span>             System.out.println(Thread.currentThread().getName()+<span class="string">&quot;启动了&quot;</span>);</span><br><span class="line"> <span class="number">5</span>         &#125;);</span><br><span class="line"> <span class="number">6</span>     &#125;</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">startRunnable</span><span class="params">(Runnable r)</span> </span>&#123;</span><br><span class="line"> <span class="number">9</span>         <span class="keyword">new</span> Thread(r).start();</span><br><span class="line"><span class="number">10</span>     &#125;</span><br><span class="line"><span class="number">11</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>在Runnable中有如下定义</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="meta">@FunctionalInterface</span></span><br><span class="line"> <span class="number">2</span> <span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>     <span class="comment">/**</span></span><br><span class="line"><span class="comment"> 4      * When an object implementing interface &#123;<span class="doctag">@code</span> Runnable&#125; is used</span></span><br><span class="line"><span class="comment"> 5      * to create a thread, starting the thread causes the object&#x27;s</span></span><br><span class="line"><span class="comment"> 6      * &#123;<span class="doctag">@code</span> run&#125; method to be called in that separately executing</span></span><br><span class="line"><span class="comment"> 7      * thread.</span></span><br><span class="line"><span class="comment"> 8      * &lt;p&gt;</span></span><br><span class="line"><span class="comment"> 9      * The general contract of the method &#123;<span class="doctag">@code</span> run&#125; is that it may</span></span><br><span class="line"><span class="comment">10      * take any action whatsoever.</span></span><br><span class="line"><span class="comment">11      *</span></span><br><span class="line"><span class="comment">12      * <span class="doctag">@see</span>     java.lang.Thread#run()</span></span><br><span class="line"><span class="comment">13      */</span></span><br><span class="line"><span class="number">14</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">abstract</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>;</span><br><span class="line"><span class="number">15</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-3-函数式接口作为方法的返回值"><a href="#1-3-函数式接口作为方法的返回值" class="headerlink" title="1.3 函数式接口作为方法的返回值"></a>1.3 函数式接口作为方法的返回值</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.sql.Connection;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.util.Collection;</span><br><span class="line"> <span class="number">4</span> <span class="keyword">import</span> java.util.Collections;</span><br><span class="line"> <span class="number">5</span> <span class="keyword">import</span> java.util.Comparator;</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">getComparetorDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">8</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">9</span>         ArrayList&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="number">10</span>         list.add(<span class="string">&quot;aaa&quot;</span>);</span><br><span class="line"><span class="number">11</span>         list.add(<span class="string">&quot;b&quot;</span>);</span><br><span class="line"><span class="number">12</span>         list.add(<span class="string">&quot;dd&quot;</span>);</span><br><span class="line"><span class="number">13</span>         list.add(<span class="string">&quot;cccc&quot;</span>);</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span>         System.out.println(<span class="string">&quot;排序前:&quot;</span>+list);</span><br><span class="line"><span class="number">16</span> </span><br><span class="line"><span class="number">17</span>         Collections.sort(list,getComparetor());</span><br><span class="line"><span class="number">18</span>         </span><br><span class="line"><span class="number">19</span>         System.out.println(<span class="string">&quot;排序后:&quot;</span>+list);</span><br><span class="line"><span class="number">20</span>     &#125;</span><br><span class="line"><span class="number">21</span> </span><br><span class="line"><span class="number">22</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Comparator&lt;String&gt; <span class="title">getComparetor</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">23</span>         <span class="keyword">return</span> (s1,s2) -&gt; s1.length() - s2.length();</span><br><span class="line"><span class="number">24</span>     &#125;</span><br><span class="line"><span class="number">25</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-4-常用函数式接口之Supplier"><a href="#1-4-常用函数式接口之Supplier" class="headerlink" title="1.4 常用函数式接口之Supplier"></a>1.4 常用函数式接口之Supplier</h3><p><strong>Supplier接口</strong></p>
+<p>　　Supplier接口也被称为生产型接口，如果我们指定了接口的泛型是什么类型，那么接口中的get方法就会生产什么类型的数据供我们使用。</p>
+<p><strong>构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>T get()</td>
+<td>按照某种实现逻辑(由Lambda表达式实现)返回一个数据</td>
+</tr>
+</tbody></table>
+<p><strong>返回字符串</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.function.Supplier;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SupplierDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         System.out.println(useSup(</span><br><span class="line"> <span class="number">6</span>                 () -&gt; <span class="string">&quot;hello world&quot;</span></span><br><span class="line"> <span class="number">7</span>         ));</span><br><span class="line"> <span class="number">8</span>     &#125;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> String <span class="title">useSup</span><span class="params">(Supplier&lt;String&gt; sup)</span> </span>&#123;</span><br><span class="line"><span class="number">11</span>         <span class="keyword">return</span> sup.get();</span><br><span class="line"><span class="number">12</span>     &#125;</span><br><span class="line"><span class="number">13</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>返回最大值</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.function.Supplier;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">SupplierDemo2</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         <span class="keyword">int</span>[] arr = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">21</span>, <span class="number">142</span>, <span class="number">11</span>, <span class="number">2241</span>, <span class="number">24</span>&#125;;</span><br><span class="line"> <span class="number">6</span>         <span class="keyword">int</span> maxValue = useSup(() -&gt; &#123;</span><br><span class="line"> <span class="number">7</span>             <span class="keyword">int</span> max = arr[<span class="number">0</span>];</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>             <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; arr.length; i++) &#123;</span><br><span class="line"><span class="number">10</span>                 <span class="keyword">if</span> (max &lt; arr[i]) &#123;</span><br><span class="line"><span class="number">11</span>                     max = arr[i];</span><br><span class="line"><span class="number">12</span>                 &#125;</span><br><span class="line"><span class="number">13</span>             &#125;</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span>             <span class="keyword">return</span> max;</span><br><span class="line"><span class="number">16</span>         &#125;);</span><br><span class="line"><span class="number">17</span> </span><br><span class="line"><span class="number">18</span>         System.out.println(maxValue);</span><br><span class="line"><span class="number">19</span>     &#125;</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> Integer <span class="title">useSup</span><span class="params">(Supplier&lt;Integer&gt; sup)</span> </span>&#123;</span><br><span class="line"><span class="number">22</span>         <span class="keyword">return</span> sup.get();</span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-5-常用函数式接口之Consumer"><a href="#1-5-常用函数式接口之Consumer" class="headerlink" title="1.5 常用函数式接口之Consumer"></a>1.5 常用函数式接口之Consumer</h3><p><strong>Consumer接口</strong></p>
+<p>　　Consumer接口也被称为消费型接口，它消费的数据的数据类型由泛型指定</p>
+<p><strong>常用方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void accept(T t)</td>
+<td>对给定的参数执行此操作</td>
+</tr>
+<tr>
+<td>default Consumer andThen(Consumer after)</td>
+<td>返回一个组合的Consumer，依次执行此操作，然后执行after操作</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.function.Consumer;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ConsumerDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         String[] list = &#123;<span class="string">&quot;1,绿巨人&quot;</span>,<span class="string">&quot;2,钢铁侠&quot;</span>,<span class="string">&quot;3,美国队长&quot;</span>&#125;;</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span>         printinfo(list,str -&gt; System.out.print(<span class="string">&quot;序号&quot;</span>+str.split(<span class="string">&quot;,&quot;</span>)[<span class="number">0</span>]),str -&gt; System.out.println(str.split(<span class="string">&quot;,&quot;</span>)[<span class="number">1</span>]));</span><br><span class="line"> <span class="number">8</span>     &#125;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">printinfo</span><span class="params">(String[] list, Consumer&lt;String&gt; con1,Consumer&lt;String&gt; con2)</span></span>&#123;</span><br><span class="line"><span class="number">11</span>         <span class="keyword">for</span> (String s : list)&#123;</span><br><span class="line"><span class="number">12</span>             con1.andThen(con2).accept(s);</span><br><span class="line"><span class="number">13</span>         &#125;</span><br><span class="line"><span class="number">14</span>     &#125;</span><br><span class="line"><span class="number">15</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-6-常用函数式接口之Predicate"><a href="#1-6-常用函数式接口之Predicate" class="headerlink" title="1.6 常用函数式接口之Predicate"></a>1.6 常用函数式接口之Predicate</h3><p>Predicate接口</p>
+<p>　　Predicate接口通常用于判断参数是否满足指定的条件</p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean test(T t)</td>
+<td>对给定的参数进行判断(判断逻辑由Lambda表达式实现)，返回 一个布尔值</td>
+</tr>
+<tr>
+<td>default Predicate negate()</td>
+<td>返回一个逻辑的否定，对应逻辑非</td>
+</tr>
+<tr>
+<td>default Predicate and(Predicate other)</td>
+<td>返回一个组合判断，对应短路与</td>
+</tr>
+<tr>
+<td>default Predicate or(Predicate other)</td>
+<td>返回一个组合判断，对应短路或</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.function.Predicate;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">PredicateDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         <span class="keyword">boolean</span> a = check(<span class="string">&quot;hello world&quot;</span>,s -&gt; s.length()&lt;<span class="number">5</span>);</span><br><span class="line"> <span class="number">6</span>         System.out.println(a);</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         <span class="keyword">boolean</span> b = uncheck(<span class="string">&quot;hello world&quot;</span>,s -&gt; s.length()&lt;<span class="number">5</span>);</span><br><span class="line"> <span class="number">9</span>         System.out.println(b);</span><br><span class="line"><span class="number">10</span>     &#125;</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">check</span><span class="params">(String s , Predicate&lt;String&gt; pre)</span></span>&#123;</span><br><span class="line"><span class="number">13</span>         <span class="keyword">return</span> pre.test(s);</span><br><span class="line"><span class="number">14</span>     &#125;</span><br><span class="line"><span class="number">15</span> </span><br><span class="line"><span class="number">16</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">boolean</span> <span class="title">uncheck</span><span class="params">(String s , Predicate&lt;String&gt; pre)</span></span>&#123;</span><br><span class="line"><span class="number">17</span>         <span class="keyword">return</span> pre.negate().test(s);</span><br><span class="line"><span class="number">18</span>     &#125;</span><br><span class="line"><span class="number">19</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-7-常用函数式接口之Function"><a href="#1-7-常用函数式接口之Function" class="headerlink" title="1.7 常用函数式接口之Function"></a>1.7 常用函数式接口之Function</h3><p><strong>Function接口</strong></p>
+<p>　　Function&lt;t,r&gt;接口通常用于对参数进行处理，转换(处理逻辑由Lambda表达式实现)，然后返回一个新的值</p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R apply(T t)</td>
+<td>将此函数应用于给定的参数</td>
+</tr>
+<tr>
+<td>default Function andThen(Function after)</td>
+<td>返回一个组合函数，首先将该函数应用于输入，然后将after函数应用于结果</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.function.Function;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FunctionDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         parseint(<span class="string">&quot;13729&quot;</span>,s -&gt; Integer.parseInt(s));</span><br><span class="line"> <span class="number">6</span>     &#125;</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">parseint</span><span class="params">(String s, Function&lt;String,Integer&gt; fun)</span> </span>&#123;</span><br><span class="line"> <span class="number">9</span>         <span class="keyword">int</span> i = fun.apply(s);</span><br><span class="line"><span class="number">10</span>         System.out.println(i);</span><br><span class="line"><span class="number">11</span>     &#125;</span><br><span class="line"><span class="number">12</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-Strem流"><a href="#2-Strem流" class="headerlink" title="2.Strem流"></a>2.Strem流</h2><h3 id="2-1-体验Stream流"><a href="#2-1-体验Stream流" class="headerlink" title="2.1 体验Stream流"></a>2.1 体验Stream流</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FilterDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;<span class="comment">//将姓张且名字在两个字（不含两个）以上的名字加入另一个集合</span></span><br><span class="line"> <span class="number">5</span>         ArrayList&lt;String&gt; names = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span>         names.add(<span class="string">&quot;张无忌&quot;</span>);</span><br><span class="line"> <span class="number">8</span>         names.add(<span class="string">&quot;赵敏&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         names.add(<span class="string">&quot;张三丰&quot;</span>);</span><br><span class="line"><span class="number">10</span>         names.add(<span class="string">&quot;张果老&quot;</span>);</span><br><span class="line"><span class="number">11</span>         names.add(<span class="string">&quot;张国立&quot;</span>);</span><br><span class="line"><span class="number">12</span>         names.add(<span class="string">&quot;铁拐李&quot;</span>);</span><br><span class="line"><span class="number">13</span>         names.add(<span class="string">&quot;张赫&quot;</span>);</span><br><span class="line"><span class="number">14</span>         names.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line"><span class="number">15</span>         names.add(<span class="string">&quot;张翼德&quot;</span>);</span><br><span class="line"><span class="number">16</span>         names.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line"><span class="number">17</span>         names.add(<span class="string">&quot;关云长&quot;</span>);</span><br><span class="line"><span class="number">18</span>         names.add(<span class="string">&quot;曹孟德&quot;</span>);</span><br><span class="line"><span class="number">19</span>         names.add(<span class="string">&quot;吕轻侯&quot;</span>);</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>         ArrayList&lt;String&gt; zhanglist = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="number">22</span> </span><br><span class="line"><span class="number">23</span>         names.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>)).filter(s -&gt; s.length() &gt;=<span class="number">3</span>).forEach(System.out::println);</span><br><span class="line"><span class="number">24</span>     &#125;</span><br><span class="line"><span class="number">25</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>Stream流的好处</strong></p>
+<p>　　直接阅读代码的字面意思即可完美展示无关逻辑方式的语义：获取流、过滤姓张、过滤长度为3、逐一打印</p>
+<p>　　Stream流把真正的函数式编程风格引入到Java中</p>
+<h3 id="2-2-Stream流的常见生成方式"><a href="#2-2-Stream流的常见生成方式" class="headerlink" title="2.2 Stream流的常见生成方式"></a>2.2 Stream流的常见生成方式</h3><p>生成Stream流的方式</p>
+<p>　　Collection体系集合</p>
+<p>　　　　使用默认方法stream()生成流， default Stream stream()</p>
+<p>　　Map体系集合</p>
+<p>　　　　把Map转成Set集合，间接的生成流</p>
+<p>　　数组</p>
+<p>　　　　通过Stream接口的静态方法of(T… values)生成流</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.*;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.stream.Stream;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CreateStream</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         <span class="comment">//Collection体系直接使用stream()</span></span><br><span class="line"> <span class="number">7</span>         List&lt;String&gt; list = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">8</span>         Stream&lt;String&gt; listStream = list.stream();</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>         Set&lt;String&gt; set = <span class="keyword">new</span> TreeSet&lt;&gt;();</span><br><span class="line"><span class="number">11</span>         Stream&lt;String&gt; setStream = set.stream();</span><br><span class="line"><span class="number">12</span>         <span class="comment">//Map体系间接生成</span></span><br><span class="line"><span class="number">13</span>         Map&lt;String,Integer&gt; map = <span class="keyword">new</span> HashMap&lt;&gt;();</span><br><span class="line"><span class="number">14</span>         Stream&lt;String&gt; keyStream = map.keySet().stream();</span><br><span class="line"><span class="number">15</span>         Stream&lt;Integer&gt; valueStream = map.values().stream();</span><br><span class="line"><span class="number">16</span> </span><br><span class="line"><span class="number">17</span>         Stream&lt;Map.Entry&lt;String, Integer&gt;&gt; entryStream = map.entrySet().stream();</span><br><span class="line"><span class="number">18</span>         <span class="comment">//数组使用Stream接口的of()</span></span><br><span class="line"><span class="number">19</span>         String[] nums = &#123;<span class="string">&quot;1&quot;</span>,<span class="string">&quot;2&quot;</span>,<span class="string">&quot;3&quot;</span>,<span class="string">&quot;4&quot;</span>&#125;;</span><br><span class="line"><span class="number">20</span>         Stream&lt;String&gt; numStringStream = Stream.of(nums);</span><br><span class="line"><span class="number">21</span>         Stream&lt;Integer&gt; numStram = Stream.of(<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>,<span class="number">4</span>,<span class="number">5</span>);</span><br><span class="line"><span class="number">22</span>     &#125;</span><br><span class="line"><span class="number">23</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-Stream流中间操作方法"><a href="#2-3-Stream流中间操作方法" class="headerlink" title="2.3 Stream流中间操作方法"></a>2.3 Stream流中间操作方法</h3><p><strong>概念</strong></p>
+<p>　　中间操作的意思是，执行完此方法之后，Stream流依然可以继续执行其他操作。</p>
+<p><strong>常用方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Stream filter(Predicate predicate)</td>
+<td>用于对流中的数据进行过滤</td>
+</tr>
+<tr>
+<td>Stream limit(long maxSize)</td>
+<td>返回此流中的元素组成的流，截取前指定参数个数的数据</td>
+</tr>
+<tr>
+<td>Stream skip(long n)</td>
+<td>跳过指定参数个数的数据，返回由该流的剩余元素组成的流</td>
+</tr>
+<tr>
+<td>static Stream concat(Stream a, Stream b)</td>
+<td>合并a和b两个流为一个流</td>
+</tr>
+<tr>
+<td>Stream distinct()</td>
+<td>返回由该流的不同元素（根据Object.equals(Object) ）组成的流</td>
+</tr>
+<tr>
+<td>Stream sorted()</td>
+<td>返回由此流的元素组成的流，根据自然顺序排序</td>
+</tr>
+<tr>
+<td>Stream sorted(Comparator comparator)</td>
+<td>返回由该流的元素组成的流，根据提供的Comparator进行排序</td>
+</tr>
+<tr>
+<td>Stream map(Function mapper)</td>
+<td>返回由给定函数应用于此流的元素的结果组成的流</td>
+</tr>
+<tr>
+<td>IntStream mapToInt(ToIntFunction mapper)</td>
+<td>返回一个IntStream其中包含将给定函数应用于此流的元素的结果</td>
+</tr>
+</tbody></table>
+<p><strong>limit&amp;skip</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">limitandskipDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         ArrayList&lt;String&gt; names = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span>         names.add(<span class="string">&quot;张无忌&quot;</span>);</span><br><span class="line"> <span class="number">8</span>         names.add(<span class="string">&quot;赵敏&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         names.add(<span class="string">&quot;张三丰&quot;</span>);</span><br><span class="line"><span class="number">10</span>         names.add(<span class="string">&quot;张果老&quot;</span>);</span><br><span class="line"><span class="number">11</span>         names.add(<span class="string">&quot;张国立&quot;</span>);</span><br><span class="line"><span class="number">12</span>         names.add(<span class="string">&quot;铁拐李&quot;</span>);</span><br><span class="line"><span class="number">13</span>         names.add(<span class="string">&quot;张赫&quot;</span>);</span><br><span class="line"><span class="number">14</span>         names.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line"><span class="number">15</span>         names.add(<span class="string">&quot;张翼德&quot;</span>);</span><br><span class="line"><span class="number">16</span>         names.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line"><span class="number">17</span>         names.add(<span class="string">&quot;关云长&quot;</span>);</span><br><span class="line"><span class="number">18</span>         names.add(<span class="string">&quot;曹孟德&quot;</span>);</span><br><span class="line"><span class="number">19</span>         names.add(<span class="string">&quot;吕轻侯&quot;</span>);</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>         <span class="comment">//输出前三个</span></span><br><span class="line"><span class="number">22</span>         names.stream().limit(<span class="number">3</span>).forEach(System.out::println);</span><br><span class="line"><span class="number">23</span>         System.out.println(<span class="string">&quot;-------&quot;</span>);</span><br><span class="line"><span class="number">24</span>         <span class="comment">//跳过三个然后输出</span></span><br><span class="line"><span class="number">25</span>         names.stream().skip(<span class="number">3</span>).forEach(System.out::println);</span><br><span class="line"><span class="number">26</span>         System.out.println(<span class="string">&quot;-------&quot;</span>);</span><br><span class="line"><span class="number">27</span>         <span class="comment">//跳过四个输出五个</span></span><br><span class="line"><span class="number">28</span>         names.stream().skip(<span class="number">4</span>).limit(<span class="number">5</span>).forEach(System.out::println);</span><br><span class="line"><span class="number">29</span>     &#125;</span><br><span class="line"><span class="number">30</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>concat&amp;distinct</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.stream.Stream;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">concatanddistinctDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         ArrayList&lt;String&gt; names = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">7</span>         names.add(<span class="string">&quot;张无忌&quot;</span>);</span><br><span class="line"> <span class="number">8</span>         names.add(<span class="string">&quot;赵敏&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         names.add(<span class="string">&quot;张三丰&quot;</span>);</span><br><span class="line"><span class="number">10</span>         names.add(<span class="string">&quot;张果老&quot;</span>);</span><br><span class="line"><span class="number">11</span>         names.add(<span class="string">&quot;张国立&quot;</span>);</span><br><span class="line"><span class="number">12</span>         names.add(<span class="string">&quot;铁拐李&quot;</span>);</span><br><span class="line"><span class="number">13</span> </span><br><span class="line"><span class="number">14</span>         <span class="comment">//截取前四个为流s1</span></span><br><span class="line"><span class="number">15</span>         Stream&lt;String&gt; s1 = names.stream().limit(<span class="number">4</span>);</span><br><span class="line"><span class="number">16</span>         <span class="comment">//跳过前两个为流s2</span></span><br><span class="line"><span class="number">17</span>         Stream&lt;String&gt; s2 = names.stream().skip(<span class="number">2</span>);</span><br><span class="line"><span class="number">18</span>         <span class="comment">//合并s1，s2</span></span><br><span class="line"><span class="number">19</span> <span class="comment">//        Stream.concat(s1, s2).forEach(System.out::println);</span></span><br><span class="line"><span class="number">20</span>         <span class="comment">//合并并去重</span></span><br><span class="line"><span class="number">21</span>         Stream.concat(s1, s2).distinct().forEach(System.out::println);</span><br><span class="line"><span class="number">22</span>     &#125;</span><br><span class="line"><span class="number">23</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>sort</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">sortDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         ArrayList&lt;String&gt; names = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">6</span>         names.add(<span class="string">&quot;张无忌&quot;</span>);</span><br><span class="line"> <span class="number">7</span>         names.add(<span class="string">&quot;赵敏&quot;</span>);</span><br><span class="line"> <span class="number">8</span>         names.add(<span class="string">&quot;张三丰&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         names.add(<span class="string">&quot;张果老&quot;</span>);</span><br><span class="line"><span class="number">10</span>         names.add(<span class="string">&quot;张国立&quot;</span>);</span><br><span class="line"><span class="number">11</span>         names.add(<span class="string">&quot;铁拐李&quot;</span>);</span><br><span class="line"><span class="number">12</span> </span><br><span class="line"><span class="number">13</span>         names.stream().sorted((s1,s2) -&gt; &#123;</span><br><span class="line"><span class="number">14</span>             <span class="keyword">int</span> num = s1.length()-s2.length();</span><br><span class="line"><span class="number">15</span>             <span class="keyword">int</span> num2 = num == <span class="number">0</span> ? s2.compareTo(s1) : num;</span><br><span class="line"><span class="number">16</span>             <span class="keyword">return</span> num2;</span><br><span class="line"><span class="number">17</span>         &#125;).forEach(System.out::println);</span><br><span class="line"><span class="number">18</span>     &#125;</span><br><span class="line"><span class="number">19</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>maptoInt</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">maptointDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         ArrayList&lt;String&gt; nums = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">6</span>         nums.add(<span class="string">&quot;1&quot;</span>);</span><br><span class="line"> <span class="number">7</span>         nums.add(<span class="string">&quot;10&quot;</span>);</span><br><span class="line"> <span class="number">8</span>         nums.add(<span class="string">&quot;100&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         nums.add(<span class="string">&quot;1000&quot;</span>);</span><br><span class="line"><span class="number">10</span>         nums.add(<span class="string">&quot;10000&quot;</span>);</span><br><span class="line"><span class="number">11</span>         nums.add(<span class="string">&quot;100000&quot;</span>);</span><br><span class="line"><span class="number">12</span> </span><br><span class="line"><span class="number">13</span>         <span class="keyword">int</span> result = nums.stream().mapToInt(Integer::parseInt).sum();</span><br><span class="line"><span class="number">14</span>         System.out.println(result);</span><br><span class="line"><span class="number">15</span>     &#125;</span><br><span class="line"><span class="number">16</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>count</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">countDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         ArrayList&lt;String&gt; names = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span>         names.add(<span class="string">&quot;张无忌&quot;</span>);</span><br><span class="line"> <span class="number">8</span>         names.add(<span class="string">&quot;赵敏&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         names.add(<span class="string">&quot;张三丰&quot;</span>);</span><br><span class="line"><span class="number">10</span>         names.add(<span class="string">&quot;张果老&quot;</span>);</span><br><span class="line"><span class="number">11</span>         names.add(<span class="string">&quot;张国立&quot;</span>);</span><br><span class="line"><span class="number">12</span>         names.add(<span class="string">&quot;铁拐李&quot;</span>);</span><br><span class="line"><span class="number">13</span>         names.add(<span class="string">&quot;张赫&quot;</span>);</span><br><span class="line"><span class="number">14</span>         names.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line"><span class="number">15</span>         names.add(<span class="string">&quot;张翼德&quot;</span>);</span><br><span class="line"><span class="number">16</span>         names.add(<span class="string">&quot;刘备&quot;</span>);</span><br><span class="line"><span class="number">17</span>         names.add(<span class="string">&quot;关云长&quot;</span>);</span><br><span class="line"><span class="number">18</span>         names.add(<span class="string">&quot;曹孟德&quot;</span>);</span><br><span class="line"><span class="number">19</span>         names.add(<span class="string">&quot;吕轻侯&quot;</span>);</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>         <span class="keyword">long</span> count = names.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;张&quot;</span>)).count();</span><br><span class="line"><span class="number">22</span>         System.out.println(count);</span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>练习</strong></p>
+<p>这里有两个集合，有6个男演员和6个女演员，要求：</p>
+<p>　　男演员只要名字为3个字的前三人</p>
+<p>　　女演员只要姓林的，并且不要第一个</p>
+<p>　　把过滤后的男演员姓名和女演员姓名合并到一起</p>
+<p>　　把上一步操作后的元素作为构造方法的参数创建演员对象,遍历数据</p>
+<p><strong>Actor类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Actor</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="keyword">private</span> String name;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="title">Actor</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"> <span class="number">6</span>     &#125;</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>     <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">9</span>         <span class="keyword">return</span> name;</span><br><span class="line"><span class="number">10</span>     &#125;</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line"><span class="number">13</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">14</span>     &#125;</span><br><span class="line"><span class="number">15</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>实现类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.stream.Stream;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActorControl</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         ArrayList&lt;String&gt; man = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">7</span>         ArrayList&lt;String&gt; woman = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         man.add(<span class="string">&quot;刘德华&quot;</span>);</span><br><span class="line"><span class="number">10</span>         man.add(<span class="string">&quot;成龙&quot;</span>);</span><br><span class="line"><span class="number">11</span>         man.add(<span class="string">&quot;周星驰&quot;</span>);</span><br><span class="line"><span class="number">12</span>         man.add(<span class="string">&quot;周润发&quot;</span>);</span><br><span class="line"><span class="number">13</span>         man.add(<span class="string">&quot;李小龙&quot;</span>);</span><br><span class="line"><span class="number">14</span>         man.add(<span class="string">&quot;林正英&quot;</span>);</span><br><span class="line"><span class="number">15</span> </span><br><span class="line"><span class="number">16</span>         woman.add(<span class="string">&quot;林青霞&quot;</span>);</span><br><span class="line"><span class="number">17</span>         woman.add(<span class="string">&quot;关之琳&quot;</span>);</span><br><span class="line"><span class="number">18</span>         woman.add(<span class="string">&quot;朱茵&quot;</span>);</span><br><span class="line"><span class="number">19</span>         woman.add(<span class="string">&quot;林志玲&quot;</span>);</span><br><span class="line"><span class="number">20</span>         woman.add(<span class="string">&quot;林心如&quot;</span>);</span><br><span class="line"><span class="number">21</span>         woman.add(<span class="string">&quot;王祖贤&quot;</span>);</span><br><span class="line"><span class="number">22</span> </span><br><span class="line"><span class="number">23</span>         <span class="comment">//男演员只要名字为3个字的前三人</span></span><br><span class="line"><span class="number">24</span>         Stream&lt;String&gt; manStream = man.stream().filter(s -&gt; s.length() == <span class="number">3</span>).limit(<span class="number">3</span>);</span><br><span class="line"><span class="number">25</span>         <span class="comment">//女演员只要姓林的，并且不要第一个</span></span><br><span class="line"><span class="number">26</span>         Stream&lt;String&gt; womanStream = woman.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;林&quot;</span>)).skip(<span class="number">1</span>);</span><br><span class="line"><span class="number">27</span>         <span class="comment">//把过滤后的男演员姓名和女演员姓名合并到一起</span></span><br><span class="line"><span class="number">28</span>         Stream&lt;String&gt; stream = Stream.concat(manStream, womanStream);</span><br><span class="line"><span class="number">29</span>         <span class="comment">//把上一步操作后的元素作为构造方法的参数创建演员对象,遍历数据</span></span><br><span class="line"><span class="number">30</span>         stream.map(Actor::<span class="keyword">new</span>).forEach(s -&gt; System.out.println(s.getName()));</span><br><span class="line"><span class="number">31</span>     &#125;</span><br><span class="line"><span class="number">32</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者更简便的写法</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.stream.Stream;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">ActorControl</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         ArrayList&lt;String&gt; man = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">7</span>         ArrayList&lt;String&gt; woman = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         man.add(<span class="string">&quot;刘德华&quot;</span>);</span><br><span class="line"><span class="number">10</span>         man.add(<span class="string">&quot;成龙&quot;</span>);</span><br><span class="line"><span class="number">11</span>         man.add(<span class="string">&quot;周星驰&quot;</span>);</span><br><span class="line"><span class="number">12</span>         man.add(<span class="string">&quot;周润发&quot;</span>);</span><br><span class="line"><span class="number">13</span>         man.add(<span class="string">&quot;李小龙&quot;</span>);</span><br><span class="line"><span class="number">14</span>         man.add(<span class="string">&quot;林正英&quot;</span>);</span><br><span class="line"><span class="number">15</span> </span><br><span class="line"><span class="number">16</span>         woman.add(<span class="string">&quot;林青霞&quot;</span>);</span><br><span class="line"><span class="number">17</span>         woman.add(<span class="string">&quot;关之琳&quot;</span>);</span><br><span class="line"><span class="number">18</span>         woman.add(<span class="string">&quot;朱茵&quot;</span>);</span><br><span class="line"><span class="number">19</span>         woman.add(<span class="string">&quot;林志玲&quot;</span>);</span><br><span class="line"><span class="number">20</span>         woman.add(<span class="string">&quot;林心如&quot;</span>);</span><br><span class="line"><span class="number">21</span>         woman.add(<span class="string">&quot;王祖贤&quot;</span>);</span><br><span class="line"><span class="number">22</span> </span><br><span class="line"><span class="number">23</span>         Stream.concat(man.stream().filter(s -&gt; s.length() == <span class="number">3</span>).limit(<span class="number">3</span>),woman.stream().filter(s -&gt; s.startsWith(<span class="string">&quot;林&quot;</span>)).skip(<span class="number">1</span>)).map(Actor::<span class="keyword">new</span>).forEach(s -&gt; System.out.println(s.getName()));</span><br><span class="line"><span class="number">24</span>     &#125;</span><br><span class="line"><span class="number">25</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-Stream流的收集操作"><a href="#2-4-Stream流的收集操作" class="headerlink" title="2.4 Stream流的收集操作"></a>2.4 Stream流的收集操作</h3><p><strong>概念</strong></p>
+<p>　　对数据使用Stream流的方式操作完毕后，可以把流中的数据收集到集合中。</p>
+<p><strong>常用方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>R collect(Collector collector)</td>
+<td>把结果收集到集合中</td>
+</tr>
+</tbody></table>
+<p><strong>工具类Collectors提供了具体的收集方式</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public static Collector toList()</td>
+<td>把元素收集到List集合中</td>
+</tr>
+<tr>
+<td>public static Collector toSet()</td>
+<td>把元素收集到Set集合中</td>
+</tr>
+<tr>
+<td>public static Collector toMap(Function keyMapper,Function valueMapper)</td>
+<td>把元素收集到Map集合中</td>
+</tr>
+</tbody></table>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.List;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.util.Map;</span><br><span class="line"> <span class="number">4</span> <span class="keyword">import</span> java.util.Set;</span><br><span class="line"> <span class="number">5</span> <span class="keyword">import</span> java.util.stream.Collectors;</span><br><span class="line"> <span class="number">6</span> <span class="keyword">import</span> java.util.stream.Stream;</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CollectorsDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">9</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"><span class="number">10</span>         List&lt;String&gt; names = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"><span class="number">11</span>         names.add(<span class="string">&quot;张无忌&quot;</span>);</span><br><span class="line"><span class="number">12</span>         names.add(<span class="string">&quot;赵敏&quot;</span>);</span><br><span class="line"><span class="number">13</span>         names.add(<span class="string">&quot;张三丰&quot;</span>);</span><br><span class="line"><span class="number">14</span>         names.add(<span class="string">&quot;张果老&quot;</span>);</span><br><span class="line"><span class="number">15</span>         names.add(<span class="string">&quot;张国立&quot;</span>);</span><br><span class="line"><span class="number">16</span>         names.add(<span class="string">&quot;铁拐李&quot;</span>);</span><br><span class="line"><span class="number">17</span>         names.add(<span class="string">&quot;张赫&quot;</span>);</span><br><span class="line"><span class="number">18</span>         names.add(<span class="string">&quot;张飞&quot;</span>);</span><br><span class="line"><span class="number">19</span>         Stream&lt;String&gt; nameStream = names.stream().filter(s -&gt; s.length()==<span class="number">3</span>);</span><br><span class="line"><span class="number">20</span>         List&lt;String&gt; threeWordsNames = nameStream.collect(Collectors.toList());</span><br><span class="line"><span class="number">21</span>         <span class="keyword">for</span> (String s : threeWordsNames)&#123;</span><br><span class="line"><span class="number">22</span>             System.out.println(s);</span><br><span class="line"><span class="number">23</span>         &#125;</span><br><span class="line"><span class="number">24</span>         System.out.println(<span class="string">&quot;------&quot;</span>);</span><br><span class="line"><span class="number">25</span>         Stream&lt;String&gt; namesStreams = names.stream().filter(s -&gt;s.startsWith(<span class="string">&quot;张&quot;</span>));</span><br><span class="line"><span class="number">26</span>         Set&lt;String&gt; threeNames = namesStreams.collect(Collectors.toSet());</span><br><span class="line"><span class="number">27</span>         <span class="keyword">for</span> (String sm : threeNames)&#123;</span><br><span class="line"><span class="number">28</span>             System.out.println(sm);</span><br><span class="line"><span class="number">29</span>         &#125;</span><br><span class="line"><span class="number">30</span>         System.out.println(<span class="string">&quot;------&quot;</span>);</span><br><span class="line"><span class="number">31</span>         String[] strArray = &#123;<span class="string">&quot;1,张曼玉&quot;</span>,<span class="string">&quot;2,林青霞&quot;</span>,<span class="string">&quot;3,朱茵&quot;</span>&#125;;</span><br><span class="line"><span class="number">32</span>         Stream&lt;String&gt; strStream = Stream.of(strArray);</span><br><span class="line"><span class="number">33</span>         Map&lt;String,String&gt; bf = strStream.collect(Collectors.toMap(s -&gt; s.split(<span class="string">&quot;,&quot;</span>)[<span class="number">0</span>],s -&gt; s.split(<span class="string">&quot;,&quot;</span>)[<span class="number">1</span>]));</span><br><span class="line"><span class="number">34</span>         Set&lt;String&gt; keys = bf.keySet();</span><br><span class="line"><span class="number">35</span>         <span class="keyword">for</span> (String key : keys)&#123;</span><br><span class="line"><span class="number">36</span>             String value = bf.get(key);</span><br><span class="line"><span class="number">37</span>             System.out.println(value);</span><br><span class="line"><span class="number">38</span>         &#125;</span><br><span class="line"><span class="number">39</span>     &#125;</span><br><span class="line"><span class="number">40</span> &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/JavaSE-23-%E5%87%BD%E6%95%B0%E5%BC%8F%E6%8E%A5%E5%8F%A3%E4%B8%8EStream%E6%B5%81/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JavaSE-22-Lambda与方法引用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -2098,525 +2670,6 @@
 
 
   
-    <article id="post-JavaSE-14-集合（壹）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/07/JavaSE-14-%E9%9B%86%E5%90%88%EF%BC%88%E5%A3%B9%EF%BC%89/">JavaSE-14-集合（壹）</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/07/JavaSE-14-%E9%9B%86%E5%90%88%EF%BC%88%E5%A3%B9%EF%BC%89/" class="archive-article-date">
-  	<time datetime="2021-10-07T15:13:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-Collection集合"><a href="#1-Collection集合" class="headerlink" title="1.Collection集合"></a>1.Collection集合</h2><h3 id="1-1-集合体系结构"><a href="#1-1-集合体系结构" class="headerlink" title="1.1 集合体系结构"></a>1.1 集合体系结构</h3><p><strong>集合</strong></p>
-<p>　　<strong>（接口）Collection：单列</strong></p>
-<p>　　　　**<em>*（接口）*<em>List：可重复</em></em></p>
-<p>　　　　　　<strong>（实现类）ArrayList</strong></p>
-<p>　　　　　　**<em>*（实现类）*<em>LinkedList</em></em></p>
-<p>　　　　**<em>*（接口）*<em>Set：不可重复</em></em></p>
-<p>　　　　　　**<em>*（实现类）*<em>HashSet</em></em></p>
-<p>　　　　　　**<em>*（实现类）*<em>TreeSet</em></em></p>
-<p>　　****（接口）**Map：双列<br>**</p>
-<p>　　　　　　**<em>*（实现类）*<em>HashMap</em></em></p>
-<h3 id="1-2-Collection集合概述和基本使用"><a href="#1-2-Collection集合概述和基本使用" class="headerlink" title="1.2 Collection集合概述和基本使用"></a>1.2 Collection集合概述和基本使用</h3><p><strong>Collection集合概述</strong></p>
-<p>　　是单例集合的顶层接口，它表示一组对象，这些对象也称为Collection的元素</p>
-<p>　　JDK 不提供此接口的任何直接实现，它提供更具体的子接口（如Set和List）实现</p>
-<h3 id="1-3-Collection集合的常用方法"><a href="#1-3-Collection集合的常用方法" class="headerlink" title="1.3 Collection集合的常用方法"></a>1.3 Collection集合的常用方法</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>boolean add(E e)</td>
-<td>添加元素</td>
-</tr>
-<tr>
-<td>boolean remove(Object o)</td>
-<td>从集合中移除指定的元素</td>
-</tr>
-<tr>
-<td>void clear()</td>
-<td>清空集合中的元素</td>
-</tr>
-<tr>
-<td>boolean contains(Object o)</td>
-<td>判断集合中是否存在指定的元素</td>
-</tr>
-<tr>
-<td>boolean isEmpty()</td>
-<td>判断集合是否为空</td>
-</tr>
-<tr>
-<td>int size()</td>
-<td>集合的长度，也就是集合中元素的个数</td>
-</tr>
-</tbody></table>
-<h3 id="1-4-Collection集合的遍历"><a href="#1-4-Collection集合的遍历" class="headerlink" title="1.4 Collection集合的遍历"></a>1.4 Collection集合的遍历</h3><p><strong>迭代器的介绍</strong></p>
-<p>　　迭代器，集合的专用遍历方式</p>
-<p>　　Iterator iterator()：返回此集合中元素的迭代器，通过集合的iterator()方法得到</p>
-<p>　　迭代器是通过集合的iterator()方法得到的，所以我们说它是依赖于集合而存在的</p>
-<p><strong>Collection集合的遍历</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.Collection;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">iCollection</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">7</span>         Collection&lt;String&gt; cl = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         cl.add(<span class="string">&quot;1&quot;</span>);</span><br><span class="line"><span class="number">10</span>         cl.add(<span class="string">&quot;2&quot;</span>);</span><br><span class="line"><span class="number">11</span>         cl.add(<span class="string">&quot;3&quot;</span>);</span><br><span class="line"><span class="number">12</span>         cl.add(<span class="string">&quot;4&quot;</span>);</span><br><span class="line"><span class="number">13</span> </span><br><span class="line"><span class="number">14</span>         Iterator&lt;String&gt; it = cl.iterator();</span><br><span class="line"><span class="number">15</span>         <span class="keyword">while</span>(it.hasNext())&#123;</span><br><span class="line"><span class="number">16</span>             String s = it.next();</span><br><span class="line"><span class="number">17</span>             System.out.println(s);</span><br><span class="line"><span class="number">18</span>         &#125;</span><br><span class="line"><span class="number">19</span>     &#125;</span><br><span class="line"><span class="number">20</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-List集合"><a href="#2-List集合" class="headerlink" title="2.List集合"></a>2.List集合</h2><h3 id="2-1-List集合概述和特点"><a href="#2-1-List集合概述和特点" class="headerlink" title="2.1 List集合概述和特点"></a>2.1 List集合概述和特点</h3><p><strong>List集合概述</strong></p>
-<p>　　有序集合(也称为序列)，用户可以精确控制列表中每个元素的插入位置。用户可以通过整数索引访问元 素，并搜索列表中的元素</p>
-<p>　　与Set集合不同，列表通常允许重复的元素</p>
-<p><strong>List集合特点</strong></p>
-<p>　　有索引</p>
-<p>　　可以存储重复元素</p>
-<p>　　元素存取有序</p>
-<h3 id="2-2-List集合的特有方法"><a href="#2-2-List集合的特有方法" class="headerlink" title="2.2 List集合的特有方法"></a>2.2 List集合的特有方法</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>void add(int index,E element)</td>
-<td>在此集合中的指定位置插入指定的元素</td>
-</tr>
-<tr>
-<td>E remove(int index)</td>
-<td>删除指定索引处的元素，返回被删除的元素</td>
-</tr>
-<tr>
-<td>E set(int index,E element)</td>
-<td>修改指定索引处的元素，返回被修改的元素</td>
-</tr>
-<tr>
-<td>E get(int index)</td>
-<td>返回指定索引处的元素</td>
-</tr>
-</tbody></table>
-<h3 id="2-3-并发修改异常"><a href="#2-3-并发修改异常" class="headerlink" title="2.3 并发修改异常"></a>2.3 并发修改异常</h3><p><strong>出现的原因</strong></p>
-<p>　　迭代器遍历的过程中，通过集合对象修改了集合中的元素，造成了迭代器获取元素中判断预期修改值和实际修改值不一致，则会出现：ConcurrentModificationException</p>
-<p><strong>解决的方案</strong></p>
-<p>　　用for循环遍历，然后用集合对象做对应的操作即可</p>
-<h3 id="2-4-列表迭代器"><a href="#2-4-列表迭代器" class="headerlink" title="2.4 列表迭代器"></a>2.4 列表迭代器</h3><p><strong>ListIterator介绍</strong></p>
-<p>　　通过List集合的listIterator()方法得到，所以说它是List集合特有的迭代器</p>
-<p>　　用于允许程序员沿任一方向遍历的列表迭代器，在迭代期间修改列表，并获取列表中迭代器的当前位置</p>
-<h3 id="2-5-增强for循环"><a href="#2-5-增强for循环" class="headerlink" title="2.5 增强for循环"></a>2.5 增强for循环</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">for</span>(元素数据类型 变量名 : 数组/集合对象名) &#123;</span><br><span class="line"><span class="number">2</span> 　　循环体;</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>本质上还是一个迭代器</p>
-<h2 id="3-常用数据结构"><a href="#3-常用数据结构" class="headerlink" title="3.常用数据结构"></a>3.常用数据结构</h2><h3 id="3-1-数据结构之栈和队列"><a href="#3-1-数据结构之栈和队列" class="headerlink" title="3.1 数据结构之栈和队列"></a>3.1 数据结构之栈和队列</h3><p><strong>栈结构</strong></p>
-<p>　　先进后出</p>
-<p><strong>队列结构</strong></p>
-<p>　　先进先出</p>
-<h3 id="3-2-数据结构之数组和链表"><a href="#3-2-数据结构之数组和链表" class="headerlink" title="3.2 数据结构之数组和链表"></a>3.2 数据结构之数组和链表</h3><p><strong>数组结构</strong></p>
-<p>　　查询快、增删慢</p>
-<p><strong>队列结构</strong></p>
-<p>　　查询慢、增删快</p>
-<h3 id="3-3-List集合子类的特点"><a href="#3-3-List集合子类的特点" class="headerlink" title="3.3 List集合子类的特点"></a>3.3 List集合子类的特点</h3><p><strong>ArrayList集合</strong></p>
-<p>　　底层是数组结构实现，查询快、增删慢</p>
-<p><strong>LinkedList集合</strong></p>
-<p>　　底层是链表结构实现，查询慢、增删快</p>
-<h3 id="3-4-LinkedList集合的特有功能"><a href="#3-4-LinkedList集合的特有功能" class="headerlink" title="3.4 LinkedList集合的特有功能"></a>3.4 LinkedList集合的特有功能</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public void addFirst(E e)</td>
-<td>在该列表开头插入指定的元素</td>
-</tr>
-<tr>
-<td>public void addLast(E e)</td>
-<td>将指定的元素追加到此列表的末尾</td>
-</tr>
-<tr>
-<td>public E getFirst()</td>
-<td>返回此列表中的第一个元素</td>
-</tr>
-<tr>
-<td>public E getLast()</td>
-<td>返回此列表中的最后一个元素</td>
-</tr>
-<tr>
-<td>public E removeFirst()</td>
-<td>从此列表中删除并返回第一个元素</td>
-</tr>
-<tr>
-<td>public E removeLast()</td>
-<td>从此列表中删除并返回最后一个元素</td>
-</tr>
-</tbody></table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/07/JavaSE-14-%E9%9B%86%E5%90%88%EF%BC%88%E5%A3%B9%EF%BC%89/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JavaSE-13-包装类和异常处理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">JavaSE-13-包装类和异常处理</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="archive-article-date">
-  	<time datetime="2021-10-07T15:12:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-包装类"><a href="#1-包装类" class="headerlink" title="1.包装类"></a>1.包装类</h2><h3 id="1-1-基本类型包装类"><a href="#1-1-基本类型包装类" class="headerlink" title="1.1 基本类型包装类"></a>1.1 基本类型包装类</h3><p><strong>基本类型包装类的作用</strong></p>
-<p>　　将基本数据类型封装成对象的好处在于可以在对象中定义更多的功能方法操作该数据</p>
-<p>　　常用的操作之一：用于基本数据类型与字符串之间的转换</p>
-<table>
-<thead>
-<tr>
-<th><strong>基本类型</strong></th>
-<th><strong>包装类</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte</td>
-<td>Byte</td>
-</tr>
-<tr>
-<td>short</td>
-<td>Short</td>
-</tr>
-<tr>
-<td>int</td>
-<td>Integer</td>
-</tr>
-<tr>
-<td>long</td>
-<td>Long</td>
-</tr>
-<tr>
-<td>float</td>
-<td>Float</td>
-</tr>
-<tr>
-<td>double</td>
-<td>Double</td>
-</tr>
-<tr>
-<td>char</td>
-<td>Character</td>
-</tr>
-<tr>
-<td>boolean</td>
-<td>Boolean</td>
-</tr>
-</tbody></table>
-<h3 id="1-2-Integer"><a href="#1-2-Integer" class="headerlink" title="1.2 Integer"></a>1.2 Integer</h3><p><strong>Integer类概述</strong></p>
-<p>　　包装一个对象中的原始类型 int 的值</p>
-<p><strong>构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public Integer(int value)</td>
-<td>根据 int 值创建 Integer 对象(过时)</td>
-</tr>
-<tr>
-<td>public Integer(String s)</td>
-<td>根据 String 值创建 Integer 对象(过时)</td>
-</tr>
-<tr>
-<td>public static Integer valueOf(int i)</td>
-<td>返回表示指定的 int 值的 Integer 实例</td>
-</tr>
-<tr>
-<td>public static Integer valueOf(String s)</td>
-<td>返回一个保存指定值的 Integer 对象 String</td>
-</tr>
-</tbody></table>
-<h3 id="1-3-int和String类型的相互转换"><a href="#1-3-int和String类型的相互转换" class="headerlink" title="1.3 int和String类型的相互转换"></a>1.3 int和String类型的相互转换</h3><p><strong>int转换为String 转换方式</strong></p>
-<p>　　方式一：直接在数字后加一个空字符串</p>
-<p>　　方式二：通过String类静态方法valueOf()</p>
-<p><strong>String转换为int</strong> </p>
-<p>　　方式一：先将字符串数字转成Integer，再调用valueOf()方法</p>
-<p>　　方式二：通过Integer静态方法parseInt()进行转换</p>
-<h3 id="1-4-自动拆箱和自动装箱"><a href="#1-4-自动拆箱和自动装箱" class="headerlink" title="1.4 自动拆箱和自动装箱"></a>1.4 自动拆箱和自动装箱</h3><p><strong>自动装箱</strong></p>
-<p>　　把基本数据类型转换为对应的包装类类型</p>
-<p><strong>自动拆箱</strong></p>
-<p>　　把包装类类型转换为对应的基本数据类型</p>
-<h2 id="2-时间日期类"><a href="#2-时间日期类" class="headerlink" title="2.时间日期类"></a>2.时间日期类</h2><h3 id="2-1-Date类"><a href="#2-1-Date类" class="headerlink" title="2.1 Date类"></a>2.1 Date类</h3><p><strong>Date类概述</strong></p>
-<p>　　Date 代表了一个特定的时间，精确到毫秒</p>
-<p><strong>Date类构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public Date()</td>
-<td>分配一个 Date对象，并初始化，以便它代表它被分配的时间，精确到毫秒</td>
-</tr>
-<tr>
-<td>public Date(long date)</td>
-<td>分配一个 Date对象，并将其初始化为表示从标准基准时间起指定的毫秒数</td>
-</tr>
-</tbody></table>
-<h3 id="2-2-Date类常用方法"><a href="#2-2-Date类常用方法" class="headerlink" title="2.2 Date类常用方法"></a>2.2 Date类常用方法</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public long getTime()</td>
-<td>获取的是日期对象从1970年1月1日 00:00:00到现在的毫秒值</td>
-</tr>
-<tr>
-<td>public void setTime(long time)</td>
-<td>设置时间，给的是毫秒值</td>
-</tr>
-</tbody></table>
-<h3 id="2-3-SimpleDateFormat类"><a href="#2-3-SimpleDateFormat类" class="headerlink" title="2.3 SimpleDateFormat类"></a>2.3 SimpleDateFormat类</h3><p><strong>SimpleDateFormat类概述</strong></p>
-<p>　　SimpleDateFormat是一个具体的类，用于以区域设置敏感的方式格式化和解析日期。</p>
-<p>　　我们重点学习日期格式化和解析</p>
-<p><strong>SimpleDateFormat类构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public SimpleDateFormat()</td>
-<td>构造一个SimpleDateFormat，使用默认模式和日期格式</td>
-</tr>
-<tr>
-<td>public SimpleDateFormat(String pattern)</td>
-<td>构造一个SimpleDateFormat使用给定的模式和默认的日期格式</td>
-</tr>
-</tbody></table>
-<p><strong>SimpleDateFormat类的常用方法</strong></p>
-<p>　　格式化(从Date到String)</p>
-<p>　　　　public final String format(Date date)：将日期格式化成日期/时间字符串</p>
-<p>　　解析(从String到Date)</p>
-<p>　　　　public Date parse(String source)：从给定字符串的开始解析文本以生成日期</p>
-<h3 id="2-5-Calendar类"><a href="#2-5-Calendar类" class="headerlink" title="2.5 Calendar类"></a>2.5 Calendar类</h3><p><strong>Calendar类概述</strong></p>
-<p>　　Calendar 为特定瞬间与一组日历字段之间的转换提供了一些方法，并为操作日历字段提供了一些方法</p>
-<p>　　Calendar 提供了一个类方法 getInstance 用于获取这种类型的一般有用的对象。 该方法返回一个Calendar 对象。</p>
-<p><strong>Calendar类常用方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public int get(int field)</td>
-<td>返回给定日历字段的值</td>
-</tr>
-<tr>
-<td>public abstract void add(int field, int amount)</td>
-<td>根据日历的规则，将指定的时间量添加或减去给定的日历字段</td>
-</tr>
-<tr>
-<td>public final void set(int year,int month,int date)</td>
-<td>设置当前日历的年月日</td>
-</tr>
-</tbody></table>
-<p><strong>二月天案例</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CalendarTest</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         <span class="comment">//键盘录入任意的年份</span></span><br><span class="line"> <span class="number">4</span>         Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line"> <span class="number">5</span>         System.out.println(<span class="string">&quot;请输入年：&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         <span class="keyword">int</span> year = sc.nextInt();</span><br><span class="line"> <span class="number">7</span>         <span class="comment">//设置日历对象的年、月、日</span></span><br><span class="line"> <span class="number">8</span>         Calendar c = Calendar.getInstance();</span><br><span class="line"> <span class="number">9</span>         c.set(year, <span class="number">2</span>, <span class="number">1</span>);</span><br><span class="line"><span class="number">10</span>         <span class="comment">//3月1日往前推一天，就是2月的最后一天</span></span><br><span class="line"><span class="number">11</span>         c.add(Calendar.DATE, -<span class="number">1</span>);</span><br><span class="line"><span class="number">12</span>         <span class="comment">//获取这一天输出即可</span></span><br><span class="line"><span class="number">13</span>         <span class="keyword">int</span> date = c.get(Calendar.DATE);</span><br><span class="line"><span class="number">14</span>         System.out.println(year + <span class="string">&quot;年的2月份有&quot;</span> + date + <span class="string">&quot;天&quot;</span>);</span><br><span class="line"><span class="number">15</span>     &#125;</span><br><span class="line"><span class="number">16</span> &#125;           </span><br></pre></td></tr></table></figure>
-
-<h2 id="3-异常"><a href="#3-异常" class="headerlink" title="3.异常"></a>3.异常</h2><h3 id="3-1-异常"><a href="#3-1-异常" class="headerlink" title="3.1 异常"></a>3.1 异常</h3><p><strong>异常的概述</strong></p>
-<p>　　异常就是程序出现了不正常的情况</p>
-<p><strong>异常的体系结构</strong></p>
-<p>Throwable</p>
-<p>　　Error:严重的错误，我们无法处理</p>
-<p>　　Exception：程序本身可以处理的错误</p>
-<p>　　　　RuntimeException：在编译期不做检查，等到发现错误时由我们回来修改程序</p>
-<p>　　　　非RuntimeException：编译期就必须处理，否则无法通过编译</p>
-<h3 id="3-2-JVM默认处理异常的方式"><a href="#3-2-JVM默认处理异常的方式" class="headerlink" title="3.2 JVM默认处理异常的方式"></a>3.2 JVM默认处理异常的方式</h3><p>如果程序出现了问题，我们没有做任何处理，最终JVM 会做默认的处理，处理方式有如下两个步骤：</p>
-<p>　　把异常的名称，错误原因及异常出现的位置等信息输出在了控制台</p>
-<p>　　程序停止执行</p>
-<h3 id="3-3-try-catch方式处理异常"><a href="#3-3-try-catch方式处理异常" class="headerlink" title="3.3 try-catch方式处理异常"></a>3.3 try-catch方式处理异常</h3><p><strong>定义格式</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">2</span> 　　可能出现异常的代码;</span><br><span class="line"><span class="number">3</span> &#125; <span class="keyword">catch</span>(异常类名 变量名) &#123;</span><br><span class="line"><span class="number">4</span> 　　异常的处理代码;</span><br><span class="line"><span class="number">5</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>执行流程</strong></p>
-<p>　　程序从 try 里面的代码开始执行</p>
-<p>　　出现异常，就会跳转到对应的 catch 里面去执行</p>
-<p>　　执行完毕之后，程序还可以继续往下执行</p>
-<h3 id="3-4-Throwable成员方法"><a href="#3-4-Throwable成员方法" class="headerlink" title="3.4 Throwable成员方法"></a>3.4 Throwable成员方法</h3><p><strong>常用方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public String getMessage()</td>
-<td>返回此 throwable 的详细消息字符串</td>
-</tr>
-<tr>
-<td>public String toString()</td>
-<td>返回此可抛出的简短描述</td>
-</tr>
-<tr>
-<td>public void printStackTrace()</td>
-<td>把异常的错误信息输出在控制台</td>
-</tr>
-</tbody></table>
-<h3 id="3-5-编译时异常和运行时异常的区别"><a href="#3-5-编译时异常和运行时异常的区别" class="headerlink" title="3.5 编译时异常和运行时异常的区别"></a>3.5 编译时异常和运行时异常的区别</h3><p><strong>编译时异常</strong></p>
-<p>　　都是Exception类及其子类</p>
-<p>　　必须显示处理，否则程序就会发生错误，无法通过编译</p>
-<p><strong>运行时异常</strong></p>
-<p>　　都是RuntimeException类及其子类</p>
-<p>　　无需显示处理，也可以和编译时异常一样处理</p>
-<h3 id="3-6-throws方式处理异常"><a href="#3-6-throws方式处理异常" class="headerlink" title="3.6 throws方式处理异常"></a>3.6 throws方式处理异常</h3><p><strong>定义格式</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="keyword">void</span> 方法() <span class="keyword">throws</span> 异常类名 &#123;</span><br><span class="line"><span class="number">2</span>     ……</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项</strong></p>
-<p>　　这个throws格式是跟在方法的括号后面的</p>
-<p>　　编译时异常必须要进行处理，两种处理方案：try…catch …或者 throws，如果采用 throws 这种方案， 将来谁调用谁处理</p>
-<p>　　运行时异常可以不处理，出现问题后，需要我们回来修改代码</p>
-<h3 id="3-7-throws和throw的区别"><a href="#3-7-throws和throw的区别" class="headerlink" title="3.7 throws和throw的区别"></a>3.7 throws和throw的区别</h3><p><strong>Throws</strong></p>
-<p>　　用在方法声明的后面，跟着的是异常类名</p>
-<p>　　表示抛出异常，由该方法的调用者来处理</p>
-<p>　　表示出现异常的一种可能，并不一定会出现这个异常</p>
-<p><strong>Throw</strong></p>
-<p>　　用在方法体内，跟着的是异常类名</p>
-<p>　　表示抛出异常，由方法体内语句处理</p>
-<p>　　执行throw一定抛出了某种异常</p>
-<h3 id="3-8-自定义异常"><a href="#3-8-自定义异常" class="headerlink" title="3.8 自定义异常"></a>3.8 自定义异常</h3><p><strong>自定义异常类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">iNumberLargeException</span> <span class="keyword">extends</span> <span class="title">Exception</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="title">iNumberLargeException</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"><span class="number">3</span> </span><br><span class="line"><span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="title">iNumberLargeException</span><span class="params">(String message)</span></span>&#123;</span><br><span class="line"><span class="number">5</span>         <span class="keyword">super</span>(message);</span><br><span class="line"><span class="number">6</span>     &#125;</span><br><span class="line"><span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>检测类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Check</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> sorce)</span> <span class="keyword">throws</span> iNumberLargeException </span>&#123;</span><br><span class="line"><span class="number">3</span>         <span class="keyword">if</span> (sorce &lt; <span class="number">0</span> || sorce &gt; <span class="number">100</span>) &#123;</span><br><span class="line"><span class="number">4</span>             <span class="keyword">throw</span> <span class="keyword">new</span> iNumberLargeException(<span class="string">&quot;分数异常！&quot;</span>);</span><br><span class="line"><span class="number">5</span>         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="number">6</span>             System.out.println(<span class="string">&quot;正常&quot;</span>);</span><br><span class="line"><span class="number">7</span>         &#125;</span><br><span class="line"><span class="number">8</span>     &#125;</span><br><span class="line"><span class="number">9</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">iExceptionDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">int</span> sorce = sc.nextInt();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Check.check(sorce);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (iNumberLargeException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
@@ -2718,11 +2771,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -2739,6 +2792,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">JavaSE</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Less</a>
               </li>
              
               <li class="article-tag-list-item">

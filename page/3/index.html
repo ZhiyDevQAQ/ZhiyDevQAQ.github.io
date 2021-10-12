@@ -165,6 +165,525 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaSE-14-集合（壹）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/07/JavaSE-14-%E9%9B%86%E5%90%88%EF%BC%88%E5%A3%B9%EF%BC%89/">JavaSE-14-集合（壹）</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/07/JavaSE-14-%E9%9B%86%E5%90%88%EF%BC%88%E5%A3%B9%EF%BC%89/" class="archive-article-date">
+  	<time datetime="2021-10-07T15:13:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-Collection集合"><a href="#1-Collection集合" class="headerlink" title="1.Collection集合"></a>1.Collection集合</h2><h3 id="1-1-集合体系结构"><a href="#1-1-集合体系结构" class="headerlink" title="1.1 集合体系结构"></a>1.1 集合体系结构</h3><p><strong>集合</strong></p>
+<p>　　<strong>（接口）Collection：单列</strong></p>
+<p>　　　　**<em>*（接口）*<em>List：可重复</em></em></p>
+<p>　　　　　　<strong>（实现类）ArrayList</strong></p>
+<p>　　　　　　**<em>*（实现类）*<em>LinkedList</em></em></p>
+<p>　　　　**<em>*（接口）*<em>Set：不可重复</em></em></p>
+<p>　　　　　　**<em>*（实现类）*<em>HashSet</em></em></p>
+<p>　　　　　　**<em>*（实现类）*<em>TreeSet</em></em></p>
+<p>　　****（接口）**Map：双列<br>**</p>
+<p>　　　　　　**<em>*（实现类）*<em>HashMap</em></em></p>
+<h3 id="1-2-Collection集合概述和基本使用"><a href="#1-2-Collection集合概述和基本使用" class="headerlink" title="1.2 Collection集合概述和基本使用"></a>1.2 Collection集合概述和基本使用</h3><p><strong>Collection集合概述</strong></p>
+<p>　　是单例集合的顶层接口，它表示一组对象，这些对象也称为Collection的元素</p>
+<p>　　JDK 不提供此接口的任何直接实现，它提供更具体的子接口（如Set和List）实现</p>
+<h3 id="1-3-Collection集合的常用方法"><a href="#1-3-Collection集合的常用方法" class="headerlink" title="1.3 Collection集合的常用方法"></a>1.3 Collection集合的常用方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>boolean add(E e)</td>
+<td>添加元素</td>
+</tr>
+<tr>
+<td>boolean remove(Object o)</td>
+<td>从集合中移除指定的元素</td>
+</tr>
+<tr>
+<td>void clear()</td>
+<td>清空集合中的元素</td>
+</tr>
+<tr>
+<td>boolean contains(Object o)</td>
+<td>判断集合中是否存在指定的元素</td>
+</tr>
+<tr>
+<td>boolean isEmpty()</td>
+<td>判断集合是否为空</td>
+</tr>
+<tr>
+<td>int size()</td>
+<td>集合的长度，也就是集合中元素的个数</td>
+</tr>
+</tbody></table>
+<h3 id="1-4-Collection集合的遍历"><a href="#1-4-Collection集合的遍历" class="headerlink" title="1.4 Collection集合的遍历"></a>1.4 Collection集合的遍历</h3><p><strong>迭代器的介绍</strong></p>
+<p>　　迭代器，集合的专用遍历方式</p>
+<p>　　Iterator iterator()：返回此集合中元素的迭代器，通过集合的iterator()方法得到</p>
+<p>　　迭代器是通过集合的iterator()方法得到的，所以我们说它是依赖于集合而存在的</p>
+<p><strong>Collection集合的遍历</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.Collection;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.util.Iterator;</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">iCollection</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">7</span>         Collection&lt;String&gt; cl = <span class="keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         cl.add(<span class="string">&quot;1&quot;</span>);</span><br><span class="line"><span class="number">10</span>         cl.add(<span class="string">&quot;2&quot;</span>);</span><br><span class="line"><span class="number">11</span>         cl.add(<span class="string">&quot;3&quot;</span>);</span><br><span class="line"><span class="number">12</span>         cl.add(<span class="string">&quot;4&quot;</span>);</span><br><span class="line"><span class="number">13</span> </span><br><span class="line"><span class="number">14</span>         Iterator&lt;String&gt; it = cl.iterator();</span><br><span class="line"><span class="number">15</span>         <span class="keyword">while</span>(it.hasNext())&#123;</span><br><span class="line"><span class="number">16</span>             String s = it.next();</span><br><span class="line"><span class="number">17</span>             System.out.println(s);</span><br><span class="line"><span class="number">18</span>         &#125;</span><br><span class="line"><span class="number">19</span>     &#125;</span><br><span class="line"><span class="number">20</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-List集合"><a href="#2-List集合" class="headerlink" title="2.List集合"></a>2.List集合</h2><h3 id="2-1-List集合概述和特点"><a href="#2-1-List集合概述和特点" class="headerlink" title="2.1 List集合概述和特点"></a>2.1 List集合概述和特点</h3><p><strong>List集合概述</strong></p>
+<p>　　有序集合(也称为序列)，用户可以精确控制列表中每个元素的插入位置。用户可以通过整数索引访问元 素，并搜索列表中的元素</p>
+<p>　　与Set集合不同，列表通常允许重复的元素</p>
+<p><strong>List集合特点</strong></p>
+<p>　　有索引</p>
+<p>　　可以存储重复元素</p>
+<p>　　元素存取有序</p>
+<h3 id="2-2-List集合的特有方法"><a href="#2-2-List集合的特有方法" class="headerlink" title="2.2 List集合的特有方法"></a>2.2 List集合的特有方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void add(int index,E element)</td>
+<td>在此集合中的指定位置插入指定的元素</td>
+</tr>
+<tr>
+<td>E remove(int index)</td>
+<td>删除指定索引处的元素，返回被删除的元素</td>
+</tr>
+<tr>
+<td>E set(int index,E element)</td>
+<td>修改指定索引处的元素，返回被修改的元素</td>
+</tr>
+<tr>
+<td>E get(int index)</td>
+<td>返回指定索引处的元素</td>
+</tr>
+</tbody></table>
+<h3 id="2-3-并发修改异常"><a href="#2-3-并发修改异常" class="headerlink" title="2.3 并发修改异常"></a>2.3 并发修改异常</h3><p><strong>出现的原因</strong></p>
+<p>　　迭代器遍历的过程中，通过集合对象修改了集合中的元素，造成了迭代器获取元素中判断预期修改值和实际修改值不一致，则会出现：ConcurrentModificationException</p>
+<p><strong>解决的方案</strong></p>
+<p>　　用for循环遍历，然后用集合对象做对应的操作即可</p>
+<h3 id="2-4-列表迭代器"><a href="#2-4-列表迭代器" class="headerlink" title="2.4 列表迭代器"></a>2.4 列表迭代器</h3><p><strong>ListIterator介绍</strong></p>
+<p>　　通过List集合的listIterator()方法得到，所以说它是List集合特有的迭代器</p>
+<p>　　用于允许程序员沿任一方向遍历的列表迭代器，在迭代期间修改列表，并获取列表中迭代器的当前位置</p>
+<h3 id="2-5-增强for循环"><a href="#2-5-增强for循环" class="headerlink" title="2.5 增强for循环"></a>2.5 增强for循环</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">for</span>(元素数据类型 变量名 : 数组/集合对象名) &#123;</span><br><span class="line"><span class="number">2</span> 　　循环体;</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>本质上还是一个迭代器</p>
+<h2 id="3-常用数据结构"><a href="#3-常用数据结构" class="headerlink" title="3.常用数据结构"></a>3.常用数据结构</h2><h3 id="3-1-数据结构之栈和队列"><a href="#3-1-数据结构之栈和队列" class="headerlink" title="3.1 数据结构之栈和队列"></a>3.1 数据结构之栈和队列</h3><p><strong>栈结构</strong></p>
+<p>　　先进后出</p>
+<p><strong>队列结构</strong></p>
+<p>　　先进先出</p>
+<h3 id="3-2-数据结构之数组和链表"><a href="#3-2-数据结构之数组和链表" class="headerlink" title="3.2 数据结构之数组和链表"></a>3.2 数据结构之数组和链表</h3><p><strong>数组结构</strong></p>
+<p>　　查询快、增删慢</p>
+<p><strong>队列结构</strong></p>
+<p>　　查询慢、增删快</p>
+<h3 id="3-3-List集合子类的特点"><a href="#3-3-List集合子类的特点" class="headerlink" title="3.3 List集合子类的特点"></a>3.3 List集合子类的特点</h3><p><strong>ArrayList集合</strong></p>
+<p>　　底层是数组结构实现，查询快、增删慢</p>
+<p><strong>LinkedList集合</strong></p>
+<p>　　底层是链表结构实现，查询慢、增删快</p>
+<h3 id="3-4-LinkedList集合的特有功能"><a href="#3-4-LinkedList集合的特有功能" class="headerlink" title="3.4 LinkedList集合的特有功能"></a>3.4 LinkedList集合的特有功能</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public void addFirst(E e)</td>
+<td>在该列表开头插入指定的元素</td>
+</tr>
+<tr>
+<td>public void addLast(E e)</td>
+<td>将指定的元素追加到此列表的末尾</td>
+</tr>
+<tr>
+<td>public E getFirst()</td>
+<td>返回此列表中的第一个元素</td>
+</tr>
+<tr>
+<td>public E getLast()</td>
+<td>返回此列表中的最后一个元素</td>
+</tr>
+<tr>
+<td>public E removeFirst()</td>
+<td>从此列表中删除并返回第一个元素</td>
+</tr>
+<tr>
+<td>public E removeLast()</td>
+<td>从此列表中删除并返回最后一个元素</td>
+</tr>
+</tbody></table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/07/JavaSE-14-%E9%9B%86%E5%90%88%EF%BC%88%E5%A3%B9%EF%BC%89/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-13-包装类和异常处理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">JavaSE-13-包装类和异常处理</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/" class="archive-article-date">
+  	<time datetime="2021-10-07T15:12:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-包装类"><a href="#1-包装类" class="headerlink" title="1.包装类"></a>1.包装类</h2><h3 id="1-1-基本类型包装类"><a href="#1-1-基本类型包装类" class="headerlink" title="1.1 基本类型包装类"></a>1.1 基本类型包装类</h3><p><strong>基本类型包装类的作用</strong></p>
+<p>　　将基本数据类型封装成对象的好处在于可以在对象中定义更多的功能方法操作该数据</p>
+<p>　　常用的操作之一：用于基本数据类型与字符串之间的转换</p>
+<table>
+<thead>
+<tr>
+<th><strong>基本类型</strong></th>
+<th><strong>包装类</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte</td>
+<td>Byte</td>
+</tr>
+<tr>
+<td>short</td>
+<td>Short</td>
+</tr>
+<tr>
+<td>int</td>
+<td>Integer</td>
+</tr>
+<tr>
+<td>long</td>
+<td>Long</td>
+</tr>
+<tr>
+<td>float</td>
+<td>Float</td>
+</tr>
+<tr>
+<td>double</td>
+<td>Double</td>
+</tr>
+<tr>
+<td>char</td>
+<td>Character</td>
+</tr>
+<tr>
+<td>boolean</td>
+<td>Boolean</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-Integer"><a href="#1-2-Integer" class="headerlink" title="1.2 Integer"></a>1.2 Integer</h3><p><strong>Integer类概述</strong></p>
+<p>　　包装一个对象中的原始类型 int 的值</p>
+<p><strong>构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public Integer(int value)</td>
+<td>根据 int 值创建 Integer 对象(过时)</td>
+</tr>
+<tr>
+<td>public Integer(String s)</td>
+<td>根据 String 值创建 Integer 对象(过时)</td>
+</tr>
+<tr>
+<td>public static Integer valueOf(int i)</td>
+<td>返回表示指定的 int 值的 Integer 实例</td>
+</tr>
+<tr>
+<td>public static Integer valueOf(String s)</td>
+<td>返回一个保存指定值的 Integer 对象 String</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-int和String类型的相互转换"><a href="#1-3-int和String类型的相互转换" class="headerlink" title="1.3 int和String类型的相互转换"></a>1.3 int和String类型的相互转换</h3><p><strong>int转换为String 转换方式</strong></p>
+<p>　　方式一：直接在数字后加一个空字符串</p>
+<p>　　方式二：通过String类静态方法valueOf()</p>
+<p><strong>String转换为int</strong> </p>
+<p>　　方式一：先将字符串数字转成Integer，再调用valueOf()方法</p>
+<p>　　方式二：通过Integer静态方法parseInt()进行转换</p>
+<h3 id="1-4-自动拆箱和自动装箱"><a href="#1-4-自动拆箱和自动装箱" class="headerlink" title="1.4 自动拆箱和自动装箱"></a>1.4 自动拆箱和自动装箱</h3><p><strong>自动装箱</strong></p>
+<p>　　把基本数据类型转换为对应的包装类类型</p>
+<p><strong>自动拆箱</strong></p>
+<p>　　把包装类类型转换为对应的基本数据类型</p>
+<h2 id="2-时间日期类"><a href="#2-时间日期类" class="headerlink" title="2.时间日期类"></a>2.时间日期类</h2><h3 id="2-1-Date类"><a href="#2-1-Date类" class="headerlink" title="2.1 Date类"></a>2.1 Date类</h3><p><strong>Date类概述</strong></p>
+<p>　　Date 代表了一个特定的时间，精确到毫秒</p>
+<p><strong>Date类构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public Date()</td>
+<td>分配一个 Date对象，并初始化，以便它代表它被分配的时间，精确到毫秒</td>
+</tr>
+<tr>
+<td>public Date(long date)</td>
+<td>分配一个 Date对象，并将其初始化为表示从标准基准时间起指定的毫秒数</td>
+</tr>
+</tbody></table>
+<h3 id="2-2-Date类常用方法"><a href="#2-2-Date类常用方法" class="headerlink" title="2.2 Date类常用方法"></a>2.2 Date类常用方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public long getTime()</td>
+<td>获取的是日期对象从1970年1月1日 00:00:00到现在的毫秒值</td>
+</tr>
+<tr>
+<td>public void setTime(long time)</td>
+<td>设置时间，给的是毫秒值</td>
+</tr>
+</tbody></table>
+<h3 id="2-3-SimpleDateFormat类"><a href="#2-3-SimpleDateFormat类" class="headerlink" title="2.3 SimpleDateFormat类"></a>2.3 SimpleDateFormat类</h3><p><strong>SimpleDateFormat类概述</strong></p>
+<p>　　SimpleDateFormat是一个具体的类，用于以区域设置敏感的方式格式化和解析日期。</p>
+<p>　　我们重点学习日期格式化和解析</p>
+<p><strong>SimpleDateFormat类构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public SimpleDateFormat()</td>
+<td>构造一个SimpleDateFormat，使用默认模式和日期格式</td>
+</tr>
+<tr>
+<td>public SimpleDateFormat(String pattern)</td>
+<td>构造一个SimpleDateFormat使用给定的模式和默认的日期格式</td>
+</tr>
+</tbody></table>
+<p><strong>SimpleDateFormat类的常用方法</strong></p>
+<p>　　格式化(从Date到String)</p>
+<p>　　　　public final String format(Date date)：将日期格式化成日期/时间字符串</p>
+<p>　　解析(从String到Date)</p>
+<p>　　　　public Date parse(String source)：从给定字符串的开始解析文本以生成日期</p>
+<h3 id="2-5-Calendar类"><a href="#2-5-Calendar类" class="headerlink" title="2.5 Calendar类"></a>2.5 Calendar类</h3><p><strong>Calendar类概述</strong></p>
+<p>　　Calendar 为特定瞬间与一组日历字段之间的转换提供了一些方法，并为操作日历字段提供了一些方法</p>
+<p>　　Calendar 提供了一个类方法 getInstance 用于获取这种类型的一般有用的对象。 该方法返回一个Calendar 对象。</p>
+<p><strong>Calendar类常用方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public int get(int field)</td>
+<td>返回给定日历字段的值</td>
+</tr>
+<tr>
+<td>public abstract void add(int field, int amount)</td>
+<td>根据日历的规则，将指定的时间量添加或减去给定的日历字段</td>
+</tr>
+<tr>
+<td>public final void set(int year,int month,int date)</td>
+<td>设置当前日历的年月日</td>
+</tr>
+</tbody></table>
+<p><strong>二月天案例</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">CalendarTest</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         <span class="comment">//键盘录入任意的年份</span></span><br><span class="line"> <span class="number">4</span>         Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line"> <span class="number">5</span>         System.out.println(<span class="string">&quot;请输入年：&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         <span class="keyword">int</span> year = sc.nextInt();</span><br><span class="line"> <span class="number">7</span>         <span class="comment">//设置日历对象的年、月、日</span></span><br><span class="line"> <span class="number">8</span>         Calendar c = Calendar.getInstance();</span><br><span class="line"> <span class="number">9</span>         c.set(year, <span class="number">2</span>, <span class="number">1</span>);</span><br><span class="line"><span class="number">10</span>         <span class="comment">//3月1日往前推一天，就是2月的最后一天</span></span><br><span class="line"><span class="number">11</span>         c.add(Calendar.DATE, -<span class="number">1</span>);</span><br><span class="line"><span class="number">12</span>         <span class="comment">//获取这一天输出即可</span></span><br><span class="line"><span class="number">13</span>         <span class="keyword">int</span> date = c.get(Calendar.DATE);</span><br><span class="line"><span class="number">14</span>         System.out.println(year + <span class="string">&quot;年的2月份有&quot;</span> + date + <span class="string">&quot;天&quot;</span>);</span><br><span class="line"><span class="number">15</span>     &#125;</span><br><span class="line"><span class="number">16</span> &#125;           </span><br></pre></td></tr></table></figure>
+
+<h2 id="3-异常"><a href="#3-异常" class="headerlink" title="3.异常"></a>3.异常</h2><h3 id="3-1-异常"><a href="#3-1-异常" class="headerlink" title="3.1 异常"></a>3.1 异常</h3><p><strong>异常的概述</strong></p>
+<p>　　异常就是程序出现了不正常的情况</p>
+<p><strong>异常的体系结构</strong></p>
+<p>Throwable</p>
+<p>　　Error:严重的错误，我们无法处理</p>
+<p>　　Exception：程序本身可以处理的错误</p>
+<p>　　　　RuntimeException：在编译期不做检查，等到发现错误时由我们回来修改程序</p>
+<p>　　　　非RuntimeException：编译期就必须处理，否则无法通过编译</p>
+<h3 id="3-2-JVM默认处理异常的方式"><a href="#3-2-JVM默认处理异常的方式" class="headerlink" title="3.2 JVM默认处理异常的方式"></a>3.2 JVM默认处理异常的方式</h3><p>如果程序出现了问题，我们没有做任何处理，最终JVM 会做默认的处理，处理方式有如下两个步骤：</p>
+<p>　　把异常的名称，错误原因及异常出现的位置等信息输出在了控制台</p>
+<p>　　程序停止执行</p>
+<h3 id="3-3-try-catch方式处理异常"><a href="#3-3-try-catch方式处理异常" class="headerlink" title="3.3 try-catch方式处理异常"></a>3.3 try-catch方式处理异常</h3><p><strong>定义格式</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">2</span> 　　可能出现异常的代码;</span><br><span class="line"><span class="number">3</span> &#125; <span class="keyword">catch</span>(异常类名 变量名) &#123;</span><br><span class="line"><span class="number">4</span> 　　异常的处理代码;</span><br><span class="line"><span class="number">5</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>执行流程</strong></p>
+<p>　　程序从 try 里面的代码开始执行</p>
+<p>　　出现异常，就会跳转到对应的 catch 里面去执行</p>
+<p>　　执行完毕之后，程序还可以继续往下执行</p>
+<h3 id="3-4-Throwable成员方法"><a href="#3-4-Throwable成员方法" class="headerlink" title="3.4 Throwable成员方法"></a>3.4 Throwable成员方法</h3><p><strong>常用方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String getMessage()</td>
+<td>返回此 throwable 的详细消息字符串</td>
+</tr>
+<tr>
+<td>public String toString()</td>
+<td>返回此可抛出的简短描述</td>
+</tr>
+<tr>
+<td>public void printStackTrace()</td>
+<td>把异常的错误信息输出在控制台</td>
+</tr>
+</tbody></table>
+<h3 id="3-5-编译时异常和运行时异常的区别"><a href="#3-5-编译时异常和运行时异常的区别" class="headerlink" title="3.5 编译时异常和运行时异常的区别"></a>3.5 编译时异常和运行时异常的区别</h3><p><strong>编译时异常</strong></p>
+<p>　　都是Exception类及其子类</p>
+<p>　　必须显示处理，否则程序就会发生错误，无法通过编译</p>
+<p><strong>运行时异常</strong></p>
+<p>　　都是RuntimeException类及其子类</p>
+<p>　　无需显示处理，也可以和编译时异常一样处理</p>
+<h3 id="3-6-throws方式处理异常"><a href="#3-6-throws方式处理异常" class="headerlink" title="3.6 throws方式处理异常"></a>3.6 throws方式处理异常</h3><p><strong>定义格式</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="keyword">void</span> 方法() <span class="keyword">throws</span> 异常类名 &#123;</span><br><span class="line"><span class="number">2</span>     ……</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项</strong></p>
+<p>　　这个throws格式是跟在方法的括号后面的</p>
+<p>　　编译时异常必须要进行处理，两种处理方案：try…catch …或者 throws，如果采用 throws 这种方案， 将来谁调用谁处理</p>
+<p>　　运行时异常可以不处理，出现问题后，需要我们回来修改代码</p>
+<h3 id="3-7-throws和throw的区别"><a href="#3-7-throws和throw的区别" class="headerlink" title="3.7 throws和throw的区别"></a>3.7 throws和throw的区别</h3><p><strong>Throws</strong></p>
+<p>　　用在方法声明的后面，跟着的是异常类名</p>
+<p>　　表示抛出异常，由该方法的调用者来处理</p>
+<p>　　表示出现异常的一种可能，并不一定会出现这个异常</p>
+<p><strong>Throw</strong></p>
+<p>　　用在方法体内，跟着的是异常类名</p>
+<p>　　表示抛出异常，由方法体内语句处理</p>
+<p>　　执行throw一定抛出了某种异常</p>
+<h3 id="3-8-自定义异常"><a href="#3-8-自定义异常" class="headerlink" title="3.8 自定义异常"></a>3.8 自定义异常</h3><p><strong>自定义异常类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">iNumberLargeException</span> <span class="keyword">extends</span> <span class="title">Exception</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="title">iNumberLargeException</span><span class="params">()</span></span>&#123;&#125;</span><br><span class="line"><span class="number">3</span> </span><br><span class="line"><span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="title">iNumberLargeException</span><span class="params">(String message)</span></span>&#123;</span><br><span class="line"><span class="number">5</span>         <span class="keyword">super</span>(message);</span><br><span class="line"><span class="number">6</span>     &#125;</span><br><span class="line"><span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>检测类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Check</span> </span>&#123;</span><br><span class="line"><span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">check</span><span class="params">(<span class="keyword">int</span> sorce)</span> <span class="keyword">throws</span> iNumberLargeException </span>&#123;</span><br><span class="line"><span class="number">3</span>         <span class="keyword">if</span> (sorce &lt; <span class="number">0</span> || sorce &gt; <span class="number">100</span>) &#123;</span><br><span class="line"><span class="number">4</span>             <span class="keyword">throw</span> <span class="keyword">new</span> iNumberLargeException(<span class="string">&quot;分数异常！&quot;</span>);</span><br><span class="line"><span class="number">5</span>         &#125; <span class="keyword">else</span> &#123;</span><br><span class="line"><span class="number">6</span>             System.out.println(<span class="string">&quot;正常&quot;</span>);</span><br><span class="line"><span class="number">7</span>         &#125;</span><br><span class="line"><span class="number">8</span>     &#125;</span><br><span class="line"><span class="number">9</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> java.util.Scanner;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">iExceptionDemo</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br><span class="line">        <span class="keyword">int</span> sorce = sc.nextInt();</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            Check.check(sorce);</span><br><span class="line">        &#125; <span class="keyword">catch</span> (iNumberLargeException e) &#123;</span><br><span class="line">            e.printStackTrace();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/07/JavaSE-13-%E5%8C%85%E8%A3%85%E7%B1%BB%E5%92%8C%E5%BC%82%E5%B8%B8%E5%A4%84%E7%90%86/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JavaSE-12-内部类和常用API" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1393,474 +1912,6 @@
 
 
   
-    <article id="post-JavaSE-4-Switch和循环语句" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/07/JavaSE-4-Switch%E5%92%8C%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5/">JavaSE-4-Switch和循环语句</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/07/JavaSE-4-Switch%E5%92%8C%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5/" class="archive-article-date">
-  	<time datetime="2021-10-07T14:51:20.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-Switch"><a href="#1-Switch" class="headerlink" title="1.Switch"></a>1.Switch</h2><p>格式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">switch</span> (表达式) &#123;</span><br><span class="line"> <span class="number">2</span> 　　<span class="keyword">case</span> <span class="number">1</span>:</span><br><span class="line"> <span class="number">3</span> 　　　　语句体<span class="number">1</span>;</span><br><span class="line"> <span class="number">4</span> 　　<span class="keyword">break</span>;</span><br><span class="line"> <span class="number">5</span> 　　<span class="keyword">case</span> <span class="number">2</span>:</span><br><span class="line"> <span class="number">6</span> 　　　　语句体<span class="number">2</span>;</span><br><span class="line"> <span class="number">7</span> 　　<span class="keyword">break</span>;</span><br><span class="line"> <span class="number">8</span> 　　...</span><br><span class="line"> <span class="number">9</span> 　　<span class="keyword">default</span>:</span><br><span class="line"><span class="number">10</span> 　　　　语句体n+<span class="number">1</span>;</span><br><span class="line"><span class="number">11</span> 　　<span class="keyword">break</span>;</span><br><span class="line"><span class="number">12</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>执行流程：</p>
-<p>首先计算出表达式的值。</p>
-<p>其次，和case依次比较，一旦有对应的值，就会执行相应的语句，在执行的过程中，遇到break就会结束。</p>
-<p>最后，如果所有的case都和表达式的值不匹配，就会执行default语句体部分，然后程序结束掉。</p>
-<h2 id="2-for循环"><a href="#2-for循环" class="headerlink" title="2.for循环"></a>2.for循环</h2><p>循环： 循环语句可以在满足循环条件的情况下，反复执行某一段代码，这段被重复执行的代码被称为循环体语句， 当反复执行这个循环体时，需要在合适的时候把循环判断条件修改为false，从而结束循环，否则循环将一直执行下去，形成死循环。</p>
-<p>格式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">for</span> (初始化语句;条件判断语句;条件控制语句) &#123;</span><br><span class="line"><span class="number">2</span> 　　循环体语句;</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>格式解释：</p>
-<p>初始化语句： 用于表示循环开启时的起始状态，简单说就是循环开始的时候什么样</p>
-<p>条件判断语句：用于表示循环反复执行的条件，简单说就是判断循环是否能一直执行下去</p>
-<p>循环体语句： 用于表示循环反复执行的内容，简单说就是循环反复执行的事情</p>
-<p>条件控制语句：用于表示循环执行中每次变化的内容，简单说就是控制循环是否能执行下去</p>
-<p>执行流程：</p>
-<p>①执行初始化语句</p>
-<p>②执行条件判断语句，看其结果是true还是false</p>
-<p>如果是false，循环结束</p>
-<p>如果是true，继续执行</p>
-<p>③执行循环体语句</p>
-<p>④执行条件控制语句</p>
-<p>⑤回到②继续</p>
-<h2 id="3-while循环"><a href="#3-while循环" class="headerlink" title="3.while循环"></a>3.while循环</h2><p>格式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">while</span> (条件判断语句) &#123;</span><br><span class="line"><span class="number">2</span>     循环体语句;</span><br><span class="line"><span class="number">3</span>     条件控制语句;</span><br><span class="line"><span class="number">4</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>执行流程：</p>
-<p>①执行初始化语句</p>
-<p>②执行条件判断语句，看其结果是true还是false</p>
-<p>如果是false，循环结束</p>
-<p>如果是true，继续执行</p>
-<p>③执行循环体语句</p>
-<p>④执行条件控制语句</p>
-<p>⑤回到②继续</p>
-<h2 id="4-do……while循环"><a href="#4-do……while循环" class="headerlink" title="4.do……while循环"></a>4.do……while循环</h2><p>格式：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">do</span> &#123;</span><br><span class="line"><span class="number">2</span> 　　循环体语句;</span><br><span class="line"><span class="number">3</span> 　　条件控制语句;</span><br><span class="line"><span class="number">4</span> &#125;<span class="keyword">while</span>(条件判断语句);</span><br></pre></td></tr></table></figure>
-
-<p>执行流程：</p>
-<p>① 执行初始化语句</p>
-<p>② 执行循环体语句</p>
-<p>③ 执行条件控制语句</p>
-<p>④ 执行条件判断语句，看其结果是true还是false</p>
-<p>如果是false，循环结束</p>
-<p>如果是true，继续执行</p>
-<p>⑤ 回到②继续</p>
-<h2 id="5-三种循环的区别"><a href="#5-三种循环的区别" class="headerlink" title="5.三种循环的区别"></a>5.三种循环的区别</h2><h3 id="5-1-三种循环的区别"><a href="#5-1-三种循环的区别" class="headerlink" title="5.1 三种循环的区别"></a>5.1 三种循环的区别</h3><p>for循环和while循环先判断条件是否成立，然后决定是否执行循环体（先判断后执行）</p>
-<p>do…while循环先执行一次循环体，然后判断条件是否成立，是否继续执行循环体（先执行后判断）</p>
-<h3 id="5-2-for循环和while的区别"><a href="#5-2-for循环和while的区别" class="headerlink" title="5.2 for循环和while的区别"></a>5.2 for循环和while的区别</h3><p>条件控制语句所控制的自增变量，因为归属for循环的语法结构中，在for循环结束后，就不能再次被访问到了</p>
-<p>条件控制语句所控制的自增变量，对于while循环来说不归属其语法结构中，在while循环结束后，该变量还可以继续使用</p>
-<h3 id="5-3-死循环（无限循环）的三种格式"><a href="#5-3-死循环（无限循环）的三种格式" class="headerlink" title="5.3 死循环（无限循环）的三种格式"></a>5.3 死循环（无限循环）的三种格式</h3><ol>
-<li><p>for(;;){}</p>
-</li>
-<li><p>while(true){}</p>
-</li>
-<li><p>do {} while(true);</p>
-</li>
-</ol>
-<h2 id="6-跳转控制语句"><a href="#6-跳转控制语句" class="headerlink" title="6.跳转控制语句"></a>6.跳转控制语句</h2><p>跳转控制语句（break） 跳出循环，结束循环</p>
-<p>跳转控制语句（continue） 跳过本次循环，继续下次循环</p>
-<p>注意： continue只能在循环中进行使用！</p>
-<h2 id="7-Random"><a href="#7-Random" class="headerlink" title="7.Random"></a>7.Random</h2><p>概述： Random类似Scanner，也是Java提供好的API，内部提供了产生随机数的功能。</p>
-<p>使用步骤：</p>
-<ol>
-<li>导入包 </li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">import</span> java.util.Random;</span><br></pre></td></tr></table></figure>
-
-<ol start="2">
-<li>创建对象 </li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> Random r = <span class="keyword">new</span> Random();</span><br></pre></td></tr></table></figure>
-
-<ol start="3">
-<li>产生随机数 </li>
-</ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> num = r.nextInt(<span class="number">10</span>);</span><br></pre></td></tr></table></figure>
-
-<p>解释： 10代表的是一个范围，如果括号写10，产生的随机数就是0-9，括号写20，参数的随机数则是0- 19。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/07/JavaSE-4-Switch%E5%92%8C%E5%BE%AA%E7%8E%AF%E8%AF%AD%E5%8F%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JavaSE-3-运算符和分支语句" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/07/JavaSE-3-%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/">JavaSE-3-运算符和分支语句</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/07/JavaSE-3-%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/" class="archive-article-date">
-  	<time datetime="2021-10-07T14:48:41.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-运算符"><a href="#1-运算符" class="headerlink" title="1.运算符"></a>1.运算符</h2><h3 id="1-1-算术运算符"><a href="#1-1-算术运算符" class="headerlink" title="1.1 算术运算符"></a>1.1 算术运算符</h3><h4 id="1-1-1-运算符和表达式"><a href="#1-1-1-运算符和表达式" class="headerlink" title="1.1.1 运算符和表达式"></a>1.1.1 运算符和表达式</h4><p>运算符：对常量或者变量进行操作的符号</p>
-<p>表达式：用运算符把常量或者变量连接起来符合java语法的式子就可以称为表达式。</p>
-<p>不同运算符连接的表达式体现的是不同类型的表达式。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> a = <span class="number">1</span>;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">int</span> b = <span class="number">2</span>;</span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> <span class="keyword">int</span> c = a + b;</span><br></pre></td></tr></table></figure>
-
-<p>+：是运算符，并且是算术运算符。 a + b：是表达式，由于+是算术运算符，所以这个表达式叫算术表达式。</p>
-<h4 id="1-1-2-算术运算符"><a href="#1-1-2-算术运算符" class="headerlink" title="1.1.2 算术运算符"></a>1.1.2 算术运算符</h4><table>
-<thead>
-<tr>
-<th><strong>符号</strong></th>
-<th><strong>作用</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>+</td>
-<td>加</td>
-<td>略</td>
-</tr>
-<tr>
-<td>-</td>
-<td>减</td>
-<td>略</td>
-</tr>
-<tr>
-<td>*</td>
-<td>乘</td>
-<td>略</td>
-</tr>
-<tr>
-<td>/</td>
-<td>除</td>
-<td>略</td>
-</tr>
-<tr>
-<td>%</td>
-<td>取余</td>
-<td>获取两数做除法后的余数</td>
-</tr>
-</tbody></table>
-<p>注意： /和%的区别：两个数据做除法，/取结果的商，%取结果的余数。 整数操作只能得到整数，要想得到小数，必须有浮点数参与运算。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="number">2</span> </span><br><span class="line"><span class="number">3</span> <span class="keyword">int</span> b = <span class="number">3</span>;</span><br><span class="line"><span class="number">4</span> </span><br><span class="line"><span class="number">5</span> System.out.println(a / b); <span class="comment">// 输出结果3</span></span><br><span class="line"><span class="number">6</span> </span><br><span class="line"><span class="number">7</span> System.out.println(a % b); <span class="comment">// 输出结果1</span></span><br></pre></td></tr></table></figure>
-
-<h4 id="1-1-3-字符的“-”操作"><a href="#1-1-3-字符的“-”操作" class="headerlink" title="1.1.3 字符的“+”操作"></a>1.1.3 字符的“+”操作</h4><p>char类型参与算术运算，使用的是计算机底层对应的十进制数值。需要我们记住三个字符对应的数值：</p>
-<p>‘a’ – 97 a-z是连续的，所以’b’对应的数值是98，’c’是99，依次递加</p>
-<p>‘A’ – 65 A-Z是连续的，所以’B’对应的数值是66，’C’是67，依次递加</p>
-<p>‘0’ – 48 0-9是连续的，所以’1’对应的数值是49，’2’是50，依次递加</p>
-<p>或者也可以只记住两个值，大写A+32就是小写a</p>
-<p>算术表达式中包含不同的基本数据类型的值的时候，整个算术表达式的类型会自动进行提升。</p>
-<p>提升规则： byte类型，short类型和char类型将被提升到int类型，不管是否有其他类型参与运算。</p>
-<p>整个表达式的类型自动提升到与表达式中最高等级的操作数相同的类型</p>
-<p>等级顺序：byte,short,char –&gt; int –&gt; long –&gt; float –&gt; double</p>
-<p>tips：</p>
-<p>1、正是由于上述原因，所以在程序开发中我们很少使用byte或者short类型定义整数。也很少会使用char类型定 义字符，而使用字符串类型，更不会使用char类型做算术运算。</p>
-<p>2、当“+”操作中出现字符串时，这个”+”是字符串连接符，而不是算术运算。在”+”操作中，如果出现了字符串，就是连接运算符，否则就是算术运算。当连续进行“+”操作时，从左到右逐个执行。</p>
-<p>3、对于大量字符串连接，会产生严重的性能问题，为了解决这一问题，可以在有大量字符串连接的代码中使用StringBuffer或者StringBuilder。</p>
-<h3 id="1-2-赋值运算符"><a href="#1-2-赋值运算符" class="headerlink" title="1.2 赋值运算符"></a>1.2 赋值运算符</h3><table>
-<thead>
-<tr>
-<th><strong>符号</strong></th>
-<th><strong>作用</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>=</td>
-<td>赋值</td>
-<td>a=1，将1赋值给变量a</td>
-</tr>
-<tr>
-<td>+=</td>
-<td>加后赋值</td>
-<td>a+=b，将a+b的值给a，等同于a=a+b</td>
-</tr>
-<tr>
-<td>-=</td>
-<td>减后赋值</td>
-<td>a-=b，将a-b的值给a，等同于a=a-b</td>
-</tr>
-<tr>
-<td>*=</td>
-<td>乘后赋值</td>
-<td>a*=b，将a<em>b的值给a，等同于a=a</em>b</td>
-</tr>
-<tr>
-<td>/=</td>
-<td>除后赋值</td>
-<td>a/=b，将a/b的值给a，等同于a=a/b</td>
-</tr>
-<tr>
-<td>%=</td>
-<td>取余后赋值</td>
-<td>a%=b，将a%b的值给a，等同于a=a%b</td>
-</tr>
-</tbody></table>
-<h3 id="1-3-自增自减"><a href="#1-3-自增自减" class="headerlink" title="1.3 自增自减"></a>1.3 自增自减</h3><table>
-<thead>
-<tr>
-<th><strong>符号</strong></th>
-<th><strong>作用</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>++</td>
-<td>自增</td>
-<td>a++，即a=a+1</td>
-</tr>
-<tr>
-<td>–</td>
-<td>自减</td>
-<td>a–，即a=a-1</td>
-</tr>
-</tbody></table>
-<p>注意事项：</p>
-<p>++和– 既可以放在变量的后边，也可以放在变量的前边。</p>
-<p>单独使用的时候， ++和– 无论是放在变量的前边还是后边，结果是一样的。</p>
-<p>参与操作的时候，如果放在变量的前边，先拿变量做++或者–，后拿变量参与操作；如果放在变量的后边，先拿变量参与操作，后拿变量做++或者–。</p>
-<h3 id="1-4-关系运算符"><a href="#1-4-关系运算符" class="headerlink" title="1.4 关系运算符"></a>1.4 关系运算符</h3><table>
-<thead>
-<tr>
-<th><strong>符号</strong></th>
-<th><strong>作用</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>==</td>
-<td>判断是否相等</td>
-<td>成立返回true，不成立返回false</td>
-</tr>
-<tr>
-<td>&gt;</td>
-<td>判断a是否大于b</td>
-<td>同上</td>
-</tr>
-<tr>
-<td>&gt;=</td>
-<td>判断a是否大于等于b</td>
-<td>同上</td>
-</tr>
-<tr>
-<td>&lt;</td>
-<td>判断a是否小于b</td>
-<td>同上</td>
-</tr>
-<tr>
-<td>&lt;=</td>
-<td>判断a是否小于等于b</td>
-<td>同上</td>
-</tr>
-<tr>
-<td>!=</td>
-<td>判断是否不相等</td>
-<td>同上</td>
-</tr>
-</tbody></table>
-<p>注意事项：</p>
-<p>1、关系运算符的结果都是boolean类型，要么是true，要么是false。</p>
-<p>2、不要混淆“==”与“=”，一个是判断，一个是赋值。</p>
-<h3 id="1-5-逻辑运算符"><a href="#1-5-逻辑运算符" class="headerlink" title="1.5 逻辑运算符"></a>1.5 逻辑运算符</h3><table>
-<thead>
-<tr>
-<th><strong>符号</strong></th>
-<th><strong>作用</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&amp;</td>
-<td>与</td>
-<td>a &amp; b,a与b是否都是true,成立返回true，不成立返回false</td>
-</tr>
-<tr>
-<td>|</td>
-<td>或</td>
-<td>a | b,a与b是否有一个是true,成立返回true，不成立返回false</td>
-</tr>
-<tr>
-<td>^</td>
-<td>异或</td>
-<td>a ^ b,a与b是否结果不同,成立返回true，不成立返回false</td>
-</tr>
-<tr>
-<td>!</td>
-<td>非</td>
-<td>!a ,结果与a是否完全相反,成立返回true，不成立返回false</td>
-</tr>
-</tbody></table>
-<p><strong>短路逻辑运算符</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>符号</strong></th>
-<th><strong>作用</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>&amp;&amp;</td>
-<td>短路与</td>
-<td>a &amp;&amp; b,a与b是否都是true,成立返回true，不成立返回false，具有短路效果</td>
-</tr>
-<tr>
-<td>||</td>
-<td>短路或</td>
-<td>a || b,a与b是否有一个是true,成立返回true，不成立返回false，具有短路效果</td>
-</tr>
-</tbody></table>
-<p><strong>短路效果：在逻辑与运算中，只要有一个表达式的值为false，那么结果就可以判定为false了，没有必要将所有表达式的值都 计算出来，短路与操作就有这样的效果，可以提高效率。同理在逻辑或运算中，一旦发现值为true，右边的表达式 将不再参与运算。</strong></p>
-<h3 id="1-6-三元运算符"><a href="#1-6-三元运算符" class="headerlink" title="1.6 三元运算符"></a>1.6 三元运算符</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">关系表达式 ? 表达式<span class="number">1</span> : 表达式<span class="number">2</span>;</span><br></pre></td></tr></table></figure>
-
-<p>解释：问号前面的位置是判断的条件，判断结果为boolean型，为true时调用表达式1，为false时调用表达式2。其 逻辑为：如果条件表达式成立或者满足则执行表达式1，否则执行第二个。</p>
-<p>举例：判断pwd和passwd是否相等，相等返回true，不相等返回false。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span> 　　<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span> 　　　　<span class="comment">//1：定义两个变量，此处仅作展示，请不要使用弱口令密码。</span></span><br><span class="line"> <span class="number">4</span> 　　　　<span class="keyword">int</span> pwd = <span class="number">123456</span>;</span><br><span class="line"> <span class="number">5</span> 　　　　<span class="keyword">int</span> passwd = <span class="number">123123</span>;</span><br><span class="line"> <span class="number">6</span> 　　　　<span class="comment">//2：用三元运算符实现数值的判断，相同，返回true，否则，返回false。</span></span><br><span class="line"> <span class="number">7</span> 　　　　<span class="keyword">boolean</span> b = pwd == passwd ? <span class="keyword">true</span> : <span class="keyword">false</span>;</span><br><span class="line"> <span class="number">8</span> 　　　　<span class="comment">//3：输出结果</span></span><br><span class="line"> <span class="number">9</span> 　　　　System.out.println(<span class="string">&quot;b:&quot;</span> + b);</span><br><span class="line"><span class="number">10</span> 　　&#125;</span><br><span class="line"><span class="number">11</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-数据输入"><a href="#2-数据输入" class="headerlink" title="2. 数据输入"></a>2. 数据输入</h2><p>我们可以通过 Scanner 类来获取用户的输入。</p>
-<p>使用步骤如下：</p>
-<p>1、导包。Scanner 类在java.util包下，所以需要将该类导入。导包的语句需要定义在类的上面。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">import</span> java.util.Scanner</span><br></pre></td></tr></table></figure>
-
-<p>2、创建Scanner对象。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> Scanner sc = <span class="keyword">new</span> Scanner(System.in);</span><br></pre></td></tr></table></figure>
-
-<p>3、接收数据</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> String str = sc.nextLine();</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-流程控制语句"><a href="#3-流程控制语句" class="headerlink" title="3. 流程控制语句"></a>3. 流程控制语句</h2><p>在一个程序执行的过程中，各条语句的执行顺序对程序的结果是有直接影响的。所以，我们必须清楚每条语句的执 行流程。而且，很多时候要通过控制语句的执行顺序来实现我们想要的功能。</p>
-<p><img src="https://ftp.bmp.ovh/imgs/2020/11/f7335ac52a9bcb53.jpg" alt="流程控制语句"></p>
-<h4 id="3-1-流程控制语句分类"><a href="#3-1-流程控制语句分类" class="headerlink" title="3.1 流程控制语句分类"></a>3.1 流程控制语句分类</h4><p>顺序结构、分支结构(if, switch)、循环结构(for, while, do…while)</p>
-<h4 id="3-2-顺序结构"><a href="#3-2-顺序结构" class="headerlink" title="3.2 顺序结构"></a>3.2 顺序结构</h4><p>顺序结构是程序中最简单最基本的流程控制，没有特定的语法结构，按照代码的先后顺序，依次执行，程序中大多 数的代码都是这样执行的。</p>
-<h4 id="3-3-分支结构之if语句"><a href="#3-3-分支结构之if语句" class="headerlink" title="3.3 分支结构之if语句"></a>3.3 分支结构之if语句</h4><p>1.if语句</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">if</span>(a == b)&#123;</span><br><span class="line"><span class="number">2</span> 　　<span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>判断a与b是否相等，相等执行花括号内语句，不相等什么都不做。</p>
-<p>2.if……else</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">if</span>(a == b)&#123;</span><br><span class="line"><span class="number">2</span> 　　<span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line"><span class="number">3</span> &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="number">4</span> 　　<span class="keyword">return</span> <span class="string">&quot;no!God!no!&quot;</span></span><br><span class="line"><span class="number">5</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>判断a与b是否相等，相等执行if下花括号内语句，不相等执行else下花括号内语句。</p>
-<p>3.if……else if……else</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">if</span>(a == b)&#123;</span><br><span class="line"><span class="number">2</span> 　　<span class="keyword">return</span> <span class="string">&quot;ok&quot;</span>;</span><br><span class="line"><span class="number">3</span> &#125;<span class="keyword">else</span> <span class="keyword">if</span>(a &lt; b)&#123;</span><br><span class="line"><span class="number">4</span> 　　<span class="keyword">return</span> <span class="string">&quot;no bad&quot;</span></span><br><span class="line"><span class="number">5</span> &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="number">6</span> 　　<span class="keyword">return</span> <span class="string">&quot;no!God!no!&quot;</span></span><br><span class="line"><span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>判断a与b是否相等，相等执行if下花括号内语句，不相等则判断else if中的判断，如果为true执行else if下花括号的语句。注意，else if语句可以有多个，如果都无法通过判断，则执行else下花括号内语句。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/07/JavaSE-3-%E8%BF%90%E7%AE%97%E7%AC%A6%E5%92%8C%E5%88%86%E6%94%AF%E8%AF%AD%E5%8F%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
@@ -1962,11 +2013,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1983,6 +2034,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color2">JavaSE</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">Less</a>
               </li>
              
               <li class="article-tag-list-item">
