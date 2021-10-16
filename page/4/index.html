@@ -999,19 +999,19 @@
 
 
   
-    <article id="post-2021-03-02-多线程、多进程与协程的选择" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+    <article id="post-2021-03-02-事件驱动" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <header class="article-header">
         
   
     <h1 itemprop="name">
-      <a class="article-title" href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/">多线程、多进程与协程的选择</a>
+      <a class="article-title" href="/2021/03/02/2021-03-02-%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/">事件驱动</a>
     </h1>
   
 
         
-        <a href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/" class="archive-article-date">
+        <a href="/2021/03/02/2021-03-02-%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/" class="archive-article-date">
   	<time datetime="2021-03-01T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-02</time>
 </a>
         
@@ -1019,15 +1019,12 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h1 id="多线程、多进程与协程的选择"><a href="#多线程、多进程与协程的选择" class="headerlink" title="多线程、多进程与协程的选择"></a>多线程、多进程与协程的选择</h1><p>协程和多线程的区别</p>
-<p>协程是实现并发编程的一种方式。一说并发，你肯定想到了多线程 / 多进程模型，没错，多线程 / 多进程，正是解决并发问题的经典模型之一。最初的互联网世界，多线程 / 多进程在服务器并发中，起到举足轻重的作用。</p>
-<p>我们知道，在处理 I/O 操作时，使用多线程与普通的单线程相比，效率得到了极大的提高。你可能会想，既然这样，为什么还需要协程（Asyncio）？</p>
-<p>诚然，多线程有诸多优点且应用广泛，但也存在一定的局限性：</p>
-<p>比如，多线程运行过程容易被打断，因此有可能出现竞争条件 (race condition) 的情况；再如，线程切换本身存在一定的损耗，线程数不能无限增加，因此，如果你的 I/O 操作非常耗时，多线程很有可能满足不了高效率、高质量的需求。</p>
-<p>因此，协程是更轻量级的线程，它的切换成本非常低，相对比协程更高效一些。</p>
-<p>那么什么场景使用多线程，什么场景使用协程呢（Asyncio）？</p>
-<p>如果是 I/O 密集型，且 I/O 请求比较耗时的话，使用协程。<br>如果是 I/O 密集型，且 I/O 请求比较快的话，使用多线程。<br>如果是 计算 密集型，考虑可以使用多核 CPU，使用多进程。</p>
-<p>但是因为Python本身的特性，实际上这个语言并不是太适合计算密集型操作，所以如果是规模巨大的计算密集型场景，还是要更换编程语言。</p>
+        <h1 id="事件驱动"><a href="#事件驱动" class="headerlink" title="事件驱动"></a>事件驱动</h1><p>我们在开发服务器处理模型时，有以下几种模型： <br>1）每收到一个请求，创建一个新的进程，来处理该请求 <br>2）每收到一个请求，创建一个新的线程，来处理该请求 <br>3）每收到一个请求，创建一个新的消息队列，来处理该请求</p>
+<p>对于这三种模型，各自有自己的优劣：<br>1)方法创建新进程资源开销比较大，所以会导致服务器性能较差，但是胜在实现简单。<br>2)方法需要涉及到线程同步，所以可能会遭遇死锁等各种线程问题。<br>3)方法在开发应用服务器时，会涉及到较复杂的逻辑，但是无论资源开销还是其他安全问题方面比较优异。</p>
+<p>综合各种方面考量，在实际的开发中我们通常使用的网络服务器开发模型是消息队列。</p>
+<p>例如： 如何获取鼠标点击事件？<br>方式一：创建线程循环检测鼠标点击事件。<br>但是这样有几种很大的缺陷：<br>1、线程资源浪费，在某些程序中，鼠标点击事件出现的频率可能极小，但是扫描线程会一直持续运行，造成极大的资源浪费。<br>2、在我们实际的使用中，可能会出现鼠标接口阻塞的情况。如果我们不仅要扫描鼠标的使用，还要扫描键盘按下，由于扫描鼠标被阻塞，键盘可能永远都不会被扫描。<br>3、如果一个循环扫描的设备十分的多，又会引起响应时间问题。</p>
+<p>方式二：事件驱动模型。<br>目前绝大部分的UI均采用了事件驱动模型，其大体思路如下：<br>1、有一个事件消息队列。<br>2、鼠标按下，在事件消息队列中添加鼠标点击事件消息。 <br>3、利用循环，不断在消息队列中取出事件消息，然后根据事件消息调用不同函数。<br>4、事件消息中各自保存着处理函数的指针，这样每个事件消息都有自己的处理函数。</p>
+<p>事件驱动编程是一种编程范式，程序的执行流由外部事件决定。 它的特点是包含一个事件循环，<br>当外部事件发生时，使用回调机制来触发相应处理。顺带一提，其他两种编程范式是单线程编程和<br>多线程编程。</p>
 
       
 
@@ -1051,7 +1048,7 @@
 
       
         <p class="article-more-link">
-          <a class="article-more-a" href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/">展开全文 >></a>
+          <a class="article-more-a" href="/2021/03/02/2021-03-02-%E4%BA%8B%E4%BB%B6%E9%A9%B1%E5%8A%A8/">展开全文 >></a>
         </p>
       
 
@@ -1102,7 +1099,9 @@
       	</div>
     </div>
   </div>
-</footer>
+</footer><!--页面点击小红心-->
+<script type="text/javascript" src="/love.js"></script>
+
     </div>
     <script>
 	var yiliaConfig = {
@@ -1174,15 +1173,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color4">SQL</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">PgSQL</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1210,11 +1209,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
+                <a href="javascript:void(0)" class="js-tag color5">Less</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">Less</a>
+                <a href="javascript:void(0)" class="js-tag color1">MySQL</a>
               </li>
              
               <li class="article-tag-list-item">
