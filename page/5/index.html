@@ -165,6 +165,88 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-2021-03-02-多线程、多进程与协程的选择" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/">多线程、多进程与协程的选择</a>
+    </h1>
+  
+
+        
+        <a href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/" class="archive-article-date">
+  	<time datetime="2021-03-01T16:00:00.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-03-02</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="多线程、多进程与协程的选择"><a href="#多线程、多进程与协程的选择" class="headerlink" title="多线程、多进程与协程的选择"></a>多线程、多进程与协程的选择</h1><p>协程和多线程的区别</p>
+<p>协程是实现并发编程的一种方式。一说并发，你肯定想到了多线程 / 多进程模型，没错，多线程 / 多进程，正是解决并发问题的经典模型之一。最初的互联网世界，多线程 / 多进程在服务器并发中，起到举足轻重的作用。</p>
+<p>我们知道，在处理 I/O 操作时，使用多线程与普通的单线程相比，效率得到了极大的提高。你可能会想，既然这样，为什么还需要协程（Asyncio）？</p>
+<p>诚然，多线程有诸多优点且应用广泛，但也存在一定的局限性：</p>
+<p>比如，多线程运行过程容易被打断，因此有可能出现竞争条件 (race condition) 的情况；再如，线程切换本身存在一定的损耗，线程数不能无限增加，因此，如果你的 I/O 操作非常耗时，多线程很有可能满足不了高效率、高质量的需求。</p>
+<p>因此，协程是更轻量级的线程，它的切换成本非常低，相对比协程更高效一些。</p>
+<p>那么什么场景使用多线程，什么场景使用协程呢（Asyncio）？</p>
+<p>如果是 I/O 密集型，且 I/O 请求比较耗时的话，使用协程。<br>如果是 I/O 密集型，且 I/O 请求比较快的话，使用多线程。<br>如果是 计算 密集型，考虑可以使用多核 CPU，使用多进程。</p>
+<p>但是因为Python本身的特性，实际上这个语言并不是太适合计算密集型操作，所以如果是规模巨大的计算密集型场景，还是要更换编程语言。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Python</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/03/02/2021-03-02-%E5%A4%9A%E7%BA%BF%E7%A8%8B%E3%80%81%E5%A4%9A%E8%BF%9B%E7%A8%8B%E4%B8%8E%E5%8D%8F%E7%A8%8B%E7%9A%84%E9%80%89%E6%8B%A9/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-2021-03-01-Python(一)" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1091,11 +1173,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color2">Python</a>
+                <a href="javascript:void(0)" class="js-tag color4">Git</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">Git</a>
+                <a href="javascript:void(0)" class="js-tag color2">Python</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1128,6 +1210,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HTML</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">JavaScript ECMA</a>
               </li>
             
             <div class="clearfix"></div>
