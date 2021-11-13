@@ -165,6 +165,1060 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JavaSE-20-线程与同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/JavaSE-20-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5/">JavaSE-20-线程与同步</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/JavaSE-20-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:22:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-线程"><a href="#1-线程" class="headerlink" title="1.线程"></a>1.线程</h2><h3 id="1-1-基本概念"><a href="#1-1-基本概念" class="headerlink" title="1.1 基本概念"></a>1.1 基本概念</h3><p><strong>线程的概念</strong></p>
+<p>线程（Thread）是操作系统能够进行运算调度的最小单位。它被包含在进程之中，是进程中的实际运作单位。一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</p>
+<p>同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等等。但同一进程中的多个线程有各自的调用栈（call stack），自己的寄存器环境（register context），自己的线程本地存储（thread-local storage）。</p>
+<p><strong>线程&amp;进程</strong></p>
+<p>A.多个进程的内部数据和状态都是完全独立的，（进程就是执行中的程序，程序是静态的概念，进程是动态的概念）。而多线程是共享一块内存空间和一组系统资源的，有可能互相影响（多个线程可以在一个进程中）</p>
+<p>B.线程本身的数据通常只有寄存器数据，以及一个程序执行时使用的堆栈，所以线程的切换比进程切换的负担要小。</p>
+<p><strong>多线程编程</strong></p>
+<p>在单个程序中可以同时运行多个不同的线程执行不同的任务。但是具体执行哪个线程是由cpu随机决定的。</p>
+<p>多线程编程的目的，就是“最大限度地利用CPU资源”，当某一线程的处理不需要占用CPU而只和I/O等资源打交道时，让需要占用CPU资源的其他线程有机会获得CPU资源。</p>
+<p>Java中如果我们自己没有产生线程，系统会自动产生一个线程，该线程为主线程 ，main方法就在主线程上运行，我们的程序都是由线程来执行的。</p>
+<p>多任务处理被所有的现代操作系统所支持。然而，多任务处理有两种截然不同的类型：<strong>基于进程的</strong>和<strong>基于线程的</strong>。</p>
+<p>　　<strong>基于进程的多任务处理</strong></p>
+<p>　　　　（1）基于进程的多任务处理是更熟悉的形式。</p>
+<p>　　　　　　　　进程（process）本质上是一个执行的程序。因此基于进程的多任务处理的特点是允许你的计算机同时运行两个或更多的程序。举例来说，基于进程的多任务处理使你在运用文本编辑器的时候可以同时运行java编译器。在基于进程的多任务处理中，程序是调度程序所分派的最小代码单位。</p>
+<p>　　　　（2）进程是重量级的任务，需要分配给他们独立的地址空间。进程间通信是昂贵和受限的。进程的转换也是很需要花费的。</p>
+<p>　　<strong>基于线程的多任务处理</strong></p>
+<p>　　　　（1）基于线程的多任务处理环境中，线程是最小的执行单位。这意味着一个程序可以同时执行两个或者多个任务的功能。例如，一个文本编辑器可以在打印的同时格式化文本。</p>
+<p>　　　　（2）多线程程序比多进程程序需要更少的代价。多线程是轻量级的任务。它们共享相同的地址空间并且共同分享同一个进程。线程间通信是便宜的，线程间的转换也是低成本的。</p>
+<p>　　　　（3）多线程使CPU的利用率提高</p>
+<h3 id="1-2-Thread类"><a href="#1-2-Thread类" class="headerlink" title="1.2 Thread类"></a>1.2 Thread类</h3><p><strong>构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public Thread()</td>
+<td>分配一个新的线程对象。</td>
+</tr>
+<tr>
+<td>public Thread(String name)</td>
+<td>分配一个指定名字的新的线程对象。</td>
+</tr>
+<tr>
+<td>public Thread(Runnable target)</td>
+<td>分配一个带有指定目标新的线程对象。</td>
+</tr>
+<tr>
+<td>public Thread(Runnable target,String name)</td>
+<td>分配一个带有指定目标新的线程对象并指定名字。</td>
+</tr>
+</tbody></table>
+<p><strong>常用方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String getName()</td>
+<td>获取当前线程名称。</td>
+</tr>
+<tr>
+<td>public void start()</td>
+<td>导致此线程开始执行; Java虚拟机调用此线程的run方法。</td>
+</tr>
+<tr>
+<td>public void run()</td>
+<td>此线程要执行的任务在此处定义代码。</td>
+</tr>
+<tr>
+<td>public static void sleep(long millis)</td>
+<td>使当前正在执行的线程以指定的毫秒数暂停（暂时停止执行）。</td>
+</tr>
+<tr>
+<td>public static Thread currentThread()</td>
+<td>返回对当前正在执行的线程对象的引用。</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-Runnable"><a href="#1-3-Runnable" class="headerlink" title="1.3 Runnable"></a>1.3 Runnable</h3><p>步骤如下：</p>
+<p>　　1. 定义Runnable接口的实现类，并重写该接口的run()方法，该run()方法的方法体同样是该线程的线程执行体。</p>
+<p>　　2. 创建Runnable实现类的实例，并以此实例作为Thread的target来创建Thread对象，该Thread对象才是真正的线程对象。</p>
+<p>　　3. 调用线程对象的start()方法来启动线程。</p>
+<p>通过实现Runnable接口，使得类有了多线程类的特征。run()方法是多线程程序的一个执行目标。所有的多线程代码都在run方法里面。Thread类实际上也是实现了Runnable接口的类。</p>
+<p>在启动的多线程的时候，需要先通过Thread类的构造方法Thread(Runnable target) 构造出对象，然后调用Thread 对象的start()方法来运行多线程代码。</p>
+<p>实际上所有的多线程代码都是通过运行Thread的start()方法来运行的。因此，不管是继承Thread类还是实现 Runnable接口来实现多线程，最终还是通过Thread的对象的API来控制线程的，熟悉Thread类的API是进行多线程编程的基础。</p>
+<p>tips:Runnable对象仅仅作为Thread对象的target，Runnable实现类里包含的run()方法仅作为线程执行体。 而实际的线程对象依然是Thread实例，只是该Thread线程负责执行其target的run()方法。</p>
+<h3 id="1-4-Thread和Runnable的区别"><a href="#1-4-Thread和Runnable的区别" class="headerlink" title="1.4 Thread和Runnable的区别"></a>1.4 Thread和Runnable的区别</h3><p>如果一个类继承Thread，则不适合资源共享。但是如果实现了Runable接口的话，则很容易的实现资源共享。</p>
+<p><strong>总结：</strong></p>
+<p>　　<strong>实现Runnable接口比继承Thread类所具有的优势：</strong></p>
+<p>　　　　<strong>1. 适合多个相同的程序代码的线程去共享同一个资源。</strong></p>
+<p>　　　　<strong>2. 可以避免java中的单继承的局限性。</strong></p>
+<p>　　　　<strong>3. 增加程序的健壮性，实现解耦操作，代码可以被多个线程共享，代码和线程独立。</strong></p>
+<p>　　　　<strong>4. 线程池只能放入实现Runable或Callable类线程，不能直接放入继承Thread的类。</strong></p>
+<p><strong>扩充：在java中，每次程序运行至少启动2个线程。一个是main线程，一个是垃圾收集线程。因为每当使用 java命令执行一个类的时候，实际上都会启动一个JVM，每一个JVM其实在就是在操作系统中启动了一个进程。</strong></p>
+<h3 id="1-5-匿名内部类方式实现线程的创建"><a href="#1-5-匿名内部类方式实现线程的创建" class="headerlink" title="1.5 匿名内部类方式实现线程的创建"></a>1.5 匿名内部类方式实现线程的创建</h3><p>使用线程的内匿名内部类方式，可以方便的实现每个线程执行不同的线程任务操作。</p>
+<p>使用匿名内部类的方式实现Runnable接口，重新Runnable接口中的run方法：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RunnableDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         Runnable rb = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> <span class="number">4</span>             <span class="meta">@Override</span></span><br><span class="line"> <span class="number">5</span>             <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>                 <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">30</span>;i++)&#123;</span><br><span class="line"> <span class="number">7</span>                     System.out.println(i);</span><br><span class="line"> <span class="number">8</span>                 &#125;</span><br><span class="line"> <span class="number">9</span>             &#125;</span><br><span class="line"><span class="number">10</span>         &#125;;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">new</span> Thread(rb).start();</span><br><span class="line"><span class="number">12</span>     <span class="keyword">new</span> Thread(rb).start();</span><br><span class="line"><span class="number">13</span>     <span class="keyword">new</span> Thread(rb).start();</span><br><span class="line"><span class="number">14</span>     &#125;</span><br><span class="line"><span class="number">15</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-线程安全"><a href="#2-线程安全" class="headerlink" title="2.线程安全"></a>2.线程安全</h2><h3 id="2-1-线程安全"><a href="#2-1-线程安全" class="headerlink" title="2.1 线程安全"></a>2.1 线程安全</h3><p>如果有多个线程在同时运行，而这些线程可能会同时运行这段代码。程序每次运行结果和单线程运行的结果是一样 的，而且其他的变量的值也和预期的是一样的，就是线程安全的。</p>
+<p>我们通过一个案例，演示线程的安全问题： 电影院要卖票，我们模拟电影院的卖票过程。假设要播放的电影是 “葫芦娃大战奥特曼”，本次电影的座位共100个 (本场电影只能卖100张票)。</p>
+<p>我们来模拟电影院的售票窗口，实现多个窗口同时卖 “葫芦娃大战奥特曼”这场电影票(多个窗口一起卖这100张票) 需要窗口，采用线程对象来模拟；需要票，Runnable接口子类来模拟</p>
+<p><strong>卖票类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ticket</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">100</span>;</span><br><span class="line"> <span class="number">3</span>     <span class="meta">@Override</span></span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line"> <span class="number">6</span>             <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>)&#123;</span><br><span class="line"> <span class="number">7</span>                 <span class="keyword">try</span>&#123;</span><br><span class="line"> <span class="number">8</span>                     Thread.sleep(<span class="number">100</span>);</span><br><span class="line"> <span class="number">9</span>                 &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line"><span class="number">10</span>                     e.printStackTrace();</span><br><span class="line"><span class="number">11</span>                 &#125;</span><br><span class="line"><span class="number">12</span>                 String name = Thread.currentThread().getName();</span><br><span class="line"><span class="number">13</span>                 System.out.println(name+<span class="string">&quot;正在卖第&quot;</span>+ticket--+<span class="string">&quot;张票.&quot;</span>);</span><br><span class="line"><span class="number">14</span>             &#125;</span><br><span class="line"><span class="number">15</span>         &#125;</span><br><span class="line"><span class="number">16</span>     &#125;</span><br><span class="line"><span class="number">17</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         Ticket tk = <span class="keyword">new</span> Ticket();</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span>         Thread w1 = <span class="keyword">new</span> Thread(tk,<span class="string">&quot;1号窗口&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         Thread w2 = <span class="keyword">new</span> Thread(tk,<span class="string">&quot;2号窗口&quot;</span>);</span><br><span class="line"> <span class="number">7</span>         Thread w3 = <span class="keyword">new</span> Thread(tk,<span class="string">&quot;3号窗口&quot;</span>);</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         w1.start();</span><br><span class="line"><span class="number">10</span>         w2.start();</span><br><span class="line"><span class="number">11</span>         w3.start();</span><br><span class="line"><span class="number">12</span>     &#125;</span><br><span class="line"><span class="number">13</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>会出现两种问题：</p>
+<p>　　1. 相同的票被卖了两回。</p>
+<p>　　2. 不存在的票，比如0票与-1票，是不存在的。</p>
+<p>这种问题，几个窗口(线程)票数不同步了，这种问题称为线程不安全。</p>
+<p>tips：线程安全问题都是由全局变量及静态变量引起的。若每个线程中对全局变量、静态变量只有读操作，而无写操作，一般来说，这个全局变量是线程安全的；若有多个线程同时执行写操作，一般都需要考虑线程同步， 否则的话就可能影响线程安全。</p>
+<h3 id="2-2-线程同步"><a href="#2-2-线程同步" class="headerlink" title="2.2 线程同步"></a>2.2 线程同步</h3><p>当我们使用多个线程访问同一资源的时候，且多个线程中对资源有写的操作，就容易出现线程安全问题。 要解决上述多线程并发访问一个资源的安全性问题:也就是解决重复票与不存在票问题，Java中提供了同步机制 (synchronized)来解决。</p>
+<p>有三种方式完成同步操作：</p>
+<p>　　1. 同步代码块。</p>
+<p>　　2. 同步方法。</p>
+<p>　　3. 锁机制。</p>
+<h3 id="2-3-同步代码块"><a href="#2-3-同步代码块" class="headerlink" title="2.3 同步代码块"></a>2.3 同步代码块</h3><p>同步代码块： synchronized 关键字可以用于方法中的某个区块中，表示只对这个区块的资源实行互斥访问。</p>
+<p>格式:</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">synchronized</span>(同步锁)&#123;</span><br><span class="line"><span class="number">2</span>     需要同步操作的代码</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>同步锁:</p>
+<p>　　对象的同步锁只是一个概念,可以想象为在对象上标记了一个锁.</p>
+<p>　　　　1. 锁对象 可以是任意类型。</p>
+<p>　　　　2. 多个线程对象 要使用同一把锁。</p>
+<p>注意:在任何时候,最多允许一个线程拥有同步锁,谁拿到锁就进入代码块,其他的线程只能在外等着 (BLOCKED)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ticket</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">100</span>;</span><br><span class="line"> <span class="number">3</span>     Object lock = <span class="keyword">new</span> Object();</span><br><span class="line"> <span class="number">4</span>     <span class="meta">@Override</span></span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line"> <span class="number">7</span>             <span class="keyword">synchronized</span>(lock)&#123;</span><br><span class="line"> <span class="number">8</span>                 <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>)&#123;</span><br><span class="line"> <span class="number">9</span>                     <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">10</span>                         Thread.sleep(<span class="number">100</span>);</span><br><span class="line"><span class="number">11</span>                     &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">12</span>                         e.printStackTrace();</span><br><span class="line"><span class="number">13</span>                     &#125;</span><br><span class="line"><span class="number">14</span>                     String name = Thread.currentThread().getName();</span><br><span class="line"><span class="number">15</span>                     System.out.println(name+<span class="string">&quot;正在卖第&quot;</span>+ticket--+<span class="string">&quot;张票.&quot;</span>);</span><br><span class="line"><span class="number">16</span>                 &#125;</span><br><span class="line"><span class="number">17</span>             &#125;</span><br><span class="line"><span class="number">18</span>         &#125;</span><br><span class="line"><span class="number">19</span>     &#125;</span><br><span class="line"><span class="number">20</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-4-同步方法"><a href="#2-4-同步方法" class="headerlink" title="2.4 同步方法"></a>2.4 同步方法</h3><p>同步方法:使用synchronized修饰的方法,就叫做同步方法,保证A线程执行该方法的时候,其他线程只能在方法外等着。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="number">2</span> 　　可能会产生线程安全问题的代码</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p>同步锁是谁?</p>
+<p>　　对于非static方法,同步锁就是this。</p>
+<p>　　对于static方法,我们使用当前方法所在类的字节码对象(类名.class)。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ticket</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">100</span>;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span>     <span class="meta">@Override</span></span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"> <span class="number">7</span>             sell();</span><br><span class="line"> <span class="number">8</span>         &#125;</span><br><span class="line"> <span class="number">9</span>     &#125;</span><br><span class="line"><span class="number">10</span> </span><br><span class="line"><span class="number">11</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">sell</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">12</span>         <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>) &#123;</span><br><span class="line"><span class="number">13</span>             <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">14</span>                 Thread.sleep(<span class="number">100</span>);</span><br><span class="line"><span class="number">15</span>             &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">16</span>                 e.printStackTrace();</span><br><span class="line"><span class="number">17</span>             &#125;</span><br><span class="line"><span class="number">18</span>             String name = Thread.currentThread().getName();</span><br><span class="line"><span class="number">19</span>             System.out.println(name + <span class="string">&quot;正在卖第&quot;</span> + ticket-- + <span class="string">&quot;张票.&quot;</span>);</span><br><span class="line"><span class="number">20</span>         &#125;</span><br><span class="line"><span class="number">21</span>     &#125;</span><br><span class="line"><span class="number">22</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-5-Lock锁"><a href="#2-5-Lock锁" class="headerlink" title="2.5 Lock锁"></a>2.5 Lock锁</h3><p>java.util.concurrent.locks.Lock机制提供了比synchronized代码块和synchronized方法更广泛的锁定操作, 同步代码块/同步方法具有的功能Lock都有,除此之外更强大,更体现面向对象。</p>
+<p>Lock锁也称同步锁，加锁与释放锁方法化了，如下：</p>
+<p>　　public void lock() :加同步锁。</p>
+<p>　　public void unlock() :释放同步锁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.concurrent.locks.Lock;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ticket</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">100</span>;</span><br><span class="line"> <span class="number">6</span>     Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>     <span class="meta">@Override</span></span><br><span class="line"> <span class="number">9</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">10</span>         <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"><span class="number">11</span>             lock.lock();</span><br><span class="line"><span class="number">12</span>             <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>) &#123;</span><br><span class="line"><span class="number">13</span>                 <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">14</span>                     Thread.sleep(<span class="number">100</span>);</span><br><span class="line"><span class="number">15</span>                 &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">16</span>                     e.printStackTrace();</span><br><span class="line"><span class="number">17</span>                 &#125;</span><br><span class="line"><span class="number">18</span>                 String name = Thread.currentThread().getName();</span><br><span class="line"><span class="number">19</span>                 System.out.println(name + <span class="string">&quot;正在卖第&quot;</span> + ticket-- + <span class="string">&quot;张票.&quot;</span>);</span><br><span class="line"><span class="number">20</span>             &#125;</span><br><span class="line"><span class="number">21</span>             lock.unlock();</span><br><span class="line"><span class="number">22</span>         &#125;</span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-线程状态"><a href="#3-线程状态" class="headerlink" title="3.线程状态"></a>3.线程状态</h2><h3 id="3-1-线程状态概述"><a href="#3-1-线程状态概述" class="headerlink" title="3.1 线程状态概述"></a>3.1 线程状态概述</h3><p>当线程被创建并启动以后，它既不是一启动就进入了执行状态，也不是一直处于执行状态。在线程的生命周期中， 有几种状态呢？</p>
+<p>在API中 java.lang.Thread.State 这个枚举中给出了六种线程状态：</p>
+<table>
+<thead>
+<tr>
+<th><strong>线程状态</strong></th>
+<th><strong>导致状态发生的条件</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>NEW(新建)</td>
+<td>线程刚被创建，但是并未启动。还没调用start方法。</td>
+</tr>
+<tr>
+<td>Runnable(可 运行)</td>
+<td>线程可以在java虚拟机中运行的状态，可能正在运行自己代码，也可能没有，这取决于操 作系统处理器。</td>
+</tr>
+<tr>
+<td>Blocked(锁阻 塞)</td>
+<td>当一个线程试图获取一个对象锁，而该对象锁被其他的线程持有，则该线程进入Blocked状 态；当该线程持有锁时，该线程将变成Runnable状态。</td>
+</tr>
+<tr>
+<td>Waiting(无限等待)</td>
+<td>一个线程在等待另一个线程执行一个（唤醒）动作时，该线程进入Waiting状态。进入这个 状态后是不能自动唤醒的，必须等待另一个线程调用notify或者notifyAll方法才能够唤醒。</td>
+</tr>
+<tr>
+<td>Timed Waiting(计时 等待)</td>
+<td>同waiting状态，有几个方法有超时参数，调用他们将进入Timed Waiting状态。这一状态 将一直保持到超时期满或者接收到唤醒通知。带有超时参数的常用方法有Thread.sleep 、 Object.wait。</td>
+</tr>
+<tr>
+<td>Teminated(被终止)</td>
+<td>因为run方法正常退出而死亡，或者因为没有捕获的异常终止了run方法而死亡。</td>
+</tr>
+</tbody></table>
+<h3 id="3-2-Timed-Waiting（计时等待）"><a href="#3-2-Timed-Waiting（计时等待）" class="headerlink" title="3.2 Timed Waiting（计时等待）"></a>3.2 Timed Waiting（计时等待）</h3><p>Timed Waiting在API中的描述为：一个正在限时等待另一个线程执行一个（唤醒）动作的线程处于这一状态。</p>
+<p>单独的去理解这句话，真是玄之又玄，其实我们在之前的操作中已经接触过这个状态了，在哪里呢？</p>
+<p>在我们写卖票的案例中，为了减少线程执行太快，现象不明显等问题，我们在run方法中添加了sleep语句，这样就强制当前正在执行的线程休眠（暂停执行），以“减慢线程”。 其实当我们调用了sleep方法之后，当前执行的线程就进入到“休眠状态”，其实就是所谓的Timed Waiting(计时等待)</p>
+<p>所以：</p>
+<p>　　1. 进入 TIMED_WAITING 状态的一种常见情形是调用的 sleep 方法，单独的线程也可以调用，不一定非要有协作关系。</p>
+<p>　　2. 为了让其他线程有机会执行，可以将Thread.sleep()的调用放线程run()之内。这样才能保证该线程执行过程中会睡眠</p>
+<p>　　3. sleep与锁无关，线程睡眠到期自动苏醒，并返回到Runnable（可运行）状态。</p>
+<p>tips：sleep()中指定的时间是线程不会运行的最短时间。因此，sleep()方法不能保证该线程睡眠到期后就开始立刻执行。</p>
+<h3 id="3-3-BLOCKED（锁阻塞）"><a href="#3-3-BLOCKED（锁阻塞）" class="headerlink" title="3.3 BLOCKED（锁阻塞）"></a>3.3 BLOCKED（锁阻塞）</h3><p>Blocked状态在API中的介绍为：一个正在阻塞等待一个监视器锁（锁对象）的线程处于这一状态。</p>
+<p>我们已经学完同步机制，那么这个状态是非常好理解的了。比如，线程A与线程B代码中使用同一锁，如果线程A获 取到锁，线程A进入到Runnable状态，那么线程B就进入到Blocked锁阻塞状态。</p>
+<p>这是由Runnable状态进入Blocked状态。除此Waiting以及Time Waiting状态也会在某种情况下进入阻塞状态</p>
+<h3 id="3-4-Waiting（无限等待）"><a href="#3-4-Waiting（无限等待）" class="headerlink" title="3.4 Waiting（无限等待）"></a>3.4 Waiting（无限等待）</h3><p>Wating状态在API中介绍为：一个正在无限期等待另一个线程执行一个特别的（唤醒）动作的线程处于这一状态。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">mbz</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         <span class="comment">//创建锁对象</span></span><br><span class="line"> <span class="number">4</span>         Object obj = <span class="keyword">new</span> Object();</span><br><span class="line"> <span class="number">5</span> </span><br><span class="line"> <span class="number">6</span>         <span class="keyword">new</span> Thread()&#123;</span><br><span class="line"> <span class="number">7</span>             <span class="meta">@Override</span></span><br><span class="line"> <span class="number">8</span>             <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line"> <span class="number">9</span>                 <span class="keyword">synchronized</span> (obj)&#123;</span><br><span class="line"><span class="number">10</span>                     System.out.println(<span class="string">&quot;告诉老板要的包子&quot;</span>);</span><br><span class="line"><span class="number">11</span>                     <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">12</span>                         obj.wait();</span><br><span class="line"><span class="number">13</span>                     &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">14</span>                         e.printStackTrace();</span><br><span class="line"><span class="number">15</span>                     &#125;</span><br><span class="line"><span class="number">16</span>                     System.out.println(<span class="string">&quot;包子做好了，开吃&quot;</span>);</span><br><span class="line"><span class="number">17</span>                 &#125;</span><br><span class="line"><span class="number">18</span>             &#125;</span><br><span class="line"><span class="number">19</span>         &#125;.start();</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>         <span class="keyword">new</span> Thread()&#123;</span><br><span class="line"><span class="number">22</span>             <span class="meta">@Override</span></span><br><span class="line"><span class="number">23</span>             <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="number">24</span>                 System.out.println(<span class="string">&quot;老板开始做包子&quot;</span>);</span><br><span class="line"><span class="number">25</span>                 <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">26</span>                     sleep(<span class="number">5000</span>);</span><br><span class="line"><span class="number">27</span>                 &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">28</span>                     e.printStackTrace();</span><br><span class="line"><span class="number">29</span>                 &#125;</span><br><span class="line"><span class="number">30</span> </span><br><span class="line"><span class="number">31</span>                 <span class="keyword">synchronized</span> (obj)&#123;</span><br><span class="line"><span class="number">32</span>                     System.out.println(<span class="string">&quot;包子做好了，请吃&quot;</span>);</span><br><span class="line"><span class="number">33</span>                     obj.notify();</span><br><span class="line"><span class="number">34</span>                 &#125;</span><br><span class="line"><span class="number">35</span>             &#125;</span><br><span class="line"><span class="number">36</span>         &#125;.start();</span><br><span class="line"><span class="number">37</span>     &#125;</span><br><span class="line"><span class="number">38</span> &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/JavaSE-20-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-19-IO特殊流和Properties集合" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/JavaSE-19-IO%E7%89%B9%E6%AE%8A%E6%B5%81%E5%92%8CProperties%E9%9B%86%E5%90%88/">JavaSE-19-IO特殊流和Properties集合</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/JavaSE-19-IO%E7%89%B9%E6%AE%8A%E6%B5%81%E5%92%8CProperties%E9%9B%86%E5%90%88/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:21:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-IO特殊操作流"><a href="#1-IO特殊操作流" class="headerlink" title="1.IO特殊操作流"></a>1.IO特殊操作流</h2><h3 id="1-1-标准输入流"><a href="#1-1-标准输入流" class="headerlink" title="1.1 标准输入流"></a>1.1 标准输入流</h3><p>System类中有两个静态的成员变量</p>
+<p>　　public static final InputStream in：标准输入流。通常该流对应于键盘输入或由主机环境或用户指定的另一个输入源。</p>
+<p>　　public static final PrintStream out：标准输出流。通常该流对应于显示输出或由主机环境或用户指定的 另一个输出目标。</p>
+<h3 id="1-2-标准输出流"><a href="#1-2-标准输出流" class="headerlink" title="1.2 标准输出流"></a>1.2 标准输出流</h3><p>System类中有两个静态的成员变量</p>
+<p>　　public static final InputStream in：标准输入流。通常该流对应于键盘输入或由主机环境或用户指定的另一个输入源。</p>
+<p>　　public static final PrintStream out：标准输出流。通常该流对应于显示输出或由主机环境或用户指定的另一个输出目标。</p>
+<h3 id="1-3-字节打印流"><a href="#1-3-字节打印流" class="headerlink" title="1.3 字节打印流"></a>1.3 字节打印流</h3><p><strong>打印流分类</strong></p>
+<p>　　字节打印流：PrintStream</p>
+<p>　　字符打印流：PrintWriter</p>
+<p><strong>打印流的特点</strong></p>
+<p>　　只负责输出数据，不负责读取数据</p>
+<p>　　永远不会抛出IOException</p>
+<p>　　有自己的特有方法</p>
+<p><strong>字节打印流</strong></p>
+<p>　　PrintStream(String fileName)：使用指定的文件名创建新的打印流</p>
+<p>　　使用继承父类的方法写数据，查看的时候会转码；使用自己的特有方法写数据，查看的数据原样输出</p>
+<p>　　可以改变输出语句的目的地</p>
+<p>　　public static void setOut(PrintStream out)：重新分配“标准”输出流</p>
+<h3 id="1-4-字符打印流"><a href="#1-4-字符打印流" class="headerlink" title="1.4 字符打印流"></a>1.4 字符打印流</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>PrintWriter(String fileName)</td>
+<td>使用指定的文件名创建一个新的PrintWriter，而不需要自动执行刷新</td>
+</tr>
+<tr>
+<td>PrintWriter(Writer out, boolean autoFlush)</td>
+<td>创建一个新的PrintWriter out：字符输出流 autoFlush： 一个布尔值，如果 为真，则println ， printf或format方法将刷新输出缓冲区</td>
+</tr>
+</tbody></table>
+<h3 id="1-5-对象序列化流"><a href="#1-5-对象序列化流" class="headerlink" title="1.5 对象序列化流"></a>1.5 对象序列化流</h3><p><strong>对象序列化介绍</strong></p>
+<p>　　对象序列化：就是将对象保存到磁盘中，或者在网络中传输对象</p>
+<p>　　这种机制就是使用一个字节序列表示一个对象，该字节序列包含：对象的类型、对象的数据和对象中存储的属性等信息</p>
+<p>　　字节序列写到文件之后，相当于文件中持久保存了一个对象的信息</p>
+<p>　　反之，该字节序列还可以从文件中读取回来，重构对象，对它进行反序列化</p>
+<p><strong>对象序列化流： ObjectOutputStream</strong></p>
+<p>　　将Java对象的原始数据类型和图形写入OutputStream。 可以使用ObjectInputStream读取（重构）对象。 可以通过使用流的文件来实现对象的持久存储。</p>
+<p>　　如果流是网络套接字流，则可以在另一个主机上或另一个进程中重构对象</p>
+<p><strong>构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ObjectOutputStream(OutputStream out)</td>
+<td>创建一个写入指定的OutputStream的 ObjectOutputStream</td>
+</tr>
+</tbody></table>
+<p><strong>序列化对象的方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void writeObject(Object obj)</td>
+<td>将指定的对象写入ObjectOutputStream</td>
+</tr>
+</tbody></table>
+<p><strong>学生类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="keyword">private</span> String name;</span><br><span class="line"> <span class="number">5</span>     <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span>     <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">8</span>     &#125;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line"><span class="number">11</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">12</span>         <span class="keyword">this</span>.age = age;</span><br><span class="line"><span class="number">13</span>     &#125;</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span>     <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">16</span>         <span class="keyword">return</span> name;</span><br><span class="line"><span class="number">17</span>     &#125;</span><br><span class="line"><span class="number">18</span> </span><br><span class="line"><span class="number">19</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line"><span class="number">20</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">21</span>     &#125;</span><br><span class="line"><span class="number">22</span> </span><br><span class="line"><span class="number">23</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">24</span>         <span class="keyword">return</span> age;</span><br><span class="line"><span class="number">25</span>     &#125;</span><br><span class="line"><span class="number">26</span> </span><br><span class="line"><span class="number">27</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line"><span class="number">28</span>         <span class="keyword">this</span>.age = age;</span><br><span class="line"><span class="number">29</span>     &#125;</span><br><span class="line"><span class="number">30</span> </span><br><span class="line"><span class="number">31</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">32</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line"><span class="number">33</span>         <span class="keyword">if</span> (<span class="keyword">this</span> == o) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"><span class="number">34</span>         <span class="keyword">if</span> (o == <span class="keyword">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="number">35</span> </span><br><span class="line"><span class="number">36</span>         Student student = (Student) o;</span><br><span class="line"><span class="number">37</span> </span><br><span class="line"><span class="number">38</span>         <span class="keyword">if</span> (age != student.age) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="number">39</span>         <span class="keyword">return</span> name != <span class="keyword">null</span> ? name.equals(student.name) : student.name == <span class="keyword">null</span>;</span><br><span class="line"><span class="number">40</span>     &#125;</span><br><span class="line"><span class="number">41</span> </span><br><span class="line"><span class="number">42</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">43</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">44</span>         <span class="keyword">int</span> result = name != <span class="keyword">null</span> ? name.hashCode() : <span class="number">0</span>;</span><br><span class="line"><span class="number">45</span>         result = <span class="number">31</span> * result + age;</span><br><span class="line"><span class="number">46</span>         <span class="keyword">return</span> result;</span><br><span class="line"><span class="number">47</span>     &#125;</span><br><span class="line"><span class="number">48</span> </span><br><span class="line"><span class="number">49</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">50</span>     <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">51</span>         <span class="keyword">return</span> <span class="string">&quot;Student&#123;&quot;</span> +</span><br><span class="line"><span class="number">52</span>                 <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line"><span class="number">53</span>                 <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line"><span class="number">54</span>                 <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line"><span class="number">55</span>     &#125;</span><br><span class="line"><span class="number">56</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>测试类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.*;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OOP</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"> <span class="number">5</span>         File file = <span class="keyword">new</span> File(<span class="string">&quot;F:\\oos.yz&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(file));</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         Student s = <span class="keyword">new</span> Student(<span class="string">&quot;yz&quot;</span>, <span class="number">22</span>);</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>         oos.writeObject(s);</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>         oos.close();</span><br><span class="line"><span class="number">13</span>     &#125;</span><br><span class="line"><span class="number">14</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意事项</strong></p>
+<p>　　一个对象要想被序列化，该对象所属的类必须必须实现Serializable接口</p>
+<p>　　Serializable是一个标记接口，实现该接口，不需要重写任何方法</p>
+<h3 id="1-6-对象反序列化流"><a href="#1-6-对象反序列化流" class="headerlink" title="1.6 对象反序列化流"></a>1.6 对象反序列化流</h3><p><strong>对象反序列化流： ObjectInputStream</strong></p>
+<p>　　ObjectInputStream反序列化先前使用ObjectOutputStream编写的原始数据和对象</p>
+<p><strong>构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>ObjectInputStream(InputStream in)</td>
+<td>创建从指定的InputStream读取的ObjectInputStream</td>
+</tr>
+</tbody></table>
+<p><strong>反对象序列化方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Object readObject()</td>
+<td>从ObjectInputStream读取一个对象</td>
+</tr>
+</tbody></table>
+<p><strong>测试类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.*;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OIS</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line"> <span class="number">5</span>         File file = <span class="keyword">new</span> File(<span class="string">&quot;F:\\oos.yz&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(file));</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         Object j = ois.readObject();</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>         Student s = (Student) j;</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>         System.out.println(s.getName()+<span class="string">&quot;\t&quot;</span>+s.getAge());</span><br><span class="line"><span class="number">13</span>     &#125;</span><br><span class="line"><span class="number">14</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="1-7-serialVersionUID-amp-transient"><a href="#1-7-serialVersionUID-amp-transient" class="headerlink" title="1.7 serialVersionUID&amp;transient"></a>1.7 serialVersionUID&amp;transient</h3><p>serialVersionUID</p>
+<p>　　<strong>用对象序列化流序列化了一个对象后，假如我们修改了对象所属的类文件，读取数据会不会出问题呢？</strong></p>
+<p>　　　　会出问题，会抛出InvalidClassException异常</p>
+<p>　　<strong>如果出问题了，如何解决呢？</strong></p>
+<p>　　　　　　重新序列化</p>
+<p>　　　　　　给对象所属的类加一个serialVersionUID</p>
+<p>　　　　　　　　private static final long serialVersionUID = 42L;</p>
+<p>transient</p>
+<p>　　<strong>如果一个对象中的某个成员变量的值不想被序列化，又该如何实现呢？</strong></p>
+<p>　　　　给该成员变量加transient关键字修饰，该关键字标记的成员变量不参与序列化过程</p>
+<h2 id="2-Properties集合"><a href="#2-Properties集合" class="headerlink" title="2.Properties集合"></a>2.Properties集合</h2><h3 id="2-1-Properties作为Map集合的使用"><a href="#2-1-Properties作为Map集合的使用" class="headerlink" title="2.1 Properties作为Map集合的使用"></a>2.1 Properties作为Map集合的使用</h3><p>Properties介绍</p>
+<p>　　是一个Map体系的集合类</p>
+<p>　　Properties可以保存到流中或从流中加载</p>
+<p>　　属性列表中的每个键及其对应的值都是一个字符串</p>
+<p>案例</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.Properties;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.Set;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Prop</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         Properties prop = <span class="keyword">new</span> Properties();</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         prop.put(<span class="string">&quot;1&quot;</span>,<span class="string">&quot;超人&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         prop.put(<span class="string">&quot;2&quot;</span>,<span class="string">&quot;蝙蝠侠&quot;</span>);</span><br><span class="line"><span class="number">10</span>         prop.put(<span class="string">&quot;3&quot;</span>,<span class="string">&quot;闪电侠&quot;</span>);</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>         Set&lt;Object&gt; keys = prop.keySet();</span><br><span class="line"><span class="number">13</span>         <span class="keyword">for</span> (Object o : keys)&#123;</span><br><span class="line"><span class="number">14</span>             Object value = prop.get(o);</span><br><span class="line"><span class="number">15</span>             System.out.println(value);</span><br><span class="line"><span class="number">16</span>         &#125;</span><br><span class="line"><span class="number">17</span>     &#125;</span><br><span class="line"><span class="number">18</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-2-Properties作为Map集合的特有方法"><a href="#2-2-Properties作为Map集合的特有方法" class="headerlink" title="2.2 Properties作为Map集合的特有方法"></a>2.2 Properties作为Map集合的特有方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Object setProperty(String key, String value)</td>
+<td>设置集合的键和值，都是String类型，底层调用 Hashtable方法put</td>
+</tr>
+<tr>
+<td>String getProperty(String key)</td>
+<td>使用此属性列表中指定的键搜索属性</td>
+</tr>
+<tr>
+<td>Set stringPropertyNames()</td>
+<td>从该属性列表中返回一个不可修改的键集，其中键及其对应的值是字符串</td>
+</tr>
+</tbody></table>
+<p><strong>测试类</strong></p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.Properties;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.Set;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Prop</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         Properties prop = <span class="keyword">new</span> Properties();</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         prop.setProperty(<span class="string">&quot;1&quot;</span>,<span class="string">&quot;超人&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         prop.setProperty(<span class="string">&quot;2&quot;</span>,<span class="string">&quot;蝙蝠侠&quot;</span>);</span><br><span class="line"><span class="number">10</span>         prop.setProperty(<span class="string">&quot;3&quot;</span>,<span class="string">&quot;闪电侠&quot;</span>);</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>         Set&lt;String&gt; names = prop.stringPropertyNames();</span><br><span class="line"><span class="number">13</span> </span><br><span class="line"><span class="number">14</span>         <span class="keyword">for</span> (String key : names)&#123;</span><br><span class="line"><span class="number">15</span>             String value = prop.getProperty(key);</span><br><span class="line"><span class="number">16</span>             System.out.println(value);</span><br><span class="line"><span class="number">17</span>         &#125;</span><br><span class="line"><span class="number">18</span>     &#125;</span><br><span class="line"><span class="number">19</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-3-Properties和IO流相结合的方法"><a href="#2-3-Properties和IO流相结合的方法" class="headerlink" title="2.3 Properties和IO流相结合的方法"></a>2.3 Properties和IO流相结合的方法</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void load(InputStream inStream)</td>
+<td>从输入字节流读取属性列表（键和元素对）</td>
+</tr>
+<tr>
+<td>void load(Reader reader)</td>
+<td>从输入字符流读取属性列表（键和元素对）</td>
+</tr>
+<tr>
+<td>void store(OutputStream out, String comments)</td>
+<td>将此属性列表（键和元素对）写入此 Properties表中，以适合于使用 load(InputStream)方法的格式写入输出字节流</td>
+</tr>
+<tr>
+<td>void store(Writer writer, String comments)</td>
+<td>将此属性列表（键和元素对）写入此 Properties表中，以适合使用 load(Reader)方法的格式写入输出字符流</td>
+</tr>
+</tbody></table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/JavaSE-19-IO%E7%89%B9%E6%AE%8A%E6%B5%81%E5%92%8CProperties%E9%9B%86%E5%90%88/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-18-字节缓冲流和字符流" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/JavaSE-18-%E5%AD%97%E8%8A%82%E7%BC%93%E5%86%B2%E6%B5%81%E5%92%8C%E5%AD%97%E7%AC%A6%E6%B5%81/">JavaSE-18-字节缓冲流和字符流</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/JavaSE-18-%E5%AD%97%E8%8A%82%E7%BC%93%E5%86%B2%E6%B5%81%E5%92%8C%E5%AD%97%E7%AC%A6%E6%B5%81/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:20:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-字节缓冲流"><a href="#1-字节缓冲流" class="headerlink" title="1.字节缓冲流"></a>1.字节缓冲流</h2><h3 id="1-1-字节缓冲流构造方法"><a href="#1-1-字节缓冲流构造方法" class="headerlink" title="1.1 字节缓冲流构造方法"></a>1.1 字节缓冲流构造方法</h3><p><strong>字节缓冲流介绍</strong></p>
+<p>　　BufferOutputStream：该类实现缓冲输出流。 通过设置这样的输出流，应用程序可以向底层输出流写 入字节，而不必为写入的每个字节导致底层系统的调用</p>
+<p>　　BufferedInputStream：创建BufferedInputStream将创建一个内部缓冲区数组。 当从流中读取或跳过 字节时，内部缓冲区将根据需要从所包含的输入流中重新填充，一次很多字节</p>
+<p><strong>构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BufferedOutputStream(OutputStream out)</td>
+<td>创建字节缓冲输出流对象</td>
+</tr>
+<tr>
+<td>BufferedInputStream(InputStream in)</td>
+<td>创建字节缓冲输入流对象</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-字节流复制视频"><a href="#1-2-字节流复制视频" class="headerlink" title="1.2 字节流复制视频"></a>1.2 字节流复制视频</h3><p><strong>实现步骤</strong></p>
+<p>　　根据数据源创建字节输入流对象</p>
+<p>　　根据目的地创建字节输出流对象</p>
+<p>　　读写数据，复制视频</p>
+<p>　　释放资源</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.*;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BisCopyVideo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"> <span class="number">5</span>         File srcFiles = <span class="keyword">new</span> File(<span class="string">&quot;F:\\1_in.mp4&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         File destFile = <span class="keyword">new</span> File(<span class="string">&quot;E:\\out.mp4&quot;</span>);</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         BufferedInputStream bis = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(srcFiles));</span><br><span class="line"> <span class="number">9</span>         BufferedOutputStream bos = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(destFile));</span><br><span class="line"><span class="number">10</span> </span><br><span class="line"><span class="number">11</span>         <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4096</span>];</span><br><span class="line"><span class="number">12</span>         <span class="keyword">int</span> len;</span><br><span class="line"><span class="number">13</span>         <span class="keyword">while</span> ((len = bis.read(buffer)) != -<span class="number">1</span>)&#123;</span><br><span class="line"><span class="number">14</span>             bos.write(buffer,<span class="number">0</span>,len);</span><br><span class="line"><span class="number">15</span>         &#125;</span><br><span class="line"><span class="number">16</span> </span><br><span class="line"><span class="number">17</span>         bis.close();</span><br><span class="line"><span class="number">18</span>         bos.close();</span><br><span class="line"><span class="number">19</span>     &#125;</span><br><span class="line"><span class="number">20</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-字符流"><a href="#2-字符流" class="headerlink" title="2.字符流"></a>2.字符流</h2><h3 id="2-1-为什么会出现字符流"><a href="#2-1-为什么会出现字符流" class="headerlink" title="2.1 为什么会出现字符流"></a>2.1 为什么会出现字符流</h3><p><strong>字符流的介绍</strong></p>
+<p>　　由于字节流操作中文不是特别的方便，所以Java就提供字符流</p>
+<p>　　字符流 = 字节流 + 编码表</p>
+<p><strong>中文的字节存储方式</strong></p>
+<p>　　用字节流复制文本文件时，文本文件也会有中文，但是没有问题，原因是最终底层操作会自动进行字节拼接成中文，如何识别是中文的呢？</p>
+<p>　　汉字在存储的时候，无论选择哪种编码存储，第一个字节都是负数</p>
+<h3 id="2-2-编码表"><a href="#2-2-编码表" class="headerlink" title="2.2 编码表"></a>2.2 编码表</h3><p><strong>什么是字符集</strong></p>
+<p>　　是一个系统支持的所有字符的集合，包括各国家文字、标点符号、图形符号、数字等</p>
+<p>　　计算机要准确的存储和识别各种字符集符号，就需要进行字符编码，一套字符集必然至少有一套字符编码。 常见字符集有ASCII字符集、GBXXX字符集、Unicode字符集等</p>
+<p><strong>常见的字符集</strong></p>
+<p>　　ASCII字符集：</p>
+<p>　　　　ASCII：是基于拉丁字母的一套电脑编码系统，用于显示现代英语，主要包括控制字符(回车键、退格、 换行键等)和可显示字符(英文大小写字符、阿拉伯数字和西文符号)</p>
+<p>　　　　基本的ASCII字符集，使用7位表示一个字符，共128字符。ASCII的扩展字符集使用8位表示一个字符，共 256字符，方便支持欧洲常用字符。是一个系统支持的所有字符的集合，包括各国家文字、标点符号、 图形符号、数字等</p>
+<p>　　GBXXX字符集：</p>
+<p>　　　　GBK：最常用的中文码表。是在GB2312标准基础上的扩展规范，使用了双字节编码方案，共收录了 21003个汉字，完全兼容GB2312标准，同时支持繁体汉字以及日韩汉字等</p>
+<p>　　Unicode字符集：</p>
+<p>　　　　UTF-8编码：可以用来表示Unicode标准中任意字符，它是电子邮件、网页及其他存储或传送文字的应用 中，优先采用的编码。互联网工程工作小组（IETF）要求所有互联网协议都必须支持UTF-8编码。它使用一至四个字节为每个字符编码</p>
+<p>　　编码规则：</p>
+<p>　　128个US-ASCII字符，只需一个字节编码</p>
+<p>　　拉丁文等字符，需要二个字节编码</p>
+<p>　　大部分常用字（含中文），使用三个字节编码</p>
+<p>　　其他极少使用的Unicode辅助字符，使用四字节编码</p>
+<h3 id="2-3-字符串中的编码解码问题"><a href="#2-3-字符串中的编码解码问题" class="headerlink" title="2.3 字符串中的编码解码问题"></a>2.3 字符串中的编码解码问题</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>byte[] getBytes()</td>
+<td>使用平台的默认字符集将该 String编码为一系列字节</td>
+</tr>
+<tr>
+<td>byte[] getBytes(String charsetName)</td>
+<td>使用指定的字符集将该 String编码为一系列字节</td>
+</tr>
+<tr>
+<td>String(byte[] bytes)</td>
+<td>使用平台的默认字符集解码指定的字节数组来创建字符串</td>
+</tr>
+<tr>
+<td>String(byte[] bytes, String charsetName)</td>
+<td>通过指定的字符集解码指定的字节数组来创建字符串</td>
+</tr>
+</tbody></table>
+<h3 id="2-4-字符流中的编码解码问题"><a href="#2-4-字符流中的编码解码问题" class="headerlink" title="2.4 字符流中的编码解码问题"></a>2.4 字符流中的编码解码问题</h3><p><strong>字符流中和编码解码问题相关的两个类</strong></p>
+<p>　　InputStreamReader：是从字节流到字符流的桥梁</p>
+<p>　　　　它读取字节，并使用指定的编码将其解码为字符</p>
+<p>　　　　它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集</p>
+<p>　　OutputStreamWriter：是从字符流到字节流的桥梁</p>
+<p>　　　　是从字符流到字节流的桥梁，使用指定的编码将写入的字符编码为字节</p>
+<p>　　　　它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集</p>
+<p><strong>构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>InputStreamReader(InputStream in)</td>
+<td>使用默认字符编码创建InputStreamReader对 象</td>
+</tr>
+<tr>
+<td>InputStreamReader(InputStream in,String chatset)</td>
+<td>使用指定的字符编码创建InputStreamReader 对象</td>
+</tr>
+<tr>
+<td>OutputStreamWriter(OutputStream out)</td>
+<td>使用默认字符编码创建OutputStreamWriter对 象</td>
+</tr>
+<tr>
+<td>OutputStreamWriter(OutputStream out,String charset)</td>
+<td>使用指定的字符编码创建OutputStreamWriter 对象</td>
+</tr>
+</tbody></table>
+<h3 id="2-5-字符流写数据的5种方式"><a href="#2-5-字符流写数据的5种方式" class="headerlink" title="2.5 字符流写数据的5种方式"></a>2.5 字符流写数据的5种方式</h3><p><strong>写</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void write(int c)</td>
+<td>写一个字符</td>
+</tr>
+<tr>
+<td>void write(char[] cbuf)</td>
+<td>写入一个字符数组</td>
+</tr>
+<tr>
+<td>void write(char[] cbuf, int off, int len)</td>
+<td>写入字符数组的一部分</td>
+</tr>
+<tr>
+<td>void write(String str)</td>
+<td>写一个字符串</td>
+</tr>
+<tr>
+<td>void write(String str, int off, int len)</td>
+<td>写一个字符串的一部分</td>
+</tr>
+</tbody></table>
+<p><strong>刷新和关闭</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>flush()</td>
+<td>刷新流，之后还可以继续写数据</td>
+</tr>
+<tr>
+<td>close()</td>
+<td>关闭流，释放资源，但是在关闭之前会先刷新流。一旦关闭，就不能再写数据</td>
+</tr>
+</tbody></table>
+<h3 id="2-6-字符流读数据的2种方式"><a href="#2-6-字符流读数据的2种方式" class="headerlink" title="2.6 字符流读数据的2种方式"></a>2.6 字符流读数据的2种方式</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>int read()</td>
+<td>一次读一个字符数据</td>
+</tr>
+<tr>
+<td>int read(char[] cbuf)</td>
+<td>一次读一个字符数组数据</td>
+</tr>
+</tbody></table>
+<h3 id="2-7-字符缓冲流"><a href="#2-7-字符缓冲流" class="headerlink" title="2.7 字符缓冲流"></a>2.7 字符缓冲流</h3><p><strong>字符缓冲流介绍</strong></p>
+<p>　　BufferedWriter：将文本写入字符输出流，缓冲字符，以提供单个字符，数组和字符串的高效写入，可 以指定缓冲区大小，或者可以接受默认大小。默认值足够大，可用于大多数用途</p>
+<p>　　BufferedReader：从字符输入流读取文本，缓冲字符，以提供字符，数组和行的高效读取，可以指定缓 冲区大小，或者可以使用默认大小。 默认值足够大，可用于大多数用途</p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>BufferedWriter(Writer out)</td>
+<td>创建字符缓冲输出流对象</td>
+</tr>
+<tr>
+<td>BufferedReader(Reader in)</td>
+<td>创建字符缓冲输入流对象</td>
+</tr>
+</tbody></table>
+<h3 id="2-8-字符缓冲流特有功能"><a href="#2-8-字符缓冲流特有功能" class="headerlink" title="2.8 字符缓冲流特有功能"></a>2.8 字符缓冲流特有功能</h3><p>BufferedWriter：</p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void newLine()</td>
+<td>写一行行分隔符，行分隔符字符串由系统属性定义</td>
+</tr>
+</tbody></table>
+<p>BufferedReader:</p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>String readLine()</td>
+<td>读一行文字。 结果包含行的内容的字符串，不包括任何行终止字符如果流的结尾已经 到达，则为null</td>
+</tr>
+</tbody></table>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/JavaSE-18-%E5%AD%97%E8%8A%82%E7%BC%93%E5%86%B2%E6%B5%81%E5%92%8C%E5%AD%97%E7%AC%A6%E6%B5%81/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JavaSE-17-File、递归和字节流" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/JavaSE-17-File%E3%80%81%E9%80%92%E5%BD%92%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81/">JavaSE-17-File、递归和字节流</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/JavaSE-17-File%E3%80%81%E9%80%92%E5%BD%92%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:19:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-File类"><a href="#1-File类" class="headerlink" title="1.File类"></a>1.File类</h2><h3 id="1-1-File类概述和构造方法"><a href="#1-1-File类概述和构造方法" class="headerlink" title="1.1 File类概述和构造方法"></a>1.1 File类概述和构造方法</h3><p><strong>File类介绍</strong></p>
+<p>　　它是文件和目录路径名的抽象表示</p>
+<p>　　文件和目录是可以通过File封装成对象的</p>
+<p>　　对于File而言，其封装的并不是一个真正存在的文件，仅仅是一个路径名而已。它可以是存在的，也可以 是不存在的。将来是要通过具体的操作把这个路径的内容转换为具体存在的</p>
+<p><strong>File类构造方法</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>File(String pathname)</td>
+<td>通过将给定的路径名字符串转换为抽象路径名来创建新的 File实例</td>
+</tr>
+<tr>
+<td>File(String parent, String child)</td>
+<td>从父路径名字符串和子路径名字符串创建新的 File实例</td>
+</tr>
+<tr>
+<td>File(File parent, String child)</td>
+<td>从父抽象路径名和子路径名字符串创建新的 File实例</td>
+</tr>
+</tbody></table>
+<h3 id="1-2-File类创建功能"><a href="#1-2-File类创建功能" class="headerlink" title="1.2 File类创建功能"></a>1.2 File类创建功能</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public boolean createNewFile()</td>
+<td>当具有该名称的文件不存在时，创建一个由该抽象路径名命名的新空文件</td>
+</tr>
+<tr>
+<td>public boolean mkdir()</td>
+<td>创建由此抽象路径名命名的目录</td>
+</tr>
+<tr>
+<td>public boolean mkdirs()</td>
+<td>创建由此抽象路径名命名的目录，包括任何必需但不存在的父目录</td>
+</tr>
+</tbody></table>
+<h3 id="1-3-File类判断和获取功能"><a href="#1-3-File类判断和获取功能" class="headerlink" title="1.3 File类判断和获取功能"></a>1.3 File类判断和获取功能</h3><p><strong>判断功能</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public boolean isDirectory()</td>
+<td>测试此抽象路径名表示的File是否为目录</td>
+</tr>
+<tr>
+<td>public boolean isFile()</td>
+<td>测试此抽象路径名表示的File是否为文件</td>
+</tr>
+<tr>
+<td>public boolean exists()</td>
+<td>测试此抽象路径名表示的File是否存在</td>
+</tr>
+</tbody></table>
+<p><strong>获取功能</strong></p>
+<table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public String getAbsolutePath()</td>
+<td>返回此抽象路径名的绝对路径名字符串</td>
+</tr>
+<tr>
+<td>public String getPath()</td>
+<td>将此抽象路径名转换为路径名字符串</td>
+</tr>
+<tr>
+<td>public String getName()</td>
+<td>返回由此抽象路径名表示的文件或目录的名称</td>
+</tr>
+<tr>
+<td>public String[] list()</td>
+<td>返回此抽象路径名表示的目录中的文件和目录的名称字符串数组</td>
+</tr>
+<tr>
+<td>public File[] listFiles()</td>
+<td>返回此抽象路径名表示的目录中的文件和目录的File对象数组</td>
+</tr>
+</tbody></table>
+<h3 id="1-4-File类删除功能"><a href="#1-4-File类删除功能" class="headerlink" title="1.4 File类删除功能"></a>1.4 File类删除功能</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>public boolean delete()</td>
+<td>删除由此抽象路径名表示的文件或目录</td>
+</tr>
+</tbody></table>
+<p><strong>绝对路径和相对路径的区别</strong></p>
+<p>　　绝对路径：完整的路径名，不需要任何其他信息就可以定位它所表示的文件。例如：E:\IT\java.txt</p>
+<p>　　相对路径：必须使用取自其他路径名的信息进行解释。例如：myFile\java.txt</p>
+<h2 id="2-递归"><a href="#2-递归" class="headerlink" title="2.递归"></a>2.递归</h2><h3 id="2-1-递归"><a href="#2-1-递归" class="headerlink" title="2.1 递归"></a>2.1 递归</h3><p><strong>递归的介绍</strong></p>
+<p>　　以编程的角度来看，递归指的是方法定义中调用方法本身的现象</p>
+<p>　　把一个复杂的问题层层转化为一个与原问题相似的规模较小的问题来求解</p>
+<p>　　递归策略只需少量的程序就可描述出解题过程所需要的多次重复计算</p>
+<p><strong>递归的注意事项</strong></p>
+<p>　　递归一定要有出口。否则内存溢出 递归虽然有出口，但是递归的次数也不宜过多。否则内存溢出</p>
+<h3 id="2-2-递归遍历目录"><a href="#2-2-递归遍历目录" class="headerlink" title="2.2 递归遍历目录"></a>2.2 递归遍历目录</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.File;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileTraversal</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         File srcFile = <span class="keyword">new</span> File(<span class="string">&quot;F:\\&quot;</span>);</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span>         getFilePath(srcFile);</span><br><span class="line"> <span class="number">8</span>     &#125;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getFilePath</span><span class="params">(File srcFile)</span> </span>&#123;</span><br><span class="line"><span class="number">11</span>         File[] fileArray = srcFile.listFiles();</span><br><span class="line"><span class="number">12</span>         <span class="keyword">if</span> (fileArray != <span class="keyword">null</span>)&#123;</span><br><span class="line"><span class="number">13</span>             <span class="keyword">for</span> (File file : fileArray)&#123;</span><br><span class="line"><span class="number">14</span>                 <span class="keyword">if</span> (file.isDirectory())&#123;</span><br><span class="line"><span class="number">15</span>                     getFilePath(file);</span><br><span class="line"><span class="number">16</span>                 &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="number">17</span>                     System.out.println(file.getAbsolutePath());</span><br><span class="line"><span class="number">18</span>                 &#125;</span><br><span class="line"><span class="number">19</span>             &#125;</span><br><span class="line"><span class="number">20</span>         &#125;</span><br><span class="line"><span class="number">21</span>     &#125;</span><br><span class="line"><span class="number">22</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="3-IO流"><a href="#3-IO流" class="headerlink" title="3.IO流"></a>3.IO流</h2><h3 id="3-1-IO流概述和分类"><a href="#3-1-IO流概述和分类" class="headerlink" title="3.1 IO流概述和分类"></a>3.1 IO流概述和分类</h3><p><strong>IO流介绍</strong></p>
+<p>　　IO：输入/输出(Input/Output)</p>
+<p>　　流：是一种抽象概念，是对数据传输的总称。也就是说数据在设备间的传输称为流，流的本质是数据传输</p>
+<p>　　IO流就是用来处理设备间数据传输问题的。常见的应用：文件复制；文件上传；文件下载</p>
+<p><strong>IO流的分类</strong></p>
+<p>　　按照数据的流向</p>
+<p>　　　　输入流：读数据</p>
+<p>　　　　输出流：写数据</p>
+<p>　　按照数据类型来分</p>
+<p>　　　　字节流</p>
+<p>　　　　　　字节输入流</p>
+<p>　　　　　　字节输出流</p>
+<p>　　　　字符流</p>
+<p>　　　　　　字符输入流</p>
+<p>　　　　　　字符输出流</p>
+<p><strong>IO流的使用场景</strong></p>
+<p>　　如果操作的是纯文本文件，优先使用字符流</p>
+<p>　　如果操作的是图片、视频、音频等二进制文件。优先使用字节流</p>
+<p>　　如果不确定文件类型，优先使用字节流。字节流是万能的流</p>
+<h3 id="3-2-字节流写数据"><a href="#3-2-字节流写数据" class="headerlink" title="3.2 字节流写数据"></a>3.2 字节流写数据</h3><p><strong>字节流抽象基类</strong></p>
+<p>　　InputStream：这个抽象类是表示字节输入流的所有类的超类</p>
+<p>　　OutputStream：这个抽象类是表示字节输出流的所有类的超类</p>
+<p>　　子类名特点：子类名称都是以其父类名作为子类名的后缀</p>
+<p><strong>字节输出流</strong></p>
+<p>　　FileOutputStream(String name)：创建文件输出流以指定的名称写入文件</p>
+<p><strong>使用字节输出流写数据的步骤</strong></p>
+<p>　　创建字节输出流对象(调用系统功能创建了文件，创建字节输出流对象，让字节输出流对象指向文件)</p>
+<p>　　调用字节输出流对象的写数据方法</p>
+<p>　　释放资源(关闭此文件输出流并释放与此流相关联的任何系统资源)</p>
+<h3 id="3-3-字节流写数据的三种方式"><a href="#3-3-字节流写数据的三种方式" class="headerlink" title="3.3 字节流写数据的三种方式"></a>3.3 字节流写数据的三种方式</h3><table>
+<thead>
+<tr>
+<th><strong>方法名</strong></th>
+<th><strong>说明</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>void write(int b)</td>
+<td>将指定的字节写入此文件输出流 一次写一个字节数据</td>
+</tr>
+<tr>
+<td>void write(byte[] b)</td>
+<td>将 b.length字节从指定的字节数组写入此文件输出流 一次写一个字节数组数据</td>
+</tr>
+<tr>
+<td>void write(byte[] b, int off, int len)</td>
+<td>将 len字节从指定的字节数组开始，从偏移量off开始写入此文件输出流 一 次写一个字节数组的部分数据</td>
+</tr>
+</tbody></table>
+<h3 id="3-4-字节流写数据的两个小问题"><a href="#3-4-字节流写数据的两个小问题" class="headerlink" title="3.4 字节流写数据的两个小问题"></a>3.4 字节流写数据的两个小问题</h3><p><strong>字节流写数据如何实现换行</strong></p>
+<p>　　windows:\r\n</p>
+<p>　　linux:\n</p>
+<p>　　mac:\r</p>
+<p><strong>字节流写数据如何实现追加写入</strong></p>
+<p>　　public FileOutputStream(String name,boolean append)</p>
+<p>　　创建文件输出流以指定的名称写入文件。如果第二个参数为true ，则字节将写入文件的末尾而不是开头</p>
+<h3 id="3-5-字节流写数据加异常处理"><a href="#3-5-字节流写数据加异常处理" class="headerlink" title="3.5 字节流写数据加异常处理"></a>3.5 字节流写数据加异常处理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">try</span>&#123;</span><br><span class="line"><span class="number">2</span> 　　可能出现异常的代码;</span><br><span class="line"><span class="number">3</span> &#125;<span class="keyword">catch</span>(异常类名 变量名)&#123;</span><br><span class="line"><span class="number">4</span> 　　异常的处理代码;</span><br><span class="line"><span class="number">5</span> &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line"><span class="number">6</span> 　　执行所有清除操作;</span><br><span class="line"><span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>finally特点</strong></p>
+<p>　　被finally控制的语句一定会执行，除非JVM退出</p>
+<h3 id="3-6-字节流读数据"><a href="#3-6-字节流读数据" class="headerlink" title="3.6 字节流读数据"></a>3.6 字节流读数据</h3><p><strong>字节输入流</strong></p>
+<p>　　FileInputStream(String name)：通过打开与实际文件的连接来创建一个FileInputStream ，该文件由文 件系统中的路径名name命名</p>
+<p><strong>字节输入流读取数据的步骤</strong></p>
+<p>　　创建字节输入流对象</p>
+<p>　　调用字节输入流对象的读数据方法</p>
+<p>　　释放资源</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.File;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.io.IOException;</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileInBuffer</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"> <span class="number">7</span>         File srcFile = <span class="keyword">new</span> File(<span class="string">&quot;F:\\Fis.txt&quot;</span>);</span><br><span class="line"> <span class="number">8</span>         FileInputStream fis = <span class="keyword">new</span> FileInputStream(srcFile);</span><br><span class="line"> <span class="number">9</span>  </span><br><span class="line"><span class="number">10</span>         <span class="keyword">byte</span>[] Buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4096</span>];</span><br><span class="line"><span class="number">11</span>  </span><br><span class="line"><span class="number">12</span>         <span class="keyword">int</span> by;</span><br><span class="line"><span class="number">13</span>  </span><br><span class="line"><span class="number">14</span>         <span class="keyword">while</span> ((by = fis.read(Buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line"><span class="number">15</span>             System.out.println(<span class="keyword">new</span> String(Buffer, <span class="number">0</span>, by));</span><br><span class="line"><span class="number">16</span>         &#125;</span><br><span class="line"><span class="number">17</span>         fis.close();</span><br><span class="line"><span class="number">18</span>     &#125;</span><br><span class="line"><span class="number">19</span> &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-7-字节流复制图片"><a href="#3-7-字节流复制图片" class="headerlink" title="3.7 字节流复制图片"></a>3.7 字节流复制图片</h3><p><strong>实现步骤</strong></p>
+<p>　　根据数据源创建字节输入流对象</p>
+<p>　　根据目的地创建字节输出流对象</p>
+<p>　　读写数据，复制图片(一次读取一个字节数组，一次写入一个字节数组)</p>
+<p>　　释放资源</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.File;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"> <span class="number">4</span> <span class="keyword">import</span> java.io.IOException;</span><br><span class="line"> <span class="number">5</span> </span><br><span class="line"> <span class="number">6</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileInBuffer</span> </span>&#123;</span><br><span class="line"> <span class="number">7</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"> <span class="number">8</span>         File srcFile = <span class="keyword">new</span> File(<span class="string">&quot;F:\\加藤惠.png&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         File destFile = <span class="keyword">new</span> File(<span class="string">&quot;E:\\加藤惠(复制品).png&quot;</span>);</span><br><span class="line"><span class="number">10</span>         FileInputStream fis = <span class="keyword">new</span> FileInputStream(srcFile);</span><br><span class="line"><span class="number">11</span>         FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(destFile);</span><br><span class="line"><span class="number">12</span> </span><br><span class="line"><span class="number">13</span>         <span class="keyword">byte</span>[] Buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4096</span>];</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span>         <span class="keyword">int</span> by;</span><br><span class="line"><span class="number">16</span> </span><br><span class="line"><span class="number">17</span>         <span class="keyword">while</span> ((by = fis.read(Buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line"><span class="number">18</span>             fos.write(Buffer,<span class="number">0</span>,by);</span><br><span class="line"><span class="number">19</span>         &#125;</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>         fis.close();</span><br><span class="line"><span class="number">22</span>         fos.close();</span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span> &#125;</span><br></pre></td></tr></table></figure>
+
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/JavaSE-17-File%E3%80%81%E9%80%92%E5%BD%92%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-JavaSE-16-集合（叁）" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -942,402 +1996,6 @@
 
 
   
-    <article id="post-JavaSE-10-继承与抽象类" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/07/JavaSE-10-%E7%BB%A7%E6%89%BF%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB/">JavaSE-10-继承与抽象类</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/07/JavaSE-10-%E7%BB%A7%E6%89%BF%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB/" class="archive-article-date">
-  	<time datetime="2021-10-07T15:06:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-继承"><a href="#1-继承" class="headerlink" title="1.继承"></a>1.继承</h2><h3 id="1-1-概述"><a href="#1-1-概述" class="headerlink" title="1.1 概述"></a>1.1 概述</h3><p>多个类中存在相同属性和行为时，将这些内容抽取到单独一个类中，那么多个类无需再定义这些属性和行为，只要继承那一个类即可。</p>
-<p>其中，多个类可以称为子类，单独那一个类称为父类、超类（superclass）或者基类。</p>
-<h3 id="1-2-定义"><a href="#1-2-定义" class="headerlink" title="1.2 定义"></a>1.2 定义</h3><p>继承：就是子类继承父类的属性和行为，使得子类对象具有与父类相同的属性、相同的行为。子类可以直接访问父类中的非私有的属性和行为。</p>
-        
-          <a class="article-more-a" href="/2021/10/07/JavaSE-10-%E7%BB%A7%E6%89%BF%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/07/JavaSE-10-%E7%BB%A7%E6%89%BF%E4%B8%8E%E6%8A%BD%E8%B1%A1%E7%B1%BB/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JavaSE-9-（练手）简单学生管理" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/07/JavaSE-9-%EF%BC%88%E7%BB%83%E6%89%8B%EF%BC%89%E7%AE%80%E5%8D%95%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86/">JavaSE-9-（练手）简单学生管理</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/07/JavaSE-9-%EF%BC%88%E7%BB%83%E6%89%8B%EF%BC%89%E7%AE%80%E5%8D%95%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86/" class="archive-article-date">
-  	<time datetime="2021-10-07T15:02:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-学生管理系统实现步骤"><a href="#1-学生管理系统实现步骤" class="headerlink" title="1.学生管理系统实现步骤"></a>1.学生管理系统实现步骤</h2><p><strong>案例需求</strong></p>
-<p>系统主要功能如下：</p>
-<p>添加学生：通过键盘录入学生信息，添加到集合中</p>
-<p>删除学生：通过键盘录入要删除学生的学号，将该学生对象从集合中删除</p>
-<p>修改学生：通过键盘录入要修改学生的学号，将该学生对象其他信息进行修改</p>
-<p>查看学生：将集合中的学生对象信息进行展示</p>
-<p>退出系统：结束程序</p>
-        
-          <a class="article-more-a" href="/2021/10/07/JavaSE-9-%EF%BC%88%E7%BB%83%E6%89%8B%EF%BC%89%E7%AE%80%E5%8D%95%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/07/JavaSE-9-%EF%BC%88%E7%BB%83%E6%89%8B%EF%BC%89%E7%AE%80%E5%8D%95%E5%AD%A6%E7%94%9F%E7%AE%A1%E7%90%86/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JavaSE-8-ArrayList" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/07/JavaSE-8-ArrayList/">JavaSE-8-ArrayList</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/07/JavaSE-8-ArrayList/" class="archive-article-date">
-  	<time datetime="2021-10-07T15:01:19.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-ArrayList类概述"><a href="#1-ArrayList类概述" class="headerlink" title="1.ArrayList类概述"></a>1.ArrayList类概述</h2><p><strong>什么是集合</strong></p>
-<p>提供一种存储空间可变的存储模型，存储的数据容量可以发生改变</p>
-<p><strong>ArrayList集合的特点</strong></p>
-<p>底层是数组实现的，长度可以变化</p>
-<p><strong>泛型的使用</strong></p>
-<p>用于约束集合中存储元素的数据类型</p>
-<h2 id="2-ArrayList构造方法"><a href="#2-ArrayList构造方法" class="headerlink" title="2.ArrayList构造方法"></a>2.ArrayList构造方法</h2><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public ArrayList()</td>
-<td>创建一个空的集合对象</td>
-</tr>
-</tbody></table>
-<h2 id="3-ArrayList成员方法"><a href="#3-ArrayList成员方法" class="headerlink" title="3.ArrayList成员方法"></a>3.ArrayList成员方法</h2><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public boolean remove(Object o)</td>
-<td>删除指定的元素，返回删除是否成功</td>
-</tr>
-<tr>
-<td>public E remove(int index)</td>
-<td>删除指定索引处的元素，返回被删除的元素</td>
-</tr>
-<tr>
-<td>public E set(int index,E element)</td>
-<td>修改指定索引处的元素，返回被修改的元素</td>
-</tr>
-<tr>
-<td>public E get(int index)</td>
-<td>返回指定索引处的元素</td>
-</tr>
-<tr>
-<td>public int size()</td>
-<td>返回集合中的元素的个数</td>
-</tr>
-<tr>
-<td>public boolean add(E e)</td>
-<td>将指定的元素追加到此集合的末尾</td>
-</tr>
-<tr>
-<td>public void add(int index,E element)</td>
-<td>在此集合中的指定位置插入指定的元素</td>
-</tr>
-</tbody></table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/07/JavaSE-8-ArrayList/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JavaSE-7-字符串常用API" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/07/JavaSE-7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8API/">JavaSE-7-字符串常用API</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/07/JavaSE-7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8API/" class="archive-article-date">
-  	<time datetime="2021-10-07T15:00:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-07</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-String"><a href="#1-String" class="headerlink" title="1.String"></a>1.String</h2><h3 id="1-1-String类概述"><a href="#1-1-String类概述" class="headerlink" title="1.1 String类概述"></a>1.1 String类概述</h3><p>String 类代表字符串，Java 程序中的所有字符串文字（例如“abc”）都被实现为此类的实例。也就是说，Java 程序 中所有的双引号字符串，都是 String 类的对象。String 类在 java.lang 包下，所以使用的时候不需要导包！</p>
-<h3 id="1-2-String类的特点"><a href="#1-2-String类的特点" class="headerlink" title="1.2 String类的特点"></a>1.2 String类的特点</h3><p>字符串不可变，它们的值在创建后不能被更改</p>
-<p>虽然 String 的值是不可变的，但是它们可以被共享</p>
-<p>字符串效果上相当于字符数组( char[] )，但是底层原理是字节数组( byte[] )</p>
-<h3 id="1-3-String的构造方法"><a href="#1-3-String的构造方法" class="headerlink" title="1.3 String的构造方法"></a>1.3 String的构造方法</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public String()</td>
-<td>创建一个空白字符串对象，不含有任何内容</td>
-</tr>
-<tr>
-<td>public String(char[] chs)</td>
-<td>根据字符数组的内容，来创建字符串对象</td>
-</tr>
-<tr>
-<td>public String(byte[] bys)</td>
-<td>根据字节数组的内容，来创建字符串对象</td>
-</tr>
-<tr>
-<td>String s = “abc”;</td>
-<td>直接赋值的方式创建字符串对象，内容就是abc</td>
-</tr>
-</tbody></table>
-<h3 id="1-4-创建字符串对象两种方式的区别"><a href="#1-4-创建字符串对象两种方式的区别" class="headerlink" title="1.4 创建字符串对象两种方式的区别"></a>1.4 创建字符串对象两种方式的区别</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> String str = <span class="keyword">new</span> String();</span><br></pre></td></tr></table></figure>
-
-<p>通过 new 创建的字符串对象，每一次 new 都会申请一个内存空间，虽然内容相同，但是地址值不同</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> String str = <span class="string">&quot;&quot;</span>;</span><br></pre></td></tr></table></figure>
-
-<p>以“”方式给出的字符串，只要字符序列相同(顺序和大小写)，无论在程序代码中出现几次，JVM 都只会建立一个String 对象，并在字符串池中维护</p>
-        
-          <a class="article-more-a" href="/2021/10/07/JavaSE-7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8API/#more">more >></a>
-        
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/07/JavaSE-7-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%B8%B8%E7%94%A8API/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/page/2/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><a class="page-number" href="/page/2/">2</a><span class="page-number current">3</span><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/4/">Next &amp;raquo;</a>
@@ -1477,11 +2135,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">电与电路</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">JavaScript ECMA</a>
+                <a href="javascript:void(0)" class="js-tag color2">电</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
             
             <div class="clearfix"></div>

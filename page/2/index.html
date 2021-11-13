@@ -165,6 +165,1844 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-JDBC-2-JDBC连接池与JDBC模板" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/JDBC-2-JDBC%E8%BF%9E%E6%8E%A5%E6%B1%A0%E4%B8%8EJDBC%E6%A8%A1%E6%9D%BF/">JDBC-2-JDBC连接池与JDBC模板</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/JDBC-2-JDBC%E8%BF%9E%E6%8E%A5%E6%B1%A0%E4%B8%8EJDBC%E6%A8%A1%E6%9D%BF/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:49:13.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="今日内容"><a href="#今日内容" class="headerlink" title="今日内容"></a>今日内容</h1><pre><code>1. 数据库连接池
+
+2. Spring JDBC : JDBC Template
+</code></pre>
+<h2 id="数据库连接池"><a href="#数据库连接池" class="headerlink" title="数据库连接池"></a>数据库连接池</h2><pre><code>1. 概念：其实就是一个容器(集合)，存放数据库连接的容器。
+        当系统初始化好后，容器被创建，容器中会申请一些连接对象，当用户来访问数据库时，从容器中获取连接对象，用户访问完之后，会将连接对象归还给容器。
+
+2. 好处：
+    1. 节约资源
+    2. 用户访问高效
+
+3. 实现：
+    1. 标准接口：DataSource   javax.sql包下的
+        1. 方法：
+            * 获取连接：getConnection()
+            * 归还连接：Connection.close()。如果连接对象Connection是从连接池中获取的，那么调用Connection.close()方法，则不会再关闭连接了。而是归还连接
+
+    2. 一般我们不去实现它，有数据库厂商来实现
+        1. C3P0：数据库连接池技术
+        2. Druid：数据库连接池实现技术，由阿里巴巴提供的
+
+
+4. C3P0：数据库连接池技术
+    * 步骤：
+        1. 导入jar包 (两个) c3p0-0.9.5.2.jar mchange-commons-java-0.2.12.jar ，
+            * 不要忘记导入数据库驱动jar包
+        2. 定义配置文件：
+            * 名称： c3p0.properties 或者 c3p0-config.xml
+            * 路径：直接将文件放在src目录下即可。
+
+        3. 创建核心对象 数据库连接池对象 ComboPooledDataSource
+        4. 获取连接： getConnection
+    * 代码：
+         //1.创建数据库连接池对象
+        DataSource ds  = new ComboPooledDataSource();
+        //2. 获取连接对象
+        Connection conn = ds.getConnection();
+5. Druid：数据库连接池实现技术，由阿里巴巴提供的
+    1. 步骤：
+        1. 导入jar包 druid-1.0.9.jar
+        2. 定义配置文件：
+            * 是properties形式的
+            * 可以叫任意名称，可以放在任意目录下
+        3. 加载配置文件。Properties
+        4. 获取数据库连接池对象：通过工厂来来获取  DruidDataSourceFactory
+        5. 获取连接：getConnection
+    * 代码：
+         //3.加载配置文件
+        Properties pro = new Properties();
+        InputStream is = DruidDemo.class.getClassLoader().getResourceAsStream(&quot;druid.properties&quot;);
+        pro.load(is);
+        //4.获取连接池对象
+        DataSource ds = DruidDataSourceFactory.createDataSource(pro);
+        //5.获取连接
+        Connection conn = ds.getConnection();
+    2. 定义工具类
+        1. 定义一个类 JDBCUtils
+        2. 提供静态代码块加载配置文件，初始化连接池对象
+        3. 提供方法
+            1. 获取连接方法：通过数据库连接池获取连接
+            2. 释放资源
+            3. 获取连接池的方法
+
+
+    * 代码：
+        public class JDBCUtils &#123;
+
+            //1.定义成员变量 DataSource
+            private static DataSource ds ;
+        
+            static&#123;
+                try &#123;
+                    //1.加载配置文件
+                    Properties pro = new Properties();
+                    pro.load(JDBCUtils.class.getClassLoader().getResourceAsStream(&quot;druid.properties&quot;));
+                    //2.获取DataSource
+                    ds = DruidDataSourceFactory.createDataSource(pro);
+                &#125; catch (IOException e) &#123;
+                    e.printStackTrace();
+                &#125; catch (Exception e) &#123;
+                    e.printStackTrace();
+                &#125;
+            &#125;
+        
+            /**
+             * 获取连接
+             */
+            public static Connection getConnection() throws SQLException &#123;
+                return ds.getConnection();
+            &#125;
+        
+            /**
+             * 释放资源
+             */
+            public static void close(Statement stmt,Connection conn)&#123;
+               /* if(stmt != null)&#123;
+                    try &#123;
+                        stmt.close();
+                    &#125; catch (SQLException e) &#123;
+                        e.printStackTrace();
+                    &#125;
+                &#125;
+        
+                if(conn != null)&#123;
+                    try &#123;
+                        conn.close();//归还连接
+                    &#125; catch (SQLException e) &#123;
+                        e.printStackTrace();
+                    &#125;
+                &#125;*/
+        
+               close(null,stmt,conn);
+            &#125;
+
+            public static void close(ResultSet rs , Statement stmt, Connection conn)&#123;
+
+                if(rs != null)&#123;
+                    try &#123;
+                        rs.close();
+                    &#125; catch (SQLException e) &#123;
+                        e.printStackTrace();
+                    &#125;
+                &#125;
+
+                if(stmt != null)&#123;
+                    try &#123;
+                        stmt.close();
+                    &#125; catch (SQLException e) &#123;
+                        e.printStackTrace();
+                    &#125;
+                &#125;
+        
+                if(conn != null)&#123;
+                    try &#123;
+                        conn.close();//归还连接
+                    &#125; catch (SQLException e) &#123;
+                        e.printStackTrace();
+                    &#125;
+                &#125;
+            &#125;
+        
+            /**
+             * 获取连接池方法
+             */
+        
+            public static DataSource getDataSource()&#123;
+                return  ds;
+            &#125;
+        
+        &#125;
+</code></pre>
+<h2 id="Spring-JDBC"><a href="#Spring-JDBC" class="headerlink" title="Spring JDBC"></a>Spring JDBC</h2><pre><code>* Spring框架对JDBC的简单封装。提供了一个JDBCTemplate对象简化JDBC的开发
+* 步骤：
+    1. 导入jar包
+    2. 创建JdbcTemplate对象。依赖于数据源DataSource
+        * JdbcTemplate template = new JdbcTemplate(ds);
+
+    3. 调用JdbcTemplate的方法来完成CRUD的操作
+        * update():执行DML语句。增、删、改语句
+        * queryForMap():查询结果将结果集封装为map集合，将列名作为key，将值作为value 将这条记录封装为一个map集合
+            * 注意：这个方法查询的结果集长度只能是1
+        * queryForList():查询结果将结果集封装为list集合
+            * 注意：将每一条记录封装为一个Map集合，再将Map集合装载到List集合中
+        * query():查询结果，将结果封装为JavaBean对象
+            * query的参数：RowMapper
+                * 一般我们使用BeanPropertyRowMapper实现类。可以完成数据到JavaBean的自动封装
+                * new BeanPropertyRowMapper&lt;类型&gt;(类型.class)
+        * queryForObject：查询结果，将结果封装为对象
+            * 一般用于聚合函数的查询
+
+    4. 练习：
+        * 需求：
+            1. 修改1号数据的 salary 为 10000
+            2. 添加一条记录
+            3. 删除刚才添加的记录
+            4. 查询id为1的记录，将其封装为Map集合
+            5. 查询所有记录，将其封装为List
+            6. 查询所有记录，将其封装为Emp对象的List集合
+            7. 查询总记录数
+
+        * 代码：
+            
+            import cn.itcast.domain.Emp;
+            import cn.itcast.utils.JDBCUtils;
+            import org.junit.Test;
+            import org.springframework.jdbc.core.BeanPropertyRowMapper;
+            import org.springframework.jdbc.core.JdbcTemplate;
+            import org.springframework.jdbc.core.RowMapper;
+            
+            import java.sql.Date;
+            import java.sql.ResultSet;
+            import java.sql.SQLException;
+            import java.util.List;
+            import java.util.Map;
+            
+            public class JdbcTemplateDemo2 &#123;
+            
+                //Junit单元测试，可以让方法独立执行
+</code></pre>
+<p>​                </p>
+<pre><code>                //1. 获取JDBCTemplate对象
+                private JdbcTemplate template = new JdbcTemplate(JDBCUtils.getDataSource());
+                /**
+                 * 1. 修改1号数据的 salary 为 10000
+                 */
+                @Test
+                public void test1()&#123;
+            
+                    //2. 定义sql
+                    String sql = &quot;update emp set salary = 10000 where id = 1001&quot;;
+                    //3. 执行sql
+                    int count = template.update(sql);
+                    System.out.println(count);
+                &#125;
+            
+                /**
+                 * 2. 添加一条记录
+                 */
+                @Test
+                public void test2()&#123;
+                    String sql = &quot;insert into emp(id,ename,dept_id) values(?,?,?)&quot;;
+                    int count = template.update(sql, 1015, &quot;郭靖&quot;, 10);
+                    System.out.println(count);
+            
+                &#125;
+            
+                /**
+                 * 3.删除刚才添加的记录
+                 */
+                @Test
+                public void test3()&#123;
+                    String sql = &quot;delete from emp where id = ?&quot;;
+                    int count = template.update(sql, 1015);
+                    System.out.println(count);
+                &#125;
+            
+                /**
+                 * 4.查询id为1001的记录，将其封装为Map集合
+                 * 注意：这个方法查询的结果集长度只能是1
+                 */
+                @Test
+                public void test4()&#123;
+                    String sql = &quot;select * from emp where id = ? or id = ?&quot;;
+                    Map&lt;String, Object&gt; map = template.queryForMap(sql, 1001,1002);
+                    System.out.println(map);
+                    //&#123;id=1001, ename=孙悟空, job_id=4, mgr=1004, joindate=2000-12-17, salary=10000.00, bonus=null, dept_id=20&#125;
+            
+                &#125;
+            
+                /**
+                 * 5. 查询所有记录，将其封装为List
+                 */
+                @Test
+                public void test5()&#123;
+                    String sql = &quot;select * from emp&quot;;
+                    List&lt;Map&lt;String, Object&gt;&gt; list = template.queryForList(sql);
+            
+                    for (Map&lt;String, Object&gt; stringObjectMap : list) &#123;
+                        System.out.println(stringObjectMap);
+                    &#125;
+                &#125;
+            
+                /**
+                 * 6. 查询所有记录，将其封装为Emp对象的List集合
+                 */
+            
+                @Test
+                public void test6()&#123;
+                    String sql = &quot;select * from emp&quot;;
+                    List&lt;Emp&gt; list = template.query(sql, new RowMapper&lt;Emp&gt;() &#123;
+            
+                        @Override
+                        public Emp mapRow(ResultSet rs, int i) throws SQLException &#123;
+                            Emp emp = new Emp();
+                            int id = rs.getInt(&quot;id&quot;);
+                            String ename = rs.getString(&quot;ename&quot;);
+                            int job_id = rs.getInt(&quot;job_id&quot;);
+                            int mgr = rs.getInt(&quot;mgr&quot;);
+                            Date joindate = rs.getDate(&quot;joindate&quot;);
+                            double salary = rs.getDouble(&quot;salary&quot;);
+                            double bonus = rs.getDouble(&quot;bonus&quot;);
+                            int dept_id = rs.getInt(&quot;dept_id&quot;);
+            
+                            emp.setId(id);
+                            emp.setEname(ename);
+                            emp.setJob_id(job_id);
+                            emp.setMgr(mgr);
+                            emp.setJoindate(joindate);
+                            emp.setSalary(salary);
+                            emp.setBonus(bonus);
+                            emp.setDept_id(dept_id);
+            
+                            return emp;
+                        &#125;
+                    &#125;);
+</code></pre>
+<p>​                </p>
+<pre><code>                    for (Emp emp : list) &#123;
+                        System.out.println(emp);
+                    &#125;
+                &#125;
+            
+                /**
+                 * 6. 查询所有记录，将其封装为Emp对象的List集合
+                 */
+            
+                @Test
+                public void test6_2()&#123;
+                    String sql = &quot;select * from emp&quot;;
+                    List&lt;Emp&gt; list = template.query(sql, new BeanPropertyRowMapper&lt;Emp&gt;(Emp.class));
+                    for (Emp emp : list) &#123;
+                        System.out.println(emp);
+                    &#125;
+                &#125;
+            
+                /**
+                 * 7. 查询总记录数
+                 */
+            
+                @Test
+                public void test7()&#123;
+                    String sql = &quot;select count(id) from emp&quot;;
+                    Long total = template.queryForObject(sql, Long.class);
+                    System.out.println(total);
+                &#125;
+            
+            &#125;
+</code></pre>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">JDBC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/JDBC-2-JDBC%E8%BF%9E%E6%8E%A5%E6%B1%A0%E4%B8%8EJDBC%E6%A8%A1%E6%9D%BF/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-JDBC-1-基本概念与基本使用" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/JDBC-1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">JDBC-1-基本概念与基本使用</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/JDBC-1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:46:17.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="今日内容"><a href="#今日内容" class="headerlink" title="今日内容"></a>今日内容</h1><pre><code>1. JDBC基本概念
+2. 快速入门
+3. 对JDBC中各个接口和类详解
+</code></pre>
+<hr>
+<p>最新的驱动名已经从“com.mysql.jdbc.Driver”改为“com.mysql.cj.jdbc.Driver”</p>
+<hr>
+<h2 id="JDBC："><a href="#JDBC：" class="headerlink" title="JDBC："></a>JDBC：</h2><pre><code>1. 概念：Java DataBase Connectivity  Java 数据库连接， Java语言操作数据库
+    * JDBC本质：其实是官方（sun公司）定义的一套操作所有关系型数据库的规则，即接口。各个数据库厂商去实现这套接口，提供数据库驱动jar包。我们可以使用这套接口（JDBC）编程，真正执行的代码是驱动jar包中的实现类。
+
+2. 快速入门：
+    * 步骤：
+        1. 导入驱动jar包 mysql-connector-java-5.1.37-bin.jar
+            1.复制mysql-connector-java-5.1.37-bin.jar到项目的libs目录下
+            2.右键--&gt;Add As Library
+        2. 注册驱动
+        3. 获取数据库连接对象 Connection
+        4. 定义sql
+        5. 获取执行sql语句的对象 Statement
+        6. 执行sql，接受返回结果
+        7. 处理结果
+        8. 释放资源
+
+    * 代码实现：
+          //1. 导入驱动jar包
+        //2.注册驱动
+        Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+        //3.获取数据库连接对象
+        Connection conn = DriverManager.getConnection(&quot;jdbc:mysql://localhost:3306/db3&quot;, &quot;root&quot;, &quot;root&quot;);
+        //4.定义sql语句
+        String sql = &quot;update account set balance = 500 where id = 1&quot;;
+        //5.获取执行sql的对象 Statement
+        Statement stmt = conn.createStatement();
+        //6.执行sql
+        int count = stmt.executeUpdate(sql);
+        //7.处理结果
+        System.out.println(count);
+        //8.释放资源
+        stmt.close();
+        conn.close();
+
+3. 详解各个对象：
+    1. DriverManager：驱动管理对象
+        * 功能：
+            1. 注册驱动：告诉程序该使用哪一个数据库驱动jar
+                static void registerDriver(Driver driver) :注册与给定的驱动程序 DriverManager 。 
+                写代码使用：  Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+                通过查看源码发现：在com.mysql.jdbc.Driver类中存在静态代码块
+                 static &#123;
+                        try &#123;
+                            java.sql.DriverManager.registerDriver(new Driver());
+                        &#125; catch (SQLException E) &#123;
+                            throw new RuntimeException(&quot;Can&#39;t register driver!&quot;);
+                        &#125;
+                    &#125;
+
+                注意：mysql5之后的驱动jar包可以省略注册驱动的步骤。
+            2. 获取数据库连接：
+                * 方法：static Connection getConnection(String url, String user, String password) 
+                * 参数：
+                    * url：指定连接的路径
+                        * 语法：jdbc:mysql://ip地址(域名):端口号/数据库名称
+                        * 例子：jdbc:mysql://localhost:3306/db3
+                        * 细节：如果连接的是本机mysql服务器，并且mysql服务默认端口是3306，则url可以简写为：jdbc:mysql:///数据库名称
+                    * user：用户名
+                    * password：密码 
+    2. Connection：数据库连接对象
+        1. 功能：
+            1. 获取执行sql 的对象
+                * Statement createStatement()
+                * PreparedStatement prepareStatement(String sql)  
+            2. 管理事务：
+                * 开启事务：setAutoCommit(boolean autoCommit) ：调用该方法设置参数为false，即开启事务
+                * 提交事务：commit() 
+                * 回滚事务：rollback() 
+    3. Statement：执行sql的对象
+        1. 执行sql
+            1. boolean execute(String sql) ：可以执行任意的sql 了解 
+            2. int executeUpdate(String sql) ：执行DML（insert、update、delete）语句、DDL(create，alter、drop)语句
+                * 返回值：影响的行数，可以通过这个影响的行数判断DML语句是否执行成功 返回值&gt;0的则执行成功，反之，则失败。
+            3. ResultSet executeQuery(String sql)  ：执行DQL（select)语句
+        2. 练习：
+            1. account表 添加一条记录
+            2. account表 修改记录
+            3. account表 删除一条记录
+
+            代码：
+                Statement stmt = null;
+                Connection conn = null;
+                try &#123;
+                    //1. 注册驱动
+                    Class.forName(&quot;com.mysql.jdbc.Driver&quot;);
+                    //2. 定义sql
+                    String sql = &quot;insert into account values(null,&#39;王五&#39;,3000)&quot;;
+                    //3.获取Connection对象
+                    conn = DriverManager.getConnection(&quot;jdbc:mysql:///db3&quot;, &quot;root&quot;, &quot;root&quot;);
+                    //4.获取执行sql的对象 Statement
+                    stmt = conn.createStatement();
+                    //5.执行sql
+                    int count = stmt.executeUpdate(sql);//影响的行数
+                    //6.处理结果
+                    System.out.println(count);
+                    if(count &gt; 0)&#123;
+                        System.out.println(&quot;添加成功！&quot;);
+                    &#125;else&#123;
+                        System.out.println(&quot;添加失败！&quot;);
+                    &#125;
+        
+                &#125; catch (ClassNotFoundException e) &#123;
+                    e.printStackTrace();
+                &#125; catch (SQLException e) &#123;
+                    e.printStackTrace();
+                &#125;finally &#123;
+                    //stmt.close();
+                    //7. 释放资源
+                    //避免空指针异常
+                    if(stmt != null)&#123;
+                        try &#123;
+                            stmt.close();
+                        &#125; catch (SQLException e) &#123;
+                            e.printStackTrace();
+                        &#125;
+                    &#125;
+        
+                    if(conn != null)&#123;
+                        try &#123;
+                            conn.close();
+                        &#125; catch (SQLException e) &#123;
+                            e.printStackTrace();
+                        &#125;
+                    &#125;
+                &#125;
+            
+    4. ResultSet：结果集对象,封装查询结果
+        * boolean next(): 游标向下移动一行，判断当前行是否是最后一行末尾(是否有数据)，如果是，则返回false，如果不是则返回true
+        * getXxx(参数):获取数据
+            * Xxx：代表数据类型   如： int getInt() ,    String getString()
+            * 参数：
+                1. int：代表列的编号,从1开始   如： getString(1)
+                2. String：代表列名称。 如： getDouble(&quot;balance&quot;)
+        
+        * 注意：
+            * 使用步骤：
+                1. 游标向下移动一行
+                2. 判断是否有数据
+                3. 获取数据
+
+               //循环判断游标是否是最后一行末尾。
+                while(rs.next())&#123;
+                    //获取数据
+                    //6.2 获取数据
+                    int id = rs.getInt(1);
+                    String name = rs.getString(&quot;name&quot;);
+                    double balance = rs.getDouble(3);
+    
+                    System.out.println(id + &quot;---&quot; + name + &quot;---&quot; + balance);
+                &#125;
+
+        * 练习：
+            * 定义一个方法，查询emp表的数据将其封装为对象，然后装载集合，返回。
+                1. 定义Emp类
+                2. 定义方法 public List&lt;Emp&gt; findAll()&#123;&#125;
+                3. 实现方法 select * from emp;
+                    
+    5. PreparedStatement：执行sql的对象
+        1. SQL注入问题：在拼接sql时，有一些sql的特殊关键字参与字符串的拼接。会造成安全性问题
+            1. 输入用户随便，输入密码：a&#39; or &#39;a&#39; = &#39;a
+            2. sql：select * from user where username = &#39;fhdsjkf&#39; and password = &#39;a&#39; or &#39;a&#39; = &#39;a&#39; 
+
+        2. 解决sql注入问题：使用PreparedStatement对象来解决
+        3. 预编译的SQL：参数使用?作为占位符
+        4. 步骤：
+            1. 导入驱动jar包 mysql-connector-java-5.1.37-bin.jar
+            2. 注册驱动
+            3. 获取数据库连接对象 Connection
+            4. 定义sql
+                * 注意：sql的参数使用？作为占位符。 如：select * from user where username = ? and password = ?;
+            5. 获取执行sql语句的对象 PreparedStatement  Connection.prepareStatement(String sql) 
+            6. 给？赋值：
+                * 方法： setXxx(参数1,参数2)
+                    * 参数1：？的位置编号 从1 开始
+                    * 参数2：？的值
+            7. 执行sql，接受返回结果，不需要传递sql语句
+            8. 处理结果
+            9. 释放资源
+
+        5. 注意：后期都会使用PreparedStatement来完成增删改查的所有操作
+            1. 可以防止SQL注入
+            2. 效率更高
+</code></pre>
+<h2 id="抽取JDBC工具类-：-JDBCUtils"><a href="#抽取JDBC工具类-：-JDBCUtils" class="headerlink" title="抽取JDBC工具类 ： JDBCUtils"></a>抽取JDBC工具类 ： JDBCUtils</h2><pre><code>* 目的：简化书写
+* 分析：
+    1. 注册驱动也抽取
+    2. 抽取一个方法获取连接对象
+        * 需求：不想传递参数（麻烦），还得保证工具类的通用性。
+        * 解决：配置文件
+            jdbc.properties
+                url=
+                user=
+                password=
+
+
+    3. 抽取一个方法释放资源
+
+* 代码实现：
+    public class JDBCUtils &#123;
+    private static String url;
+    private static String user;
+    private static String password;
+    private static String driver;
+    /**
+     * 文件的读取，只需要读取一次即可拿到这些值。使用静态代码块
+     */
+    static&#123;
+        //读取资源文件，获取值。
+
+        try &#123;
+            //1. 创建Properties集合类。
+            Properties pro = new Properties();
+
+            //获取src路径下的文件的方式---&gt;ClassLoader 类加载器
+            ClassLoader classLoader = JDBCUtils.class.getClassLoader();
+            URL res  = classLoader.getResource(&quot;jdbc.properties&quot;);
+            String path = res.getPath();
+            System.out.println(path);///D:/IdeaProjects/itcast/out/production/day04_jdbc/jdbc.properties
+            //2. 加载文件
+           // pro.load(new FileReader(&quot;D:\\IdeaProjects\\itcast\\day04_jdbc\\src\\jdbc.properties&quot;));
+            pro.load(new FileReader(path));
+
+            //3. 获取数据，赋值
+            url = pro.getProperty(&quot;url&quot;);
+            user = pro.getProperty(&quot;user&quot;);
+            password = pro.getProperty(&quot;password&quot;);
+            driver = pro.getProperty(&quot;driver&quot;);
+            //4. 注册驱动
+            Class.forName(driver);
+        &#125; catch (IOException e) &#123;
+            e.printStackTrace();
+        &#125; catch (ClassNotFoundException e) &#123;
+            e.printStackTrace();
+        &#125;
+    &#125;
+</code></pre>
+<p>​    </p>
+<pre><code>    /**
+     * 获取连接
+     * @return 连接对象
+     */
+    public static Connection getConnection() throws SQLException &#123;
+
+        return DriverManager.getConnection(url, user, password);
+    &#125;
+
+    /**
+     * 释放资源
+     * @param stmt
+     * @param conn
+     */
+    public static void close(Statement stmt,Connection conn)&#123;
+        if( stmt != null)&#123;
+            try &#123;
+                stmt.close();
+            &#125; catch (SQLException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+
+        if( conn != null)&#123;
+            try &#123;
+                conn.close();
+            &#125; catch (SQLException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+</code></pre>
+<p>​    </p>
+<pre><code>    /**
+     * 释放资源
+     * @param stmt
+     * @param conn
+     */
+    public static void close(ResultSet rs,Statement stmt, Connection conn)&#123;
+        if( rs != null)&#123;
+            try &#123;
+                rs.close();
+            &#125; catch (SQLException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+
+        if( stmt != null)&#123;
+            try &#123;
+                stmt.close();
+            &#125; catch (SQLException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+
+        if( conn != null)&#123;
+            try &#123;
+                conn.close();
+            &#125; catch (SQLException e) &#123;
+                e.printStackTrace();
+            &#125;
+        &#125;
+    &#125;
+
+&#125;
+</code></pre>
+<ul>
+<li><p>练习：</p>
+<ul>
+<li><p>需求：</p>
+<ol>
+<li>通过键盘录入用户名和密码</li>
+<li>判断用户是否登录成功<ul>
+<li>select * from user where username = “” and password = “”;</li>
+<li>如果这个sql有查询结果，则成功，反之，则失败</li>
+</ul>
+</li>
+</ol>
+</li>
+<li><p>步骤：</p>
+<ol>
+<li><p>创建数据库表 user</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">CREATE TABLE USER(</span><br><span class="line">	id INT PRIMARY KEY AUTO_INCREMENT,</span><br><span class="line">	username VARCHAR(32),</span><br><span class="line">	PASSWORD VARCHAR(32)</span><br><span class="line"></span><br><span class="line">);</span><br><span class="line"></span><br><span class="line">INSERT INTO USER VALUES(NULL,&#x27;zhangsan&#x27;,&#x27;123&#x27;);</span><br><span class="line">INSERT INTO USER VALUES(NULL,&#x27;lisi&#x27;,&#x27;234&#x27;);</span><br></pre></td></tr></table></figure></li>
+<li><p>代码实现：</p>
+<pre><code>     public class JDBCDemo9 &#123;
+     
+         public static void main(String[] args) &#123;
+             //1.键盘录入，接受用户名和密码
+             Scanner sc = new Scanner(System.in);
+             System.out.println(&quot;请输入用户名：&quot;);
+             String username = sc.nextLine();
+             System.out.println(&quot;请输入密码：&quot;);
+             String password = sc.nextLine();
+             //2.调用方法
+             boolean flag = new JDBCDemo9().login(username, password);
+             //3.判断结果，输出不同语句
+             if(flag)&#123;
+                 //登录成功
+                 System.out.println(&quot;登录成功！&quot;);
+             &#125;else&#123;
+                 System.out.println(&quot;用户名或密码错误！&quot;);
+                 &#125;
+             &#125;
+</code></pre>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<p>​<br>​                </p>
+<pre><code>                /**
+                 * 登录方法
+                 */
+                public boolean login(String username ,String password)&#123;
+                    if(username == null || password == null)&#123;
+                        return false;
+                    &#125;
+                    //连接数据库判断是否登录成功
+                    Connection conn = null;
+                    Statement stmt =  null;
+                    ResultSet rs = null;
+                    //1.获取连接
+                    try &#123;
+                        conn =  JDBCUtils.getConnection();
+                        //2.定义sql
+                        String sql = &quot;select * from user where username = &#39;&quot;+username+&quot;&#39; and password = &#39;&quot;+password+&quot;&#39; &quot;;
+                        //3.获取执行sql的对象
+                        stmt = conn.createStatement();
+                        //4.执行查询
+                        rs = stmt.executeQuery(sql);
+                        //5.判断
+                       /* if(rs.next())&#123;//如果有下一行，则返回true
+                            return true;
+                        &#125;else&#123;
+                            return false;
+                        &#125;*/
+                       return rs.next();//如果有下一行，则返回true
+            
+                    &#125; catch (SQLException e) &#123;
+                        e.printStackTrace();
+                    &#125;finally &#123;
+                        JDBCUtils.close(rs,stmt,conn);
+                    &#125;
+                     return false;
+                &#125;
+            &#125;                   
+</code></pre>
+<h2 id="JDBC控制事务："><a href="#JDBC控制事务：" class="headerlink" title="JDBC控制事务："></a>JDBC控制事务：</h2><pre><code>1. 事务：一个包含多个步骤的业务操作。如果这个业务操作被事务管理，则这多个步骤要么同时成功，要么同时失败。
+2. 操作：
+    1. 开启事务
+    2. 提交事务
+    3. 回滚事务
+3. 使用Connection对象来管理事务
+    * 开启事务：setAutoCommit(boolean autoCommit) ：调用该方法设置参数为false，即开启事务
+        * 在执行sql之前开启事务
+    * 提交事务：commit() 
+        * 当所有sql都执行完提交事务
+    * 回滚事务：rollback() 
+        * 在catch中回滚事务
+
+4. 代码：
+    public class JDBCDemo10 &#123;
+
+        public static void main(String[] args) &#123;
+            Connection conn = null;
+            PreparedStatement pstmt1 = null;
+            PreparedStatement pstmt2 = null;
+    
+            try &#123;
+                //1.获取连接
+                conn = JDBCUtils.getConnection();
+                //开启事务
+                conn.setAutoCommit(false);
+    
+                //2.定义sql
+                //2.1 张三 - 500
+                String sql1 = &quot;update account set balance = balance - ? where id = ?&quot;;
+                //2.2 李四 + 500
+                String sql2 = &quot;update account set balance = balance + ? where id = ?&quot;;
+                //3.获取执行sql对象
+                pstmt1 = conn.prepareStatement(sql1);
+                pstmt2 = conn.prepareStatement(sql2);
+                //4. 设置参数
+                pstmt1.setDouble(1,500);
+                pstmt1.setInt(2,1);
+    
+                pstmt2.setDouble(1,500);
+                pstmt2.setInt(2,2);
+                //5.执行sql
+                pstmt1.executeUpdate();
+                // 手动制造异常
+                int i = 3/0;
+    
+                pstmt2.executeUpdate();
+                //提交事务
+                conn.commit();
+            &#125; catch (Exception e) &#123;
+                //事务回滚
+                try &#123;
+                    if(conn != null) &#123;
+                        conn.rollback();
+                    &#125;
+                &#125; catch (SQLException e1) &#123;
+                    e1.printStackTrace();
+                &#125;
+                e.printStackTrace();
+            &#125;finally &#123;
+                JDBCUtils.close(pstmt1,conn);
+                JDBCUtils.close(pstmt2,null);
+            &#125;
+          &#125;
+        &#125;
+</code></pre>
+<p>​            </p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">JDBC</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/JDBC-1-%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5%E4%B8%8E%E5%9F%BA%E6%9C%AC%E4%BD%BF%E7%94%A8/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-MySQL-3-多表查询、事务与DCL" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/MySQL-3-%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2%E3%80%81%E4%BA%8B%E5%8A%A1%E4%B8%8EDCL/">MySQL-3-多表查询、事务与DCL</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/MySQL-3-%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2%E3%80%81%E4%BA%8B%E5%8A%A1%E4%B8%8EDCL/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:41:06.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="今日内容"><a href="#今日内容" class="headerlink" title="今日内容"></a>今日内容</h1><pre><code>1. 多表查询
+
+2. 事务
+
+3. DCL
+</code></pre>
+<h2 id="多表查询："><a href="#多表查询：" class="headerlink" title="多表查询："></a>多表查询：</h2><pre><code>* 查询语法：
+    select
+        列名列表
+    from
+        表名列表
+    where....
+* 准备sql
+    # 创建部门表
+    CREATE TABLE dept(
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        NAME VARCHAR(20)
+    );
+    INSERT INTO dept (NAME) VALUES (&#39;开发部&#39;),(&#39;市场部&#39;),(&#39;财务部&#39;);
+    # 创建员工表
+    CREATE TABLE emp (
+        id INT PRIMARY KEY AUTO_INCREMENT,
+        NAME VARCHAR(10),
+        gender CHAR(1), -- 性别
+        salary DOUBLE, -- 工资
+        join_date DATE, -- 入职日期
+        dept_id INT,
+        FOREIGN KEY (dept_id) REFERENCES dept(id) -- 外键，关联部门表(部门表的主键)
+    );
+    INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES(&#39;孙悟空&#39;,&#39;男&#39;,7200,&#39;2013-02-24&#39;,1);
+    INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES(&#39;猪八戒&#39;,&#39;男&#39;,3600,&#39;2010-12-02&#39;,2);
+    INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES(&#39;唐僧&#39;,&#39;男&#39;,9000,&#39;2008-08-08&#39;,2);
+    INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES(&#39;白骨精&#39;,&#39;女&#39;,5000,&#39;2015-10-07&#39;,3);
+    INSERT INTO emp(NAME,gender,salary,join_date,dept_id) VALUES(&#39;蜘蛛精&#39;,&#39;女&#39;,4500,&#39;2011-03-14&#39;,1);
+* 笛卡尔积：
+    * 有两个集合A,B .取这两个集合的所有组成情况。
+    * 要完成多表查询，需要消除无用的数据
+* 多表查询的分类：
+    1. 内连接查询：
+        1. 隐式内连接：使用where条件消除无用数据
+            * 例子：
+            -- 查询所有员工信息和对应的部门信息
+
+            SELECT * FROM emp,dept WHERE emp.`dept_id` = dept.`id`;
+            
+            -- 查询员工表的名称，性别。部门表的名称
+            SELECT emp.name,emp.gender,dept.name FROM emp,dept WHERE emp.`dept_id` = dept.`id`;
+            
+            SELECT 
+                t1.name, -- 员工表的姓名
+                t1.gender,-- 员工表的性别
+                t2.name -- 部门表的名称
+            FROM
+                emp t1,
+                dept t2
+            WHERE 
+                t1.`dept_id` = t2.`id`;
+</code></pre>
+<p>​    </p>
+<pre><code>        2. 显式内连接：
+            * 语法： select 字段列表 from 表名1 [inner] join 表名2 on 条件
+            * 例如：
+                * SELECT * FROM emp INNER JOIN dept ON emp.`dept_id` = dept.`id`;    
+                * SELECT * FROM emp JOIN dept ON emp.`dept_id` = dept.`id`;    
+
+        3. 内连接查询：
+            1. 从哪些表中查询数据
+            2. 条件是什么
+            3. 查询哪些字段
+    2. 外链接查询：
+        1. 左外连接：
+            * 语法：select 字段列表 from 表1 left [outer] join 表2 on 条件；
+            * 查询的是左表所有数据以及其交集部分。
+            * 例子：
+                -- 查询所有员工信息，如果员工有部门，则查询部门名称，没有部门，则不显示部门名称
+                SELECT     t1.*,t2.`name` FROM emp t1 LEFT JOIN dept t2 ON t1.`dept_id` = t2.`id`;
+        2. 右外连接：
+            * 语法：select 字段列表 from 表1 right [outer] join 表2 on 条件；
+            * 查询的是右表所有数据以及其交集部分。
+            * 例子：
+                SELECT     * FROM dept t2 RIGHT JOIN emp t1 ON t1.`dept_id` = t2.`id`;
+    3. 子查询：
+        * 概念：查询中嵌套查询，称嵌套查询为子查询。
+            -- 查询工资最高的员工信息
+            -- 1 查询最高的工资是多少 9000
+            SELECT MAX(salary) FROM emp;
+            
+            -- 2 查询员工信息，并且工资等于9000的
+            SELECT * FROM emp WHERE emp.`salary` = 9000;
+            
+            -- 一条sql就完成这个操作。子查询
+            SELECT * FROM emp WHERE emp.`salary` = (SELECT MAX(salary) FROM emp);
+
+        * 子查询不同情况
+            1. 子查询的结果是单行单列的：
+                * 子查询可以作为条件，使用运算符去判断。 运算符： &gt; &gt;= &lt; &lt;= =
+                * 
+                -- 查询员工工资小于平均工资的人
+                SELECT * FROM emp WHERE emp.salary &lt; (SELECT AVG(salary) FROM emp);
+            2. 子查询的结果是多行单列的：
+                * 子查询可以作为条件，使用运算符in来判断
+                -- 查询&#39;财务部&#39;和&#39;市场部&#39;所有的员工信息
+                SELECT id FROM dept WHERE NAME = &#39;财务部&#39; OR NAME = &#39;市场部&#39;;
+                SELECT * FROM emp WHERE dept_id = 3 OR dept_id = 2;
+                -- 子查询
+                SELECT * FROM emp WHERE dept_id IN (SELECT id FROM dept WHERE NAME = &#39;财务部&#39; OR NAME = &#39;市场部&#39;);
+
+            3. 子查询的结果是多行多列的：
+                * 子查询可以作为一张虚拟表参与查询
+                -- 查询员工入职日期是2011-11-11日之后的员工信息和部门信息
+                -- 子查询
+                SELECT * FROM dept t1 ,(SELECT * FROM emp WHERE emp.`join_date` &gt; &#39;2011-11-11&#39;) t2
+                WHERE t1.id = t2.dept_id;
+                
+                -- 普通内连接
+                SELECT * FROM emp t1,dept t2 WHERE t1.`dept_id` = t2.`id` AND t1.`join_date` &gt;  &#39;2011-11-11&#39;
+
+    * 多表查询练习
+
+            -- 部门表
+            CREATE TABLE dept (
+              id INT PRIMARY KEY PRIMARY KEY, -- 部门id
+              dname VARCHAR(50), -- 部门名称
+              loc VARCHAR(50) -- 部门所在地
+            );
+            
+            -- 添加4个部门
+            INSERT INTO dept(id,dname,loc) VALUES 
+            (10,&#39;教研部&#39;,&#39;北京&#39;),
+            (20,&#39;学工部&#39;,&#39;上海&#39;),
+            (30,&#39;销售部&#39;,&#39;广州&#39;),
+            (40,&#39;财务部&#39;,&#39;深圳&#39;);
+</code></pre>
+<p>​<br>​                </p>
+<pre><code>            -- 职务表，职务名称，职务描述
+            CREATE TABLE job (
+              id INT PRIMARY KEY,
+              jname VARCHAR(20),
+              description VARCHAR(50)
+            );
+            
+            -- 添加4个职务
+            INSERT INTO job (id, jname, description) VALUES
+            (1, &#39;董事长&#39;, &#39;管理整个公司，接单&#39;),
+            (2, &#39;经理&#39;, &#39;管理部门员工&#39;),
+            (3, &#39;销售员&#39;, &#39;向客人推销产品&#39;),
+            (4, &#39;文员&#39;, &#39;使用办公软件&#39;);
+</code></pre>
+<p>​<br>​                </p>
+<pre><code>            -- 员工表
+            CREATE TABLE emp (
+              id INT PRIMARY KEY, -- 员工id
+              ename VARCHAR(50), -- 员工姓名
+              job_id INT, -- 职务id
+              mgr INT , -- 上级领导
+              joindate DATE, -- 入职日期
+              salary DECIMAL(7,2), -- 工资
+              bonus DECIMAL(7,2), -- 奖金
+              dept_id INT, -- 所在部门编号
+              CONSTRAINT emp_jobid_ref_job_id_fk FOREIGN KEY (job_id) REFERENCES job (id),
+              CONSTRAINT emp_deptid_ref_dept_id_fk FOREIGN KEY (dept_id) REFERENCES dept (id)
+            );
+            
+            -- 添加员工
+            INSERT INTO emp(id,ename,job_id,mgr,joindate,salary,bonus,dept_id) VALUES 
+            (1001,&#39;孙悟空&#39;,4,1004,&#39;2000-12-17&#39;,&#39;8000.00&#39;,NULL,20),
+            (1002,&#39;卢俊义&#39;,3,1006,&#39;2001-02-20&#39;,&#39;16000.00&#39;,&#39;3000.00&#39;,30),
+            (1003,&#39;林冲&#39;,3,1006,&#39;2001-02-22&#39;,&#39;12500.00&#39;,&#39;5000.00&#39;,30),
+            (1004,&#39;唐僧&#39;,2,1009,&#39;2001-04-02&#39;,&#39;29750.00&#39;,NULL,20),
+            (1005,&#39;李逵&#39;,4,1006,&#39;2001-09-28&#39;,&#39;12500.00&#39;,&#39;14000.00&#39;,30),
+            (1006,&#39;宋江&#39;,2,1009,&#39;2001-05-01&#39;,&#39;28500.00&#39;,NULL,30),
+            (1007,&#39;刘备&#39;,2,1009,&#39;2001-09-01&#39;,&#39;24500.00&#39;,NULL,10),
+            (1008,&#39;猪八戒&#39;,4,1004,&#39;2007-04-19&#39;,&#39;30000.00&#39;,NULL,20),
+            (1009,&#39;罗贯中&#39;,1,NULL,&#39;2001-11-17&#39;,&#39;50000.00&#39;,NULL,10),
+            (1010,&#39;吴用&#39;,3,1006,&#39;2001-09-08&#39;,&#39;15000.00&#39;,&#39;0.00&#39;,30),
+            (1011,&#39;沙僧&#39;,4,1004,&#39;2007-05-23&#39;,&#39;11000.00&#39;,NULL,20),
+            (1012,&#39;李逵&#39;,4,1006,&#39;2001-12-03&#39;,&#39;9500.00&#39;,NULL,30),
+            (1013,&#39;小白龙&#39;,4,1004,&#39;2001-12-03&#39;,&#39;30000.00&#39;,NULL,20),
+            (1014,&#39;关羽&#39;,4,1007,&#39;2002-01-23&#39;,&#39;13000.00&#39;,NULL,10);
+</code></pre>
+<p>​<br>​                </p>
+<pre><code>            -- 工资等级表
+            CREATE TABLE salarygrade (
+              grade INT PRIMARY KEY,   -- 级别
+              losalary INT,  -- 最低工资
+              hisalary INT -- 最高工资
+            );
+            
+            -- 添加5个工资等级
+            INSERT INTO salarygrade(grade,losalary,hisalary) VALUES 
+            (1,7000,12000),
+            (2,12010,14000),
+            (3,14010,20000),
+            (4,20010,30000),
+            (5,30010,99990);
+            
+            -- 需求：
+            
+            -- 1.查询所有员工信息。查询员工编号，员工姓名，工资，职务名称，职务描述
+            /*
+                分析：
+                    1.员工编号，员工姓名，工资，需要查询emp表  职务名称，职务描述 需要查询job表
+                    2.查询条件 emp.job_id = job.id
+            
+            */
+            SELECT 
+                t1.`id`, -- 员工编号
+                t1.`ename`, -- 员工姓名
+                t1.`salary`,-- 工资
+                t2.`jname`, -- 职务名称
+                t2.`description` -- 职务描述
+            FROM 
+                emp t1, job t2
+            WHERE 
+                t1.`job_id` = t2.`id`;
+</code></pre>
+<p>​<br>​                </p>
+<pre><code>            -- 2.查询员工编号，员工姓名，工资，职务名称，职务描述，部门名称，部门位置
+            /*
+                分析：
+                    1. 员工编号，员工姓名，工资 emp  职务名称，职务描述 job  部门名称，部门位置 dept
+                    2. 条件： emp.job_id = job.id and emp.dept_id = dept.id
+            */
+            
+            SELECT 
+                t1.`id`, -- 员工编号
+                t1.`ename`, -- 员工姓名
+                t1.`salary`,-- 工资
+                t2.`jname`, -- 职务名称
+                t2.`description`, -- 职务描述
+                t3.`dname`, -- 部门名称
+                t3.`loc` -- 部门位置
+            FROM 
+                emp t1, job t2,dept t3
+            WHERE 
+                t1.`job_id` = t2.`id` AND t1.`dept_id` = t3.`id`;
+               
+            -- 3.查询员工姓名，工资，工资等级
+            /*
+                分析：
+                    1.员工姓名，工资 emp  工资等级 salarygrade
+                    2.条件 emp.salary &gt;= salarygrade.losalary and emp.salary &lt;= salarygrade.hisalary
+                        emp.salary BETWEEN salarygrade.losalary and salarygrade.hisalary
+            */
+            SELECT 
+                t1.ename ,
+                t1.`salary`,
+                t2.*
+            FROM emp t1, salarygrade t2
+            WHERE t1.`salary` BETWEEN t2.`losalary` AND t2.`hisalary`;
+</code></pre>
+<p>​<br>​                </p>
+<pre><code>            -- 4.查询员工姓名，工资，职务名称，职务描述，部门名称，部门位置，工资等级
+            /*
+                分析：
+                    1. 员工姓名，工资 emp ， 职务名称，职务描述 job 部门名称，部门位置，dept  工资等级 salarygrade
+                    2. 条件： emp.job_id = job.id and emp.dept_id = dept.id and emp.salary BETWEEN salarygrade.losalary and salarygrade.hisalary
+                        
+            */
+            SELECT 
+                t1.`ename`,
+                t1.`salary`,
+                t2.`jname`,
+                t2.`description`,
+                t3.`dname`,
+                t3.`loc`,
+                t4.`grade`
+            FROM 
+                emp t1,job t2,dept t3,salarygrade t4
+            WHERE 
+                t1.`job_id` = t2.`id` 
+                AND t1.`dept_id` = t3.`id`
+                AND t1.`salary` BETWEEN t4.`losalary` AND t4.`hisalary`;
+</code></pre>
+<p>​<br>​                </p>
+<pre><code>            -- 5.查询出部门编号、部门名称、部门位置、部门人数
+            
+            /*
+                分析：
+                    1.部门编号、部门名称、部门位置 dept 表。 部门人数 emp表
+                    2.使用分组查询。按照emp.dept_id完成分组，查询count(id)
+                    3.使用子查询将第2步的查询结果和dept表进行关联查询
+                    
+            */
+            SELECT 
+                t1.`id`,t1.`dname`,t1.`loc` , t2.total
+            FROM 
+                dept t1,
+                (SELECT
+                    dept_id,COUNT(id) total
+                FROM 
+                    emp
+                GROUP BY dept_id) t2
+            WHERE t1.`id` = t2.dept_id;
+</code></pre>
+<p>​                </p>
+<pre><code>            -- 6.查询所有员工的姓名及其直接上级的姓名,没有领导的员工也需要查询
+            
+            /*
+                分析：
+                    1.姓名 emp， 直接上级的姓名 emp
+                        * emp表的id 和 mgr 是自关联
+                    2.条件 emp.id = emp.mgr
+                    3.查询左表的所有数据，和 交集数据
+                        * 使用左外连接查询
+                
+            */
+            /*
+            select
+                t1.ename,
+                t1.mgr,
+                t2.`id`,
+                t2.ename
+            from emp t1, emp t2
+            where t1.mgr = t2.`id`;
+            
+            */
+            
+            SELECT 
+                t1.ename,
+                t1.mgr,
+                t2.`id`,
+                t2.`ename`
+            FROM emp t1
+            LEFT JOIN emp t2
+            ON t1.`mgr` = t2.`id`;
+</code></pre>
+<h2 id="事务"><a href="#事务" class="headerlink" title="事务"></a>事务</h2><pre><code>1. 事务的基本介绍
+    1. 概念：
+        *  如果一个包含多个步骤的业务操作，被事务管理，那么这些操作要么同时成功，要么同时失败。
+        
+    2. 操作：
+        1. 开启事务： start transaction;
+        2. 回滚：rollback;
+        3. 提交：commit;
+    3. 例子：
+        CREATE TABLE account (
+            id INT PRIMARY KEY AUTO_INCREMENT,
+            NAME VARCHAR(10),
+            balance DOUBLE
+        );
+        -- 添加数据
+        INSERT INTO account (NAME, balance) VALUES (&#39;zhangsan&#39;, 1000), (&#39;lisi&#39;, 1000);
+</code></pre>
+<p>​            </p>
+<pre><code>        SELECT * FROM account;
+        UPDATE account SET balance = 1000;
+        -- 张三给李四转账 500 元
+        
+        -- 0. 开启事务
+        START TRANSACTION;
+        -- 1. 张三账户 -500
+        
+        UPDATE account SET balance = balance - 500 WHERE NAME = &#39;zhangsan&#39;;
+        -- 2. 李四账户 +500
+        -- 出错了...
+        UPDATE account SET balance = balance + 500 WHERE NAME = &#39;lisi&#39;;
+        
+        -- 发现执行没有问题，提交事务
+        COMMIT;
+        
+        -- 发现出问题了，回滚事务
+        ROLLBACK;
+    4. MySQL数据库中事务默认自动提交
+        
+        * 事务提交的两种方式：
+            * 自动提交：
+                * mysql就是自动提交的
+                * 一条DML(增删改)语句会自动提交一次事务。
+            * 手动提交：
+                * Oracle 数据库默认是手动提交事务
+                * 需要先开启事务，再提交
+        * 修改事务的默认提交方式：
+            * 查看事务的默认提交方式：SELECT @@autocommit; -- 1 代表自动提交  0 代表手动提交
+            * 修改默认提交方式： set @@autocommit = 0;
+
+
+2. 事务的四大特征：
+    1. 原子性：是不可分割的最小操作单位，要么同时成功，要么同时失败。
+    2. 持久性：当事务提交或回滚后，数据库会持久化的保存数据。
+    3. 隔离性：多个事务之间。相互独立。
+    4. 一致性：事务操作前后，数据总量不变
+3. 事务的隔离级别（了解）
+    * 概念：多个事务之间隔离的，相互独立的。但是如果多个事务操作同一批数据，则会引发一些问题，设置不同的隔离级别就可以解决这些问题。
+    * 存在问题：
+        1. 脏读：一个事务，读取到另一个事务中没有提交的数据
+        2. 不可重复读(虚读)：在同一个事务中，两次读取到的数据不一样。
+        3. 幻读：一个事务操作(DML)数据表中所有记录，另一个事务添加了一条数据，则第一个事务查询不到自己的修改。
+    * 隔离级别：
+        1. read uncommitted：读未提交
+            * 产生的问题：脏读、不可重复读、幻读
+        2. read committed：读已提交 （Oracle）
+            * 产生的问题：不可重复读、幻读
+        3. repeatable read：可重复读 （MySQL默认）
+            * 产生的问题：幻读
+        4. serializable：串行化
+            * 可以解决所有的问题
+
+        * 注意：隔离级别从小到大安全性越来越高，但是效率越来越低
+        * 数据库查询隔离级别：
+            * select @@tx_isolation;
+        * 数据库设置隔离级别：
+            * set global transaction isolation level  级别字符串;
+
+    * 演示：
+        set global transaction isolation level read uncommitted;
+        start transaction;
+        -- 转账操作
+        update account set balance = balance - 500 where id = 1;
+        update account set balance = balance + 500 where id = 2;
+</code></pre>
+<h2 id="DCL："><a href="#DCL：" class="headerlink" title="DCL："></a>DCL：</h2><pre><code>* SQL分类：
+    1. DDL：操作数据库和表
+    2. DML：增删改表中数据
+    3. DQL：查询表中数据
+    4. DCL：管理用户，授权
+
+* DBA：数据库管理员
+
+* DCL：管理用户，授权
+    1. 管理用户
+        1. 添加用户：
+            * 语法：CREATE USER &#39;用户名&#39;@&#39;主机名&#39; IDENTIFIED BY &#39;密码&#39;;
+        2. 删除用户：
+            * 语法：DROP USER &#39;用户名&#39;@&#39;主机名&#39;;
+        3. 修改用户密码：
+            
+            UPDATE USER SET PASSWORD = PASSWORD(&#39;新密码&#39;) WHERE USER = &#39;用户名&#39;;
+            UPDATE USER SET PASSWORD = PASSWORD(&#39;abc&#39;) WHERE USER = &#39;lisi&#39;;
+            
+            SET PASSWORD FOR &#39;用户名&#39;@&#39;主机名&#39; = PASSWORD(&#39;新密码&#39;);
+            SET PASSWORD FOR &#39;root&#39;@&#39;localhost&#39; = PASSWORD(&#39;123&#39;);
+
+            * mysql中忘记了root用户的密码？
+                1. cmd -- &gt; net stop mysql 停止mysql服务
+                    * 需要管理员运行该cmd
+
+                2. 使用无验证方式启动mysql服务： mysqld --skip-grant-tables
+                3. 打开新的cmd窗口,直接输入mysql命令，敲回车。就可以登录成功
+                4. use mysql;
+                5. update user set password = password(&#39;你的新密码&#39;) where user = &#39;root&#39;;
+                6. 关闭两个窗口
+                7. 打开任务管理器，手动结束mysqld.exe 的进程
+                8. 启动mysql服务
+                9. 使用新密码登录。
+        4. 查询用户：
+            -- 1. 切换到mysql数据库
+            USE myql;
+            -- 2. 查询user表
+            SELECT * FROM USER;
+            
+            * 通配符： % 表示可以在任意主机使用用户登录数据库
+
+    2. 权限管理：
+        1. 查询权限：
+            -- 查询权限
+            SHOW GRANTS FOR &#39;用户名&#39;@&#39;主机名&#39;;
+            SHOW GRANTS FOR &#39;lisi&#39;@&#39;%&#39;;
+
+        2. 授予权限：
+            -- 授予权限
+            grant 权限列表 on 数据库名.表名 to &#39;用户名&#39;@&#39;主机名&#39;;
+            -- 给张三用户授予所有权限，在任意数据库任意表上
+            
+            GRANT ALL ON *.* TO &#39;zhangsan&#39;@&#39;localhost&#39;;
+        3. 撤销权限：
+            -- 撤销权限：
+            revoke 权限列表 on 数据库名.表名 from &#39;用户名&#39;@&#39;主机名&#39;;
+            REVOKE UPDATE ON db3.`account` FROM &#39;lisi&#39;@&#39;%&#39;;
+</code></pre>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/MySQL-3-%E5%A4%9A%E8%A1%A8%E6%9F%A5%E8%AF%A2%E3%80%81%E4%BA%8B%E5%8A%A1%E4%B8%8EDCL/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
+    <article id="post-MySQL-2-DQL、约束、多表关系与范式" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2021/10/08/MySQL-2-DQL%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81%E5%A4%9A%E8%A1%A8%E5%85%B3%E7%B3%BB%E4%B8%8E%E8%8C%83%E5%BC%8F/">MySQL-2-DQL、约束、多表关系与范式</a>
+    </h1>
+  
+
+        
+        <a href="/2021/10/08/MySQL-2-DQL%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81%E5%A4%9A%E8%A1%A8%E5%85%B3%E7%B3%BB%E4%B8%8E%E8%8C%83%E5%BC%8F/" class="archive-article-date">
+  	<time datetime="2021-10-08T10:38:43.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h1 id="今日内容"><a href="#今日内容" class="headerlink" title="今日内容"></a>今日内容</h1><pre><code>1. DQL:查询语句
+    1. 排序查询
+    2. 聚合函数
+    3. 分组查询
+    4. 分页查询
+
+2. 约束
+3. 多表之间的关系
+4. 范式
+5. 数据库的备份和还原
+</code></pre>
+<h1 id="DQL-查询语句"><a href="#DQL-查询语句" class="headerlink" title="DQL:查询语句"></a>DQL:查询语句</h1><pre><code>1. 排序查询
+    * 语法：order by 子句
+        * order by 排序字段1 排序方式1 ，  排序字段2 排序方式2...
+
+    * 排序方式：
+        * ASC：升序，默认的。
+        * DESC：降序。
+
+    * 注意：
+        * 如果有多个排序条件，则当前边的条件值一样时，才会判断第二条件。
+
+
+2. 聚合函数：将一列数据作为一个整体，进行纵向的计算。
+    1. count：计算个数
+        1. 一般选择非空的列：主键
+        2. count(*)
+    2. max：计算最大值
+    3. min：计算最小值
+    4. sum：计算和
+    5. avg：计算平均值
+
+
+    * 注意：聚合函数的计算，排除null值。
+        解决方案：
+            1. 选择不包含非空的列进行计算
+            2. IFNULL函数
+
+3. 分组查询:
+    1. 语法：group by 分组字段；
+    2. 注意：
+        1. 分组之后查询的字段：分组字段、聚合函数
+        2. where 和 having 的区别？
+            1. where 在分组之前进行限定，如果不满足条件，则不参与分组。having在分组之后进行限定，如果不满足结果，则不会被查询出来
+            2. where 后不可以跟聚合函数，having可以进行聚合函数的判断。
+
+        -- 按照性别分组。分别查询男、女同学的平均分
+
+        SELECT sex , AVG(math) FROM student GROUP BY sex;
+        
+        -- 按照性别分组。分别查询男、女同学的平均分,人数
+        
+        SELECT sex , AVG(math),COUNT(id) FROM student GROUP BY sex;
+        
+        --  按照性别分组。分别查询男、女同学的平均分,人数 要求：分数低于70分的人，不参与分组
+        SELECT sex , AVG(math),COUNT(id) FROM student WHERE math &gt; 70 GROUP BY sex;
+        
+        --  按照性别分组。分别查询男、女同学的平均分,人数 要求：分数低于70分的人，不参与分组,分组之后。人数要大于2个人
+        SELECT sex , AVG(math),COUNT(id) FROM student WHERE math &gt; 70 GROUP BY sex HAVING COUNT(id) &gt; 2;
+        
+        SELECT sex , AVG(math),COUNT(id) 人数 FROM student WHERE math &gt; 70 GROUP BY sex HAVING 人数 &gt; 2;
+</code></pre>
+<p>​            </p>
+<pre><code>4. 分页查询
+    1. 语法：limit 开始的索引,每页查询的条数;
+    2. 公式：开始的索引 = （当前的页码 - 1） * 每页显示的条数
+        -- 每页显示3条记录 
+
+        SELECT * FROM student LIMIT 0,3; -- 第1页
+        
+        SELECT * FROM student LIMIT 3,3; -- 第2页
+        
+        SELECT * FROM student LIMIT 6,3; -- 第3页
+
+    3. limit 是一个MySQL&quot;方言&quot;
+</code></pre>
+<h2 id="约束"><a href="#约束" class="headerlink" title="约束"></a>约束</h2><pre><code>* 概念： 对表中的数据进行限定，保证数据的正确性、有效性和完整性。    
+* 分类：
+    1. 主键约束：primary key
+    2. 非空约束：not null
+    3. 唯一约束：unique
+    4. 外键约束：foreign key
+
+* 非空约束：not null，某一列的值不能为null
+    1. 创建表时添加约束
+        CREATE TABLE stu(
+            id INT,
+            NAME VARCHAR(20) NOT NULL -- name为非空
+        );
+    2. 创建表完后，添加非空约束
+        ALTER TABLE stu MODIFY NAME VARCHAR(20) NOT NULL;
+
+    3. 删除name的非空约束
+        ALTER TABLE stu MODIFY NAME VARCHAR(20);
+
+* 唯一约束：unique，某一列的值不能重复
+    1. 注意：
+        * 唯一约束可以有NULL值，但是只能有一条记录为null
+    2. 在创建表时，添加唯一约束
+        CREATE TABLE stu(
+            id INT,
+            phone_number VARCHAR(20) UNIQUE -- 手机号
+        );
+    3. 删除唯一约束
+        ALTER TABLE stu DROP INDEX phone_number;
+    4. 在表创建完后，添加唯一约束
+        ALTER TABLE stu MODIFY phone_number VARCHAR(20) UNIQUE;
+
+* 主键约束：primary key。
+    1. 注意：
+        1. 含义：非空且唯一
+        2. 一张表只能有一个字段为主键
+        3. 主键就是表中记录的唯一标识
+
+    2. 在创建表时，添加主键约束
+        create table stu(
+            id int primary key,-- 给id添加主键约束
+            name varchar(20)
+        );
+
+    3. 删除主键
+        -- 错误 alter table stu modify id int ;
+        ALTER TABLE stu DROP PRIMARY KEY;
+
+    4. 创建完表后，添加主键
+        ALTER TABLE stu MODIFY id INT PRIMARY KEY;
+
+    5. 自动增长：
+        1.  概念：如果某一列是数值类型的，使用 auto_increment 可以来完成值得自动增长
+
+        2. 在创建表时，添加主键约束，并且完成主键自增长
+        create table stu(
+            id int primary key auto_increment,-- 给id添加主键约束
+            name varchar(20)
+        );
+</code></pre>
+<p>​            </p>
+<pre><code>        3. 删除自动增长
+        ALTER TABLE stu MODIFY id INT;
+        4. 添加自动增长
+        ALTER TABLE stu MODIFY id INT AUTO_INCREMENT;
+
+
+* 外键约束：foreign key,让表于表产生关系，从而保证数据的正确性。
+    1. 在创建表时，可以添加外键
+        * 语法：
+            create table 表名(
+                ....
+                外键列
+                constraint 外键名称 foreign key (外键列名称) references 主表名称(主表列名称)
+            );
+
+    2. 删除外键
+        ALTER TABLE 表名 DROP FOREIGN KEY 外键名称;
+
+    3. 创建表之后，添加外键
+        ALTER TABLE 表名 ADD CONSTRAINT 外键名称 FOREIGN KEY (外键字段名称) REFERENCES 主表名称(主表列名称);
+</code></pre>
+<p>​        </p>
+<pre><code>    4. 级联操作
+        1. 添加级联操作
+            语法：ALTER TABLE 表名 ADD CONSTRAINT 外键名称 
+                    FOREIGN KEY (外键字段名称) REFERENCES 主表名称(主表列名称) ON UPDATE CASCADE ON DELETE CASCADE  ;
+        2. 分类：
+            1. 级联更新：ON UPDATE CASCADE 
+            2. 级联删除：ON DELETE CASCADE 
+</code></pre>
+<h2 id="数据库的设计"><a href="#数据库的设计" class="headerlink" title="数据库的设计"></a>数据库的设计</h2><pre><code>1. 多表之间的关系
+    1. 分类：
+        1. 一对一(了解)：
+            * 如：人和身份证
+            * 分析：一个人只有一个身份证，一个身份证只能对应一个人
+        2. 一对多(多对一)：
+            * 如：部门和员工
+            * 分析：一个部门有多个员工，一个员工只能对应一个部门
+        3. 多对多：
+            * 如：学生和课程
+            * 分析：一个学生可以选择很多门课程，一个课程也可以被很多学生选择
+    2. 实现关系：
+        1. 一对多(多对一)：
+            * 如：部门和员工
+            * 实现方式：在多的一方建立外键，指向一的一方的主键。
+        2. 多对多：
+            * 如：学生和课程
+            * 实现方式：多对多关系实现需要借助第三张中间表。中间表至少包含两个字段，这两个字段作为第三张表的外键，分别指向两张表的主键
+        3. 一对一(了解)：
+            * 如：人和身份证
+            * 实现方式：一对一关系实现，可以在任意一方添加唯一外键指向另一方的主键。
+
+    3. 案例
+        -- 创建旅游线路分类表 tab_category
+        -- cid 旅游线路分类主键，自动增长
+        -- cname 旅游线路分类名称非空，唯一，字符串 100
+        CREATE TABLE tab_category (
+            cid INT PRIMARY KEY AUTO_INCREMENT,
+            cname VARCHAR(100) NOT NULL UNIQUE
+        );
+        
+        -- 创建旅游线路表 tab_route
+        /*
+        rid 旅游线路主键，自动增长
+        rname 旅游线路名称非空，唯一，字符串 100
+        price 价格
+        rdate 上架时间，日期类型
+        cid 外键，所属分类
+        */
+        CREATE TABLE tab_route(
+            rid INT PRIMARY KEY AUTO_INCREMENT,
+            rname VARCHAR(100) NOT NULL UNIQUE,
+            price DOUBLE,
+            rdate DATE,
+            cid INT,
+            FOREIGN KEY (cid) REFERENCES tab_category(cid)
+        );
+        
+        /*创建用户表 tab_user
+        uid 用户主键，自增长
+        username 用户名长度 100，唯一，非空
+        password 密码长度 30，非空
+        name 真实姓名长度 100
+        birthday 生日
+        sex 性别，定长字符串 1
+        telephone 手机号，字符串 11
+        email 邮箱，字符串长度 100
+        */
+        CREATE TABLE tab_user (
+            uid INT PRIMARY KEY AUTO_INCREMENT,
+            username VARCHAR(100) UNIQUE NOT NULL,
+            PASSWORD VARCHAR(30) NOT NULL,
+            NAME VARCHAR(100),
+            birthday DATE,
+            sex CHAR(1) DEFAULT &#39;男&#39;,
+            telephone VARCHAR(11),
+            email VARCHAR(100)
+        );
+        
+        /*
+        创建收藏表 tab_favorite
+        rid 旅游线路 id，外键
+        date 收藏时间
+        uid 用户 id，外键
+        rid 和 uid 不能重复，设置复合主键，同一个用户不能收藏同一个线路两次
+        */
+        CREATE TABLE tab_favorite (
+            rid INT, -- 线路id
+            DATE DATETIME,
+            uid INT, -- 用户id
+            -- 创建复合主键
+            PRIMARY KEY(rid,uid), -- 联合主键
+            FOREIGN KEY (rid) REFERENCES tab_route(rid),
+            FOREIGN KEY(uid) REFERENCES tab_user(uid)
+        );
+</code></pre>
+<p>​        </p>
+<pre><code>2. 数据库设计的范式
+    * 概念：设计数据库时，需要遵循的一些规范。要遵循后边的范式要求，必须先遵循前边的所有范式要求
+
+        设计关系数据库时，遵从不同的规范要求，设计出合理的关系型数据库，这些不同的规范要求被称为不同的范式，各种范式呈递次规范，越高的范式数据库冗余越小。
+        目前关系数据库有六种范式：第一范式（1NF）、第二范式（2NF）、第三范式（3NF）、巴斯-科德范式（BCNF）、第四范式(4NF）和第五范式（5NF，又称完美范式）。
+
+    * 分类：
+        1. 第一范式（1NF）：每一列都是不可分割的原子数据项
+        2. 第二范式（2NF）：在1NF的基础上，非码属性必须完全依赖于码（在1NF基础上消除非主属性对主码的部分函数依赖）
+            * 几个概念：
+                1. 函数依赖：A--&gt;B,如果通过A属性(属性组)的值，可以确定唯一B属性的值。则称B依赖于A
+                    例如：学号--&gt;姓名。  （学号，课程名称） --&gt; 分数
+                2. 完全函数依赖：A--&gt;B， 如果A是一个属性组，则B属性值得确定需要依赖于A属性组中所有的属性值。
+                    例如：（学号，课程名称） --&gt; 分数
+                3. 部分函数依赖：A--&gt;B， 如果A是一个属性组，则B属性值得确定只需要依赖于A属性组中某一些值即可。
+                    例如：（学号，课程名称） -- &gt; 姓名
+                4. 传递函数依赖：A--&gt;B, B -- &gt;C . 如果通过A属性(属性组)的值，可以确定唯一B属性的值，在通过B属性（属性组）的值可以确定唯一C属性的值，则称 C 传递函数依赖于A
+                    例如：学号--&gt;系名，系名--&gt;系主任
+                5. 码：如果在一张表中，一个属性或属性组，被其他所有属性所完全依赖，则称这个属性(属性组)为该表的码
+                    例如：该表中码为：（学号，课程名称）
+                    * 主属性：码属性组中的所有属性
+                    * 非主属性：除过码属性组的属性
+                    
+        3. 第三范式（3NF）：在2NF基础上，任何非主属性不依赖于其它非主属性（在2NF基础上消除传递依赖）
+</code></pre>
+<h2 id="数据库的备份和还原"><a href="#数据库的备份和还原" class="headerlink" title="数据库的备份和还原"></a>数据库的备份和还原</h2><pre><code>1. 命令行：
+    * 语法：
+        * 备份： mysqldump -u用户名 -p密码 数据库名称 &gt; 保存的路径
+        * 还原：
+            1. 登录数据库
+            2. 创建数据库
+            3. 使用数据库
+            4. 执行文件。source 文件路径
+2. 图形化工具：
+</code></pre>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">MySQL</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2021/10/08/MySQL-2-DQL%E3%80%81%E7%BA%A6%E6%9D%9F%E3%80%81%E5%A4%9A%E8%A1%A8%E5%85%B3%E7%B3%BB%E4%B8%8E%E8%8C%83%E5%BC%8F/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-MySQL-1-基本概念" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1711,1060 +3549,6 @@
 
 
   
-    <article id="post-JavaSE-20-线程与同步" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/08/JavaSE-20-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5/">JavaSE-20-线程与同步</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/08/JavaSE-20-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:22:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-线程"><a href="#1-线程" class="headerlink" title="1.线程"></a>1.线程</h2><h3 id="1-1-基本概念"><a href="#1-1-基本概念" class="headerlink" title="1.1 基本概念"></a>1.1 基本概念</h3><p><strong>线程的概念</strong></p>
-<p>线程（Thread）是操作系统能够进行运算调度的最小单位。它被包含在进程之中，是进程中的实际运作单位。一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程，每条线程并行执行不同的任务。</p>
-<p>同一进程中的多条线程将共享该进程中的全部系统资源，如虚拟地址空间，文件描述符和信号处理等等。但同一进程中的多个线程有各自的调用栈（call stack），自己的寄存器环境（register context），自己的线程本地存储（thread-local storage）。</p>
-<p><strong>线程&amp;进程</strong></p>
-<p>A.多个进程的内部数据和状态都是完全独立的，（进程就是执行中的程序，程序是静态的概念，进程是动态的概念）。而多线程是共享一块内存空间和一组系统资源的，有可能互相影响（多个线程可以在一个进程中）</p>
-<p>B.线程本身的数据通常只有寄存器数据，以及一个程序执行时使用的堆栈，所以线程的切换比进程切换的负担要小。</p>
-<p><strong>多线程编程</strong></p>
-<p>在单个程序中可以同时运行多个不同的线程执行不同的任务。但是具体执行哪个线程是由cpu随机决定的。</p>
-<p>多线程编程的目的，就是“最大限度地利用CPU资源”，当某一线程的处理不需要占用CPU而只和I/O等资源打交道时，让需要占用CPU资源的其他线程有机会获得CPU资源。</p>
-<p>Java中如果我们自己没有产生线程，系统会自动产生一个线程，该线程为主线程 ，main方法就在主线程上运行，我们的程序都是由线程来执行的。</p>
-<p>多任务处理被所有的现代操作系统所支持。然而，多任务处理有两种截然不同的类型：<strong>基于进程的</strong>和<strong>基于线程的</strong>。</p>
-<p>　　<strong>基于进程的多任务处理</strong></p>
-<p>　　　　（1）基于进程的多任务处理是更熟悉的形式。</p>
-<p>　　　　　　　　进程（process）本质上是一个执行的程序。因此基于进程的多任务处理的特点是允许你的计算机同时运行两个或更多的程序。举例来说，基于进程的多任务处理使你在运用文本编辑器的时候可以同时运行java编译器。在基于进程的多任务处理中，程序是调度程序所分派的最小代码单位。</p>
-<p>　　　　（2）进程是重量级的任务，需要分配给他们独立的地址空间。进程间通信是昂贵和受限的。进程的转换也是很需要花费的。</p>
-<p>　　<strong>基于线程的多任务处理</strong></p>
-<p>　　　　（1）基于线程的多任务处理环境中，线程是最小的执行单位。这意味着一个程序可以同时执行两个或者多个任务的功能。例如，一个文本编辑器可以在打印的同时格式化文本。</p>
-<p>　　　　（2）多线程程序比多进程程序需要更少的代价。多线程是轻量级的任务。它们共享相同的地址空间并且共同分享同一个进程。线程间通信是便宜的，线程间的转换也是低成本的。</p>
-<p>　　　　（3）多线程使CPU的利用率提高</p>
-<h3 id="1-2-Thread类"><a href="#1-2-Thread类" class="headerlink" title="1.2 Thread类"></a>1.2 Thread类</h3><p><strong>构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public Thread()</td>
-<td>分配一个新的线程对象。</td>
-</tr>
-<tr>
-<td>public Thread(String name)</td>
-<td>分配一个指定名字的新的线程对象。</td>
-</tr>
-<tr>
-<td>public Thread(Runnable target)</td>
-<td>分配一个带有指定目标新的线程对象。</td>
-</tr>
-<tr>
-<td>public Thread(Runnable target,String name)</td>
-<td>分配一个带有指定目标新的线程对象并指定名字。</td>
-</tr>
-</tbody></table>
-<p><strong>常用方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public String getName()</td>
-<td>获取当前线程名称。</td>
-</tr>
-<tr>
-<td>public void start()</td>
-<td>导致此线程开始执行; Java虚拟机调用此线程的run方法。</td>
-</tr>
-<tr>
-<td>public void run()</td>
-<td>此线程要执行的任务在此处定义代码。</td>
-</tr>
-<tr>
-<td>public static void sleep(long millis)</td>
-<td>使当前正在执行的线程以指定的毫秒数暂停（暂时停止执行）。</td>
-</tr>
-<tr>
-<td>public static Thread currentThread()</td>
-<td>返回对当前正在执行的线程对象的引用。</td>
-</tr>
-</tbody></table>
-<h3 id="1-3-Runnable"><a href="#1-3-Runnable" class="headerlink" title="1.3 Runnable"></a>1.3 Runnable</h3><p>步骤如下：</p>
-<p>　　1. 定义Runnable接口的实现类，并重写该接口的run()方法，该run()方法的方法体同样是该线程的线程执行体。</p>
-<p>　　2. 创建Runnable实现类的实例，并以此实例作为Thread的target来创建Thread对象，该Thread对象才是真正的线程对象。</p>
-<p>　　3. 调用线程对象的start()方法来启动线程。</p>
-<p>通过实现Runnable接口，使得类有了多线程类的特征。run()方法是多线程程序的一个执行目标。所有的多线程代码都在run方法里面。Thread类实际上也是实现了Runnable接口的类。</p>
-<p>在启动的多线程的时候，需要先通过Thread类的构造方法Thread(Runnable target) 构造出对象，然后调用Thread 对象的start()方法来运行多线程代码。</p>
-<p>实际上所有的多线程代码都是通过运行Thread的start()方法来运行的。因此，不管是继承Thread类还是实现 Runnable接口来实现多线程，最终还是通过Thread的对象的API来控制线程的，熟悉Thread类的API是进行多线程编程的基础。</p>
-<p>tips:Runnable对象仅仅作为Thread对象的target，Runnable实现类里包含的run()方法仅作为线程执行体。 而实际的线程对象依然是Thread实例，只是该Thread线程负责执行其target的run()方法。</p>
-<h3 id="1-4-Thread和Runnable的区别"><a href="#1-4-Thread和Runnable的区别" class="headerlink" title="1.4 Thread和Runnable的区别"></a>1.4 Thread和Runnable的区别</h3><p>如果一个类继承Thread，则不适合资源共享。但是如果实现了Runable接口的话，则很容易的实现资源共享。</p>
-<p><strong>总结：</strong></p>
-<p>　　<strong>实现Runnable接口比继承Thread类所具有的优势：</strong></p>
-<p>　　　　<strong>1. 适合多个相同的程序代码的线程去共享同一个资源。</strong></p>
-<p>　　　　<strong>2. 可以避免java中的单继承的局限性。</strong></p>
-<p>　　　　<strong>3. 增加程序的健壮性，实现解耦操作，代码可以被多个线程共享，代码和线程独立。</strong></p>
-<p>　　　　<strong>4. 线程池只能放入实现Runable或Callable类线程，不能直接放入继承Thread的类。</strong></p>
-<p><strong>扩充：在java中，每次程序运行至少启动2个线程。一个是main线程，一个是垃圾收集线程。因为每当使用 java命令执行一个类的时候，实际上都会启动一个JVM，每一个JVM其实在就是在操作系统中启动了一个进程。</strong></p>
-<h3 id="1-5-匿名内部类方式实现线程的创建"><a href="#1-5-匿名内部类方式实现线程的创建" class="headerlink" title="1.5 匿名内部类方式实现线程的创建"></a>1.5 匿名内部类方式实现线程的创建</h3><p>使用线程的内匿名内部类方式，可以方便的实现每个线程执行不同的线程任务操作。</p>
-<p>使用匿名内部类的方式实现Runnable接口，重新Runnable接口中的run方法：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">RunnableDemo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         Runnable rb = <span class="keyword">new</span> Runnable() &#123;</span><br><span class="line"> <span class="number">4</span>             <span class="meta">@Override</span></span><br><span class="line"> <span class="number">5</span>             <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>                 <span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span> ; i &lt; <span class="number">30</span>;i++)&#123;</span><br><span class="line"> <span class="number">7</span>                     System.out.println(i);</span><br><span class="line"> <span class="number">8</span>                 &#125;</span><br><span class="line"> <span class="number">9</span>             &#125;</span><br><span class="line"><span class="number">10</span>         &#125;;</span><br><span class="line"><span class="number">11</span>     <span class="keyword">new</span> Thread(rb).start();</span><br><span class="line"><span class="number">12</span>     <span class="keyword">new</span> Thread(rb).start();</span><br><span class="line"><span class="number">13</span>     <span class="keyword">new</span> Thread(rb).start();</span><br><span class="line"><span class="number">14</span>     &#125;</span><br><span class="line"><span class="number">15</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-线程安全"><a href="#2-线程安全" class="headerlink" title="2.线程安全"></a>2.线程安全</h2><h3 id="2-1-线程安全"><a href="#2-1-线程安全" class="headerlink" title="2.1 线程安全"></a>2.1 线程安全</h3><p>如果有多个线程在同时运行，而这些线程可能会同时运行这段代码。程序每次运行结果和单线程运行的结果是一样 的，而且其他的变量的值也和预期的是一样的，就是线程安全的。</p>
-<p>我们通过一个案例，演示线程的安全问题： 电影院要卖票，我们模拟电影院的卖票过程。假设要播放的电影是 “葫芦娃大战奥特曼”，本次电影的座位共100个 (本场电影只能卖100张票)。</p>
-<p>我们来模拟电影院的售票窗口，实现多个窗口同时卖 “葫芦娃大战奥特曼”这场电影票(多个窗口一起卖这100张票) 需要窗口，采用线程对象来模拟；需要票，Runnable接口子类来模拟</p>
-<p><strong>卖票类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ticket</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">100</span>;</span><br><span class="line"> <span class="number">3</span>     <span class="meta">@Override</span></span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         <span class="keyword">while</span>(<span class="keyword">true</span>)&#123;</span><br><span class="line"> <span class="number">6</span>             <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>)&#123;</span><br><span class="line"> <span class="number">7</span>                 <span class="keyword">try</span>&#123;</span><br><span class="line"> <span class="number">8</span>                     Thread.sleep(<span class="number">100</span>);</span><br><span class="line"> <span class="number">9</span>                 &#125;<span class="keyword">catch</span> (Exception e)&#123;</span><br><span class="line"><span class="number">10</span>                     e.printStackTrace();</span><br><span class="line"><span class="number">11</span>                 &#125;</span><br><span class="line"><span class="number">12</span>                 String name = Thread.currentThread().getName();</span><br><span class="line"><span class="number">13</span>                 System.out.println(name+<span class="string">&quot;正在卖第&quot;</span>+ticket--+<span class="string">&quot;张票.&quot;</span>);</span><br><span class="line"><span class="number">14</span>             &#125;</span><br><span class="line"><span class="number">15</span>         &#125;</span><br><span class="line"><span class="number">16</span>     &#125;</span><br><span class="line"><span class="number">17</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Demo</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         Ticket tk = <span class="keyword">new</span> Ticket();</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span>         Thread w1 = <span class="keyword">new</span> Thread(tk,<span class="string">&quot;1号窗口&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         Thread w2 = <span class="keyword">new</span> Thread(tk,<span class="string">&quot;2号窗口&quot;</span>);</span><br><span class="line"> <span class="number">7</span>         Thread w3 = <span class="keyword">new</span> Thread(tk,<span class="string">&quot;3号窗口&quot;</span>);</span><br><span class="line"> <span class="number">8</span> </span><br><span class="line"> <span class="number">9</span>         w1.start();</span><br><span class="line"><span class="number">10</span>         w2.start();</span><br><span class="line"><span class="number">11</span>         w3.start();</span><br><span class="line"><span class="number">12</span>     &#125;</span><br><span class="line"><span class="number">13</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>会出现两种问题：</p>
-<p>　　1. 相同的票被卖了两回。</p>
-<p>　　2. 不存在的票，比如0票与-1票，是不存在的。</p>
-<p>这种问题，几个窗口(线程)票数不同步了，这种问题称为线程不安全。</p>
-<p>tips：线程安全问题都是由全局变量及静态变量引起的。若每个线程中对全局变量、静态变量只有读操作，而无写操作，一般来说，这个全局变量是线程安全的；若有多个线程同时执行写操作，一般都需要考虑线程同步， 否则的话就可能影响线程安全。</p>
-<h3 id="2-2-线程同步"><a href="#2-2-线程同步" class="headerlink" title="2.2 线程同步"></a>2.2 线程同步</h3><p>当我们使用多个线程访问同一资源的时候，且多个线程中对资源有写的操作，就容易出现线程安全问题。 要解决上述多线程并发访问一个资源的安全性问题:也就是解决重复票与不存在票问题，Java中提供了同步机制 (synchronized)来解决。</p>
-<p>有三种方式完成同步操作：</p>
-<p>　　1. 同步代码块。</p>
-<p>　　2. 同步方法。</p>
-<p>　　3. 锁机制。</p>
-<h3 id="2-3-同步代码块"><a href="#2-3-同步代码块" class="headerlink" title="2.3 同步代码块"></a>2.3 同步代码块</h3><p>同步代码块： synchronized 关键字可以用于方法中的某个区块中，表示只对这个区块的资源实行互斥访问。</p>
-<p>格式:</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">synchronized</span>(同步锁)&#123;</span><br><span class="line"><span class="number">2</span>     需要同步操作的代码</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>同步锁:</p>
-<p>　　对象的同步锁只是一个概念,可以想象为在对象上标记了一个锁.</p>
-<p>　　　　1. 锁对象 可以是任意类型。</p>
-<p>　　　　2. 多个线程对象 要使用同一把锁。</p>
-<p>注意:在任何时候,最多允许一个线程拥有同步锁,谁拿到锁就进入代码块,其他的线程只能在外等着 (BLOCKED)。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ticket</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">100</span>;</span><br><span class="line"> <span class="number">3</span>     Object lock = <span class="keyword">new</span> Object();</span><br><span class="line"> <span class="number">4</span>     <span class="meta">@Override</span></span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         <span class="keyword">while</span> (<span class="keyword">true</span>)&#123;</span><br><span class="line"> <span class="number">7</span>             <span class="keyword">synchronized</span>(lock)&#123;</span><br><span class="line"> <span class="number">8</span>                 <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>)&#123;</span><br><span class="line"> <span class="number">9</span>                     <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">10</span>                         Thread.sleep(<span class="number">100</span>);</span><br><span class="line"><span class="number">11</span>                     &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">12</span>                         e.printStackTrace();</span><br><span class="line"><span class="number">13</span>                     &#125;</span><br><span class="line"><span class="number">14</span>                     String name = Thread.currentThread().getName();</span><br><span class="line"><span class="number">15</span>                     System.out.println(name+<span class="string">&quot;正在卖第&quot;</span>+ticket--+<span class="string">&quot;张票.&quot;</span>);</span><br><span class="line"><span class="number">16</span>                 &#125;</span><br><span class="line"><span class="number">17</span>             &#125;</span><br><span class="line"><span class="number">18</span>         &#125;</span><br><span class="line"><span class="number">19</span>     &#125;</span><br><span class="line"><span class="number">20</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-4-同步方法"><a href="#2-4-同步方法" class="headerlink" title="2.4 同步方法"></a>2.4 同步方法</h3><p>同步方法:使用synchronized修饰的方法,就叫做同步方法,保证A线程执行该方法的时候,其他线程只能在方法外等着。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="function"><span class="keyword">public</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">method</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="number">2</span> 　　可能会产生线程安全问题的代码</span><br><span class="line"><span class="number">3</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>同步锁是谁?</p>
-<p>　　对于非static方法,同步锁就是this。</p>
-<p>　　对于static方法,我们使用当前方法所在类的字节码对象(类名.class)。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ticket</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">100</span>;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span>     <span class="meta">@Override</span></span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"> <span class="number">7</span>             sell();</span><br><span class="line"> <span class="number">8</span>         &#125;</span><br><span class="line"> <span class="number">9</span>     &#125;</span><br><span class="line"><span class="number">10</span> </span><br><span class="line"><span class="number">11</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">synchronized</span> <span class="keyword">void</span> <span class="title">sell</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">12</span>         <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>) &#123;</span><br><span class="line"><span class="number">13</span>             <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">14</span>                 Thread.sleep(<span class="number">100</span>);</span><br><span class="line"><span class="number">15</span>             &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">16</span>                 e.printStackTrace();</span><br><span class="line"><span class="number">17</span>             &#125;</span><br><span class="line"><span class="number">18</span>             String name = Thread.currentThread().getName();</span><br><span class="line"><span class="number">19</span>             System.out.println(name + <span class="string">&quot;正在卖第&quot;</span> + ticket-- + <span class="string">&quot;张票.&quot;</span>);</span><br><span class="line"><span class="number">20</span>         &#125;</span><br><span class="line"><span class="number">21</span>     &#125;</span><br><span class="line"><span class="number">22</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-5-Lock锁"><a href="#2-5-Lock锁" class="headerlink" title="2.5 Lock锁"></a>2.5 Lock锁</h3><p>java.util.concurrent.locks.Lock机制提供了比synchronized代码块和synchronized方法更广泛的锁定操作, 同步代码块/同步方法具有的功能Lock都有,除此之外更强大,更体现面向对象。</p>
-<p>Lock锁也称同步锁，加锁与释放锁方法化了，如下：</p>
-<p>　　public void lock() :加同步锁。</p>
-<p>　　public void unlock() :释放同步锁。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.concurrent.locks.Lock;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.concurrent.locks.ReentrantLock;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Ticket</span> <span class="keyword">implements</span> <span class="title">Runnable</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="keyword">private</span> <span class="keyword">int</span> ticket = <span class="number">100</span>;</span><br><span class="line"> <span class="number">6</span>     Lock lock = <span class="keyword">new</span> ReentrantLock();</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>     <span class="meta">@Override</span></span><br><span class="line"> <span class="number">9</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">10</span>         <span class="keyword">while</span> (<span class="keyword">true</span>) &#123;</span><br><span class="line"><span class="number">11</span>             lock.lock();</span><br><span class="line"><span class="number">12</span>             <span class="keyword">if</span> (ticket &gt; <span class="number">0</span>) &#123;</span><br><span class="line"><span class="number">13</span>                 <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">14</span>                     Thread.sleep(<span class="number">100</span>);</span><br><span class="line"><span class="number">15</span>                 &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">16</span>                     e.printStackTrace();</span><br><span class="line"><span class="number">17</span>                 &#125;</span><br><span class="line"><span class="number">18</span>                 String name = Thread.currentThread().getName();</span><br><span class="line"><span class="number">19</span>                 System.out.println(name + <span class="string">&quot;正在卖第&quot;</span> + ticket-- + <span class="string">&quot;张票.&quot;</span>);</span><br><span class="line"><span class="number">20</span>             &#125;</span><br><span class="line"><span class="number">21</span>             lock.unlock();</span><br><span class="line"><span class="number">22</span>         &#125;</span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-线程状态"><a href="#3-线程状态" class="headerlink" title="3.线程状态"></a>3.线程状态</h2><h3 id="3-1-线程状态概述"><a href="#3-1-线程状态概述" class="headerlink" title="3.1 线程状态概述"></a>3.1 线程状态概述</h3><p>当线程被创建并启动以后，它既不是一启动就进入了执行状态，也不是一直处于执行状态。在线程的生命周期中， 有几种状态呢？</p>
-<p>在API中 java.lang.Thread.State 这个枚举中给出了六种线程状态：</p>
-<table>
-<thead>
-<tr>
-<th><strong>线程状态</strong></th>
-<th><strong>导致状态发生的条件</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>NEW(新建)</td>
-<td>线程刚被创建，但是并未启动。还没调用start方法。</td>
-</tr>
-<tr>
-<td>Runnable(可 运行)</td>
-<td>线程可以在java虚拟机中运行的状态，可能正在运行自己代码，也可能没有，这取决于操 作系统处理器。</td>
-</tr>
-<tr>
-<td>Blocked(锁阻 塞)</td>
-<td>当一个线程试图获取一个对象锁，而该对象锁被其他的线程持有，则该线程进入Blocked状 态；当该线程持有锁时，该线程将变成Runnable状态。</td>
-</tr>
-<tr>
-<td>Waiting(无限等待)</td>
-<td>一个线程在等待另一个线程执行一个（唤醒）动作时，该线程进入Waiting状态。进入这个 状态后是不能自动唤醒的，必须等待另一个线程调用notify或者notifyAll方法才能够唤醒。</td>
-</tr>
-<tr>
-<td>Timed Waiting(计时 等待)</td>
-<td>同waiting状态，有几个方法有超时参数，调用他们将进入Timed Waiting状态。这一状态 将一直保持到超时期满或者接收到唤醒通知。带有超时参数的常用方法有Thread.sleep 、 Object.wait。</td>
-</tr>
-<tr>
-<td>Teminated(被终止)</td>
-<td>因为run方法正常退出而死亡，或者因为没有捕获的异常终止了run方法而死亡。</td>
-</tr>
-</tbody></table>
-<h3 id="3-2-Timed-Waiting（计时等待）"><a href="#3-2-Timed-Waiting（计时等待）" class="headerlink" title="3.2 Timed Waiting（计时等待）"></a>3.2 Timed Waiting（计时等待）</h3><p>Timed Waiting在API中的描述为：一个正在限时等待另一个线程执行一个（唤醒）动作的线程处于这一状态。</p>
-<p>单独的去理解这句话，真是玄之又玄，其实我们在之前的操作中已经接触过这个状态了，在哪里呢？</p>
-<p>在我们写卖票的案例中，为了减少线程执行太快，现象不明显等问题，我们在run方法中添加了sleep语句，这样就强制当前正在执行的线程休眠（暂停执行），以“减慢线程”。 其实当我们调用了sleep方法之后，当前执行的线程就进入到“休眠状态”，其实就是所谓的Timed Waiting(计时等待)</p>
-<p>所以：</p>
-<p>　　1. 进入 TIMED_WAITING 状态的一种常见情形是调用的 sleep 方法，单独的线程也可以调用，不一定非要有协作关系。</p>
-<p>　　2. 为了让其他线程有机会执行，可以将Thread.sleep()的调用放线程run()之内。这样才能保证该线程执行过程中会睡眠</p>
-<p>　　3. sleep与锁无关，线程睡眠到期自动苏醒，并返回到Runnable（可运行）状态。</p>
-<p>tips：sleep()中指定的时间是线程不会运行的最短时间。因此，sleep()方法不能保证该线程睡眠到期后就开始立刻执行。</p>
-<h3 id="3-3-BLOCKED（锁阻塞）"><a href="#3-3-BLOCKED（锁阻塞）" class="headerlink" title="3.3 BLOCKED（锁阻塞）"></a>3.3 BLOCKED（锁阻塞）</h3><p>Blocked状态在API中的介绍为：一个正在阻塞等待一个监视器锁（锁对象）的线程处于这一状态。</p>
-<p>我们已经学完同步机制，那么这个状态是非常好理解的了。比如，线程A与线程B代码中使用同一锁，如果线程A获 取到锁，线程A进入到Runnable状态，那么线程B就进入到Blocked锁阻塞状态。</p>
-<p>这是由Runnable状态进入Blocked状态。除此Waiting以及Time Waiting状态也会在某种情况下进入阻塞状态</p>
-<h3 id="3-4-Waiting（无限等待）"><a href="#3-4-Waiting（无限等待）" class="headerlink" title="3.4 Waiting（无限等待）"></a>3.4 Waiting（无限等待）</h3><p>Wating状态在API中介绍为：一个正在无限期等待另一个线程执行一个特别的（唤醒）动作的线程处于这一状态。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">mbz</span> </span>&#123;</span><br><span class="line"> <span class="number">2</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">3</span>         <span class="comment">//创建锁对象</span></span><br><span class="line"> <span class="number">4</span>         Object obj = <span class="keyword">new</span> Object();</span><br><span class="line"> <span class="number">5</span> </span><br><span class="line"> <span class="number">6</span>         <span class="keyword">new</span> Thread()&#123;</span><br><span class="line"> <span class="number">7</span>             <span class="meta">@Override</span></span><br><span class="line"> <span class="number">8</span>             <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line"> <span class="number">9</span>                 <span class="keyword">synchronized</span> (obj)&#123;</span><br><span class="line"><span class="number">10</span>                     System.out.println(<span class="string">&quot;告诉老板要的包子&quot;</span>);</span><br><span class="line"><span class="number">11</span>                     <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">12</span>                         obj.wait();</span><br><span class="line"><span class="number">13</span>                     &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">14</span>                         e.printStackTrace();</span><br><span class="line"><span class="number">15</span>                     &#125;</span><br><span class="line"><span class="number">16</span>                     System.out.println(<span class="string">&quot;包子做好了，开吃&quot;</span>);</span><br><span class="line"><span class="number">17</span>                 &#125;</span><br><span class="line"><span class="number">18</span>             &#125;</span><br><span class="line"><span class="number">19</span>         &#125;.start();</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>         <span class="keyword">new</span> Thread()&#123;</span><br><span class="line"><span class="number">22</span>             <span class="meta">@Override</span></span><br><span class="line"><span class="number">23</span>             <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">run</span><span class="params">()</span></span>&#123;</span><br><span class="line"><span class="number">24</span>                 System.out.println(<span class="string">&quot;老板开始做包子&quot;</span>);</span><br><span class="line"><span class="number">25</span>                 <span class="keyword">try</span> &#123;</span><br><span class="line"><span class="number">26</span>                     sleep(<span class="number">5000</span>);</span><br><span class="line"><span class="number">27</span>                 &#125; <span class="keyword">catch</span> (InterruptedException e) &#123;</span><br><span class="line"><span class="number">28</span>                     e.printStackTrace();</span><br><span class="line"><span class="number">29</span>                 &#125;</span><br><span class="line"><span class="number">30</span> </span><br><span class="line"><span class="number">31</span>                 <span class="keyword">synchronized</span> (obj)&#123;</span><br><span class="line"><span class="number">32</span>                     System.out.println(<span class="string">&quot;包子做好了，请吃&quot;</span>);</span><br><span class="line"><span class="number">33</span>                     obj.notify();</span><br><span class="line"><span class="number">34</span>                 &#125;</span><br><span class="line"><span class="number">35</span>             &#125;</span><br><span class="line"><span class="number">36</span>         &#125;.start();</span><br><span class="line"><span class="number">37</span>     &#125;</span><br><span class="line"><span class="number">38</span> &#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/08/JavaSE-20-%E7%BA%BF%E7%A8%8B%E4%B8%8E%E5%90%8C%E6%AD%A5/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JavaSE-19-IO特殊流和Properties集合" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/08/JavaSE-19-IO%E7%89%B9%E6%AE%8A%E6%B5%81%E5%92%8CProperties%E9%9B%86%E5%90%88/">JavaSE-19-IO特殊流和Properties集合</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/08/JavaSE-19-IO%E7%89%B9%E6%AE%8A%E6%B5%81%E5%92%8CProperties%E9%9B%86%E5%90%88/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:21:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-IO特殊操作流"><a href="#1-IO特殊操作流" class="headerlink" title="1.IO特殊操作流"></a>1.IO特殊操作流</h2><h3 id="1-1-标准输入流"><a href="#1-1-标准输入流" class="headerlink" title="1.1 标准输入流"></a>1.1 标准输入流</h3><p>System类中有两个静态的成员变量</p>
-<p>　　public static final InputStream in：标准输入流。通常该流对应于键盘输入或由主机环境或用户指定的另一个输入源。</p>
-<p>　　public static final PrintStream out：标准输出流。通常该流对应于显示输出或由主机环境或用户指定的 另一个输出目标。</p>
-<h3 id="1-2-标准输出流"><a href="#1-2-标准输出流" class="headerlink" title="1.2 标准输出流"></a>1.2 标准输出流</h3><p>System类中有两个静态的成员变量</p>
-<p>　　public static final InputStream in：标准输入流。通常该流对应于键盘输入或由主机环境或用户指定的另一个输入源。</p>
-<p>　　public static final PrintStream out：标准输出流。通常该流对应于显示输出或由主机环境或用户指定的另一个输出目标。</p>
-<h3 id="1-3-字节打印流"><a href="#1-3-字节打印流" class="headerlink" title="1.3 字节打印流"></a>1.3 字节打印流</h3><p><strong>打印流分类</strong></p>
-<p>　　字节打印流：PrintStream</p>
-<p>　　字符打印流：PrintWriter</p>
-<p><strong>打印流的特点</strong></p>
-<p>　　只负责输出数据，不负责读取数据</p>
-<p>　　永远不会抛出IOException</p>
-<p>　　有自己的特有方法</p>
-<p><strong>字节打印流</strong></p>
-<p>　　PrintStream(String fileName)：使用指定的文件名创建新的打印流</p>
-<p>　　使用继承父类的方法写数据，查看的时候会转码；使用自己的特有方法写数据，查看的数据原样输出</p>
-<p>　　可以改变输出语句的目的地</p>
-<p>　　public static void setOut(PrintStream out)：重新分配“标准”输出流</p>
-<h3 id="1-4-字符打印流"><a href="#1-4-字符打印流" class="headerlink" title="1.4 字符打印流"></a>1.4 字符打印流</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>PrintWriter(String fileName)</td>
-<td>使用指定的文件名创建一个新的PrintWriter，而不需要自动执行刷新</td>
-</tr>
-<tr>
-<td>PrintWriter(Writer out, boolean autoFlush)</td>
-<td>创建一个新的PrintWriter out：字符输出流 autoFlush： 一个布尔值，如果 为真，则println ， printf或format方法将刷新输出缓冲区</td>
-</tr>
-</tbody></table>
-<h3 id="1-5-对象序列化流"><a href="#1-5-对象序列化流" class="headerlink" title="1.5 对象序列化流"></a>1.5 对象序列化流</h3><p><strong>对象序列化介绍</strong></p>
-<p>　　对象序列化：就是将对象保存到磁盘中，或者在网络中传输对象</p>
-<p>　　这种机制就是使用一个字节序列表示一个对象，该字节序列包含：对象的类型、对象的数据和对象中存储的属性等信息</p>
-<p>　　字节序列写到文件之后，相当于文件中持久保存了一个对象的信息</p>
-<p>　　反之，该字节序列还可以从文件中读取回来，重构对象，对它进行反序列化</p>
-<p><strong>对象序列化流： ObjectOutputStream</strong></p>
-<p>　　将Java对象的原始数据类型和图形写入OutputStream。 可以使用ObjectInputStream读取（重构）对象。 可以通过使用流的文件来实现对象的持久存储。</p>
-<p>　　如果流是网络套接字流，则可以在另一个主机上或另一个进程中重构对象</p>
-<p><strong>构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>ObjectOutputStream(OutputStream out)</td>
-<td>创建一个写入指定的OutputStream的 ObjectOutputStream</td>
-</tr>
-</tbody></table>
-<p><strong>序列化对象的方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>void writeObject(Object obj)</td>
-<td>将指定的对象写入ObjectOutputStream</td>
-</tr>
-</tbody></table>
-<p><strong>学生类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Student</span> <span class="keyword">implements</span> <span class="title">Serializable</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="keyword">private</span> String name;</span><br><span class="line"> <span class="number">5</span>     <span class="keyword">private</span> <span class="keyword">int</span> age;</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span>     <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">()</span> </span>&#123;</span><br><span class="line"> <span class="number">8</span>     &#125;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">public</span> <span class="title">Student</span><span class="params">(String name, <span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line"><span class="number">11</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">12</span>         <span class="keyword">this</span>.age = age;</span><br><span class="line"><span class="number">13</span>     &#125;</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span>     <span class="function"><span class="keyword">public</span> String <span class="title">getName</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">16</span>         <span class="keyword">return</span> name;</span><br><span class="line"><span class="number">17</span>     &#125;</span><br><span class="line"><span class="number">18</span> </span><br><span class="line"><span class="number">19</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setName</span><span class="params">(String name)</span> </span>&#123;</span><br><span class="line"><span class="number">20</span>         <span class="keyword">this</span>.name = name;</span><br><span class="line"><span class="number">21</span>     &#125;</span><br><span class="line"><span class="number">22</span> </span><br><span class="line"><span class="number">23</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">getAge</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">24</span>         <span class="keyword">return</span> age;</span><br><span class="line"><span class="number">25</span>     &#125;</span><br><span class="line"><span class="number">26</span> </span><br><span class="line"><span class="number">27</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">setAge</span><span class="params">(<span class="keyword">int</span> age)</span> </span>&#123;</span><br><span class="line"><span class="number">28</span>         <span class="keyword">this</span>.age = age;</span><br><span class="line"><span class="number">29</span>     &#125;</span><br><span class="line"><span class="number">30</span> </span><br><span class="line"><span class="number">31</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">32</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">equals</span><span class="params">(Object o)</span> </span>&#123;</span><br><span class="line"><span class="number">33</span>         <span class="keyword">if</span> (<span class="keyword">this</span> == o) <span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line"><span class="number">34</span>         <span class="keyword">if</span> (o == <span class="keyword">null</span> || getClass() != o.getClass()) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="number">35</span> </span><br><span class="line"><span class="number">36</span>         Student student = (Student) o;</span><br><span class="line"><span class="number">37</span> </span><br><span class="line"><span class="number">38</span>         <span class="keyword">if</span> (age != student.age) <span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line"><span class="number">39</span>         <span class="keyword">return</span> name != <span class="keyword">null</span> ? name.equals(student.name) : student.name == <span class="keyword">null</span>;</span><br><span class="line"><span class="number">40</span>     &#125;</span><br><span class="line"><span class="number">41</span> </span><br><span class="line"><span class="number">42</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">43</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">int</span> <span class="title">hashCode</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">44</span>         <span class="keyword">int</span> result = name != <span class="keyword">null</span> ? name.hashCode() : <span class="number">0</span>;</span><br><span class="line"><span class="number">45</span>         result = <span class="number">31</span> * result + age;</span><br><span class="line"><span class="number">46</span>         <span class="keyword">return</span> result;</span><br><span class="line"><span class="number">47</span>     &#125;</span><br><span class="line"><span class="number">48</span> </span><br><span class="line"><span class="number">49</span>     <span class="meta">@Override</span></span><br><span class="line"><span class="number">50</span>     <span class="function"><span class="keyword">public</span> String <span class="title">toString</span><span class="params">()</span> </span>&#123;</span><br><span class="line"><span class="number">51</span>         <span class="keyword">return</span> <span class="string">&quot;Student&#123;&quot;</span> +</span><br><span class="line"><span class="number">52</span>                 <span class="string">&quot;name=&#x27;&quot;</span> + name + <span class="string">&#x27;\&#x27;&#x27;</span> +</span><br><span class="line"><span class="number">53</span>                 <span class="string">&quot;, age=&quot;</span> + age +</span><br><span class="line"><span class="number">54</span>                 <span class="string">&#x27;&#125;&#x27;</span>;</span><br><span class="line"><span class="number">55</span>     &#125;</span><br><span class="line"><span class="number">56</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.*;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OOP</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"> <span class="number">5</span>         File file = <span class="keyword">new</span> File(<span class="string">&quot;F:\\oos.yz&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         ObjectOutputStream oos = <span class="keyword">new</span> ObjectOutputStream(<span class="keyword">new</span> FileOutputStream(file));</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         Student s = <span class="keyword">new</span> Student(<span class="string">&quot;yz&quot;</span>, <span class="number">22</span>);</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>         oos.writeObject(s);</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>         oos.close();</span><br><span class="line"><span class="number">13</span>     &#125;</span><br><span class="line"><span class="number">14</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意事项</strong></p>
-<p>　　一个对象要想被序列化，该对象所属的类必须必须实现Serializable接口</p>
-<p>　　Serializable是一个标记接口，实现该接口，不需要重写任何方法</p>
-<h3 id="1-6-对象反序列化流"><a href="#1-6-对象反序列化流" class="headerlink" title="1.6 对象反序列化流"></a>1.6 对象反序列化流</h3><p><strong>对象反序列化流： ObjectInputStream</strong></p>
-<p>　　ObjectInputStream反序列化先前使用ObjectOutputStream编写的原始数据和对象</p>
-<p><strong>构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>ObjectInputStream(InputStream in)</td>
-<td>创建从指定的InputStream读取的ObjectInputStream</td>
-</tr>
-</tbody></table>
-<p><strong>反对象序列化方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Object readObject()</td>
-<td>从ObjectInputStream读取一个对象</td>
-</tr>
-</tbody></table>
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.*;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">OIS</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException, ClassNotFoundException </span>&#123;</span><br><span class="line"> <span class="number">5</span>         File file = <span class="keyword">new</span> File(<span class="string">&quot;F:\\oos.yz&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         ObjectInputStream ois = <span class="keyword">new</span> ObjectInputStream(<span class="keyword">new</span> FileInputStream(file));</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         Object j = ois.readObject();</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>         Student s = (Student) j;</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>         System.out.println(s.getName()+<span class="string">&quot;\t&quot;</span>+s.getAge());</span><br><span class="line"><span class="number">13</span>     &#125;</span><br><span class="line"><span class="number">14</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="1-7-serialVersionUID-amp-transient"><a href="#1-7-serialVersionUID-amp-transient" class="headerlink" title="1.7 serialVersionUID&amp;transient"></a>1.7 serialVersionUID&amp;transient</h3><p>serialVersionUID</p>
-<p>　　<strong>用对象序列化流序列化了一个对象后，假如我们修改了对象所属的类文件，读取数据会不会出问题呢？</strong></p>
-<p>　　　　会出问题，会抛出InvalidClassException异常</p>
-<p>　　<strong>如果出问题了，如何解决呢？</strong></p>
-<p>　　　　　　重新序列化</p>
-<p>　　　　　　给对象所属的类加一个serialVersionUID</p>
-<p>　　　　　　　　private static final long serialVersionUID = 42L;</p>
-<p>transient</p>
-<p>　　<strong>如果一个对象中的某个成员变量的值不想被序列化，又该如何实现呢？</strong></p>
-<p>　　　　给该成员变量加transient关键字修饰，该关键字标记的成员变量不参与序列化过程</p>
-<h2 id="2-Properties集合"><a href="#2-Properties集合" class="headerlink" title="2.Properties集合"></a>2.Properties集合</h2><h3 id="2-1-Properties作为Map集合的使用"><a href="#2-1-Properties作为Map集合的使用" class="headerlink" title="2.1 Properties作为Map集合的使用"></a>2.1 Properties作为Map集合的使用</h3><p>Properties介绍</p>
-<p>　　是一个Map体系的集合类</p>
-<p>　　Properties可以保存到流中或从流中加载</p>
-<p>　　属性列表中的每个键及其对应的值都是一个字符串</p>
-<p>案例</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.Properties;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.Set;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Prop</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         Properties prop = <span class="keyword">new</span> Properties();</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         prop.put(<span class="string">&quot;1&quot;</span>,<span class="string">&quot;超人&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         prop.put(<span class="string">&quot;2&quot;</span>,<span class="string">&quot;蝙蝠侠&quot;</span>);</span><br><span class="line"><span class="number">10</span>         prop.put(<span class="string">&quot;3&quot;</span>,<span class="string">&quot;闪电侠&quot;</span>);</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>         Set&lt;Object&gt; keys = prop.keySet();</span><br><span class="line"><span class="number">13</span>         <span class="keyword">for</span> (Object o : keys)&#123;</span><br><span class="line"><span class="number">14</span>             Object value = prop.get(o);</span><br><span class="line"><span class="number">15</span>             System.out.println(value);</span><br><span class="line"><span class="number">16</span>         &#125;</span><br><span class="line"><span class="number">17</span>     &#125;</span><br><span class="line"><span class="number">18</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-2-Properties作为Map集合的特有方法"><a href="#2-2-Properties作为Map集合的特有方法" class="headerlink" title="2.2 Properties作为Map集合的特有方法"></a>2.2 Properties作为Map集合的特有方法</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>Object setProperty(String key, String value)</td>
-<td>设置集合的键和值，都是String类型，底层调用 Hashtable方法put</td>
-</tr>
-<tr>
-<td>String getProperty(String key)</td>
-<td>使用此属性列表中指定的键搜索属性</td>
-</tr>
-<tr>
-<td>Set stringPropertyNames()</td>
-<td>从该属性列表中返回一个不可修改的键集，其中键及其对应的值是字符串</td>
-</tr>
-</tbody></table>
-<p><strong>测试类</strong></p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.util.Properties;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.util.Set;</span><br><span class="line"> <span class="number">3</span> </span><br><span class="line"> <span class="number">4</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Prop</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>         Properties prop = <span class="keyword">new</span> Properties();</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         prop.setProperty(<span class="string">&quot;1&quot;</span>,<span class="string">&quot;超人&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         prop.setProperty(<span class="string">&quot;2&quot;</span>,<span class="string">&quot;蝙蝠侠&quot;</span>);</span><br><span class="line"><span class="number">10</span>         prop.setProperty(<span class="string">&quot;3&quot;</span>,<span class="string">&quot;闪电侠&quot;</span>);</span><br><span class="line"><span class="number">11</span> </span><br><span class="line"><span class="number">12</span>         Set&lt;String&gt; names = prop.stringPropertyNames();</span><br><span class="line"><span class="number">13</span> </span><br><span class="line"><span class="number">14</span>         <span class="keyword">for</span> (String key : names)&#123;</span><br><span class="line"><span class="number">15</span>             String value = prop.getProperty(key);</span><br><span class="line"><span class="number">16</span>             System.out.println(value);</span><br><span class="line"><span class="number">17</span>         &#125;</span><br><span class="line"><span class="number">18</span>     &#125;</span><br><span class="line"><span class="number">19</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-3-Properties和IO流相结合的方法"><a href="#2-3-Properties和IO流相结合的方法" class="headerlink" title="2.3 Properties和IO流相结合的方法"></a>2.3 Properties和IO流相结合的方法</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>void load(InputStream inStream)</td>
-<td>从输入字节流读取属性列表（键和元素对）</td>
-</tr>
-<tr>
-<td>void load(Reader reader)</td>
-<td>从输入字符流读取属性列表（键和元素对）</td>
-</tr>
-<tr>
-<td>void store(OutputStream out, String comments)</td>
-<td>将此属性列表（键和元素对）写入此 Properties表中，以适合于使用 load(InputStream)方法的格式写入输出字节流</td>
-</tr>
-<tr>
-<td>void store(Writer writer, String comments)</td>
-<td>将此属性列表（键和元素对）写入此 Properties表中，以适合使用 load(Reader)方法的格式写入输出字符流</td>
-</tr>
-</tbody></table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/08/JavaSE-19-IO%E7%89%B9%E6%AE%8A%E6%B5%81%E5%92%8CProperties%E9%9B%86%E5%90%88/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JavaSE-18-字节缓冲流和字符流" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/08/JavaSE-18-%E5%AD%97%E8%8A%82%E7%BC%93%E5%86%B2%E6%B5%81%E5%92%8C%E5%AD%97%E7%AC%A6%E6%B5%81/">JavaSE-18-字节缓冲流和字符流</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/08/JavaSE-18-%E5%AD%97%E8%8A%82%E7%BC%93%E5%86%B2%E6%B5%81%E5%92%8C%E5%AD%97%E7%AC%A6%E6%B5%81/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:20:30.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-字节缓冲流"><a href="#1-字节缓冲流" class="headerlink" title="1.字节缓冲流"></a>1.字节缓冲流</h2><h3 id="1-1-字节缓冲流构造方法"><a href="#1-1-字节缓冲流构造方法" class="headerlink" title="1.1 字节缓冲流构造方法"></a>1.1 字节缓冲流构造方法</h3><p><strong>字节缓冲流介绍</strong></p>
-<p>　　BufferOutputStream：该类实现缓冲输出流。 通过设置这样的输出流，应用程序可以向底层输出流写 入字节，而不必为写入的每个字节导致底层系统的调用</p>
-<p>　　BufferedInputStream：创建BufferedInputStream将创建一个内部缓冲区数组。 当从流中读取或跳过 字节时，内部缓冲区将根据需要从所包含的输入流中重新填充，一次很多字节</p>
-<p><strong>构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>BufferedOutputStream(OutputStream out)</td>
-<td>创建字节缓冲输出流对象</td>
-</tr>
-<tr>
-<td>BufferedInputStream(InputStream in)</td>
-<td>创建字节缓冲输入流对象</td>
-</tr>
-</tbody></table>
-<h3 id="1-2-字节流复制视频"><a href="#1-2-字节流复制视频" class="headerlink" title="1.2 字节流复制视频"></a>1.2 字节流复制视频</h3><p><strong>实现步骤</strong></p>
-<p>　　根据数据源创建字节输入流对象</p>
-<p>　　根据目的地创建字节输出流对象</p>
-<p>　　读写数据，复制视频</p>
-<p>　　释放资源</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.*;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">BisCopyVideo</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"> <span class="number">5</span>         File srcFiles = <span class="keyword">new</span> File(<span class="string">&quot;F:\\1_in.mp4&quot;</span>);</span><br><span class="line"> <span class="number">6</span>         File destFile = <span class="keyword">new</span> File(<span class="string">&quot;E:\\out.mp4&quot;</span>);</span><br><span class="line"> <span class="number">7</span> </span><br><span class="line"> <span class="number">8</span>         BufferedInputStream bis = <span class="keyword">new</span> BufferedInputStream(<span class="keyword">new</span> FileInputStream(srcFiles));</span><br><span class="line"> <span class="number">9</span>         BufferedOutputStream bos = <span class="keyword">new</span> BufferedOutputStream(<span class="keyword">new</span> FileOutputStream(destFile));</span><br><span class="line"><span class="number">10</span> </span><br><span class="line"><span class="number">11</span>         <span class="keyword">byte</span>[] buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4096</span>];</span><br><span class="line"><span class="number">12</span>         <span class="keyword">int</span> len;</span><br><span class="line"><span class="number">13</span>         <span class="keyword">while</span> ((len = bis.read(buffer)) != -<span class="number">1</span>)&#123;</span><br><span class="line"><span class="number">14</span>             bos.write(buffer,<span class="number">0</span>,len);</span><br><span class="line"><span class="number">15</span>         &#125;</span><br><span class="line"><span class="number">16</span> </span><br><span class="line"><span class="number">17</span>         bis.close();</span><br><span class="line"><span class="number">18</span>         bos.close();</span><br><span class="line"><span class="number">19</span>     &#125;</span><br><span class="line"><span class="number">20</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="2-字符流"><a href="#2-字符流" class="headerlink" title="2.字符流"></a>2.字符流</h2><h3 id="2-1-为什么会出现字符流"><a href="#2-1-为什么会出现字符流" class="headerlink" title="2.1 为什么会出现字符流"></a>2.1 为什么会出现字符流</h3><p><strong>字符流的介绍</strong></p>
-<p>　　由于字节流操作中文不是特别的方便，所以Java就提供字符流</p>
-<p>　　字符流 = 字节流 + 编码表</p>
-<p><strong>中文的字节存储方式</strong></p>
-<p>　　用字节流复制文本文件时，文本文件也会有中文，但是没有问题，原因是最终底层操作会自动进行字节拼接成中文，如何识别是中文的呢？</p>
-<p>　　汉字在存储的时候，无论选择哪种编码存储，第一个字节都是负数</p>
-<h3 id="2-2-编码表"><a href="#2-2-编码表" class="headerlink" title="2.2 编码表"></a>2.2 编码表</h3><p><strong>什么是字符集</strong></p>
-<p>　　是一个系统支持的所有字符的集合，包括各国家文字、标点符号、图形符号、数字等</p>
-<p>　　计算机要准确的存储和识别各种字符集符号，就需要进行字符编码，一套字符集必然至少有一套字符编码。 常见字符集有ASCII字符集、GBXXX字符集、Unicode字符集等</p>
-<p><strong>常见的字符集</strong></p>
-<p>　　ASCII字符集：</p>
-<p>　　　　ASCII：是基于拉丁字母的一套电脑编码系统，用于显示现代英语，主要包括控制字符(回车键、退格、 换行键等)和可显示字符(英文大小写字符、阿拉伯数字和西文符号)</p>
-<p>　　　　基本的ASCII字符集，使用7位表示一个字符，共128字符。ASCII的扩展字符集使用8位表示一个字符，共 256字符，方便支持欧洲常用字符。是一个系统支持的所有字符的集合，包括各国家文字、标点符号、 图形符号、数字等</p>
-<p>　　GBXXX字符集：</p>
-<p>　　　　GBK：最常用的中文码表。是在GB2312标准基础上的扩展规范，使用了双字节编码方案，共收录了 21003个汉字，完全兼容GB2312标准，同时支持繁体汉字以及日韩汉字等</p>
-<p>　　Unicode字符集：</p>
-<p>　　　　UTF-8编码：可以用来表示Unicode标准中任意字符，它是电子邮件、网页及其他存储或传送文字的应用 中，优先采用的编码。互联网工程工作小组（IETF）要求所有互联网协议都必须支持UTF-8编码。它使用一至四个字节为每个字符编码</p>
-<p>　　编码规则：</p>
-<p>　　128个US-ASCII字符，只需一个字节编码</p>
-<p>　　拉丁文等字符，需要二个字节编码</p>
-<p>　　大部分常用字（含中文），使用三个字节编码</p>
-<p>　　其他极少使用的Unicode辅助字符，使用四字节编码</p>
-<h3 id="2-3-字符串中的编码解码问题"><a href="#2-3-字符串中的编码解码问题" class="headerlink" title="2.3 字符串中的编码解码问题"></a>2.3 字符串中的编码解码问题</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>byte[] getBytes()</td>
-<td>使用平台的默认字符集将该 String编码为一系列字节</td>
-</tr>
-<tr>
-<td>byte[] getBytes(String charsetName)</td>
-<td>使用指定的字符集将该 String编码为一系列字节</td>
-</tr>
-<tr>
-<td>String(byte[] bytes)</td>
-<td>使用平台的默认字符集解码指定的字节数组来创建字符串</td>
-</tr>
-<tr>
-<td>String(byte[] bytes, String charsetName)</td>
-<td>通过指定的字符集解码指定的字节数组来创建字符串</td>
-</tr>
-</tbody></table>
-<h3 id="2-4-字符流中的编码解码问题"><a href="#2-4-字符流中的编码解码问题" class="headerlink" title="2.4 字符流中的编码解码问题"></a>2.4 字符流中的编码解码问题</h3><p><strong>字符流中和编码解码问题相关的两个类</strong></p>
-<p>　　InputStreamReader：是从字节流到字符流的桥梁</p>
-<p>　　　　它读取字节，并使用指定的编码将其解码为字符</p>
-<p>　　　　它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集</p>
-<p>　　OutputStreamWriter：是从字符流到字节流的桥梁</p>
-<p>　　　　是从字符流到字节流的桥梁，使用指定的编码将写入的字符编码为字节</p>
-<p>　　　　它使用的字符集可以由名称指定，也可以被明确指定，或者可以接受平台的默认字符集</p>
-<p><strong>构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>InputStreamReader(InputStream in)</td>
-<td>使用默认字符编码创建InputStreamReader对 象</td>
-</tr>
-<tr>
-<td>InputStreamReader(InputStream in,String chatset)</td>
-<td>使用指定的字符编码创建InputStreamReader 对象</td>
-</tr>
-<tr>
-<td>OutputStreamWriter(OutputStream out)</td>
-<td>使用默认字符编码创建OutputStreamWriter对 象</td>
-</tr>
-<tr>
-<td>OutputStreamWriter(OutputStream out,String charset)</td>
-<td>使用指定的字符编码创建OutputStreamWriter 对象</td>
-</tr>
-</tbody></table>
-<h3 id="2-5-字符流写数据的5种方式"><a href="#2-5-字符流写数据的5种方式" class="headerlink" title="2.5 字符流写数据的5种方式"></a>2.5 字符流写数据的5种方式</h3><p><strong>写</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>void write(int c)</td>
-<td>写一个字符</td>
-</tr>
-<tr>
-<td>void write(char[] cbuf)</td>
-<td>写入一个字符数组</td>
-</tr>
-<tr>
-<td>void write(char[] cbuf, int off, int len)</td>
-<td>写入字符数组的一部分</td>
-</tr>
-<tr>
-<td>void write(String str)</td>
-<td>写一个字符串</td>
-</tr>
-<tr>
-<td>void write(String str, int off, int len)</td>
-<td>写一个字符串的一部分</td>
-</tr>
-</tbody></table>
-<p><strong>刷新和关闭</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>flush()</td>
-<td>刷新流，之后还可以继续写数据</td>
-</tr>
-<tr>
-<td>close()</td>
-<td>关闭流，释放资源，但是在关闭之前会先刷新流。一旦关闭，就不能再写数据</td>
-</tr>
-</tbody></table>
-<h3 id="2-6-字符流读数据的2种方式"><a href="#2-6-字符流读数据的2种方式" class="headerlink" title="2.6 字符流读数据的2种方式"></a>2.6 字符流读数据的2种方式</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>int read()</td>
-<td>一次读一个字符数据</td>
-</tr>
-<tr>
-<td>int read(char[] cbuf)</td>
-<td>一次读一个字符数组数据</td>
-</tr>
-</tbody></table>
-<h3 id="2-7-字符缓冲流"><a href="#2-7-字符缓冲流" class="headerlink" title="2.7 字符缓冲流"></a>2.7 字符缓冲流</h3><p><strong>字符缓冲流介绍</strong></p>
-<p>　　BufferedWriter：将文本写入字符输出流，缓冲字符，以提供单个字符，数组和字符串的高效写入，可 以指定缓冲区大小，或者可以接受默认大小。默认值足够大，可用于大多数用途</p>
-<p>　　BufferedReader：从字符输入流读取文本，缓冲字符，以提供字符，数组和行的高效读取，可以指定缓 冲区大小，或者可以使用默认大小。 默认值足够大，可用于大多数用途</p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>BufferedWriter(Writer out)</td>
-<td>创建字符缓冲输出流对象</td>
-</tr>
-<tr>
-<td>BufferedReader(Reader in)</td>
-<td>创建字符缓冲输入流对象</td>
-</tr>
-</tbody></table>
-<h3 id="2-8-字符缓冲流特有功能"><a href="#2-8-字符缓冲流特有功能" class="headerlink" title="2.8 字符缓冲流特有功能"></a>2.8 字符缓冲流特有功能</h3><p>BufferedWriter：</p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>void newLine()</td>
-<td>写一行行分隔符，行分隔符字符串由系统属性定义</td>
-</tr>
-</tbody></table>
-<p>BufferedReader:</p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>String readLine()</td>
-<td>读一行文字。 结果包含行的内容的字符串，不包括任何行终止字符如果流的结尾已经 到达，则为null</td>
-</tr>
-</tbody></table>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/08/JavaSE-18-%E5%AD%97%E8%8A%82%E7%BC%93%E5%86%B2%E6%B5%81%E5%92%8C%E5%AD%97%E7%AC%A6%E6%B5%81/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
-    <article id="post-JavaSE-17-File、递归和字节流" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2021/10/08/JavaSE-17-File%E3%80%81%E9%80%92%E5%BD%92%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81/">JavaSE-17-File、递归和字节流</a>
-    </h1>
-  
-
-        
-        <a href="/2021/10/08/JavaSE-17-File%E3%80%81%E9%80%92%E5%BD%92%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81/" class="archive-article-date">
-  	<time datetime="2021-10-08T10:19:21.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2021-10-08</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <h2 id="1-File类"><a href="#1-File类" class="headerlink" title="1.File类"></a>1.File类</h2><h3 id="1-1-File类概述和构造方法"><a href="#1-1-File类概述和构造方法" class="headerlink" title="1.1 File类概述和构造方法"></a>1.1 File类概述和构造方法</h3><p><strong>File类介绍</strong></p>
-<p>　　它是文件和目录路径名的抽象表示</p>
-<p>　　文件和目录是可以通过File封装成对象的</p>
-<p>　　对于File而言，其封装的并不是一个真正存在的文件，仅仅是一个路径名而已。它可以是存在的，也可以 是不存在的。将来是要通过具体的操作把这个路径的内容转换为具体存在的</p>
-<p><strong>File类构造方法</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>File(String pathname)</td>
-<td>通过将给定的路径名字符串转换为抽象路径名来创建新的 File实例</td>
-</tr>
-<tr>
-<td>File(String parent, String child)</td>
-<td>从父路径名字符串和子路径名字符串创建新的 File实例</td>
-</tr>
-<tr>
-<td>File(File parent, String child)</td>
-<td>从父抽象路径名和子路径名字符串创建新的 File实例</td>
-</tr>
-</tbody></table>
-<h3 id="1-2-File类创建功能"><a href="#1-2-File类创建功能" class="headerlink" title="1.2 File类创建功能"></a>1.2 File类创建功能</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public boolean createNewFile()</td>
-<td>当具有该名称的文件不存在时，创建一个由该抽象路径名命名的新空文件</td>
-</tr>
-<tr>
-<td>public boolean mkdir()</td>
-<td>创建由此抽象路径名命名的目录</td>
-</tr>
-<tr>
-<td>public boolean mkdirs()</td>
-<td>创建由此抽象路径名命名的目录，包括任何必需但不存在的父目录</td>
-</tr>
-</tbody></table>
-<h3 id="1-3-File类判断和获取功能"><a href="#1-3-File类判断和获取功能" class="headerlink" title="1.3 File类判断和获取功能"></a>1.3 File类判断和获取功能</h3><p><strong>判断功能</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public boolean isDirectory()</td>
-<td>测试此抽象路径名表示的File是否为目录</td>
-</tr>
-<tr>
-<td>public boolean isFile()</td>
-<td>测试此抽象路径名表示的File是否为文件</td>
-</tr>
-<tr>
-<td>public boolean exists()</td>
-<td>测试此抽象路径名表示的File是否存在</td>
-</tr>
-</tbody></table>
-<p><strong>获取功能</strong></p>
-<table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public String getAbsolutePath()</td>
-<td>返回此抽象路径名的绝对路径名字符串</td>
-</tr>
-<tr>
-<td>public String getPath()</td>
-<td>将此抽象路径名转换为路径名字符串</td>
-</tr>
-<tr>
-<td>public String getName()</td>
-<td>返回由此抽象路径名表示的文件或目录的名称</td>
-</tr>
-<tr>
-<td>public String[] list()</td>
-<td>返回此抽象路径名表示的目录中的文件和目录的名称字符串数组</td>
-</tr>
-<tr>
-<td>public File[] listFiles()</td>
-<td>返回此抽象路径名表示的目录中的文件和目录的File对象数组</td>
-</tr>
-</tbody></table>
-<h3 id="1-4-File类删除功能"><a href="#1-4-File类删除功能" class="headerlink" title="1.4 File类删除功能"></a>1.4 File类删除功能</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>public boolean delete()</td>
-<td>删除由此抽象路径名表示的文件或目录</td>
-</tr>
-</tbody></table>
-<p><strong>绝对路径和相对路径的区别</strong></p>
-<p>　　绝对路径：完整的路径名，不需要任何其他信息就可以定位它所表示的文件。例如：E:\IT\java.txt</p>
-<p>　　相对路径：必须使用取自其他路径名的信息进行解释。例如：myFile\java.txt</p>
-<h2 id="2-递归"><a href="#2-递归" class="headerlink" title="2.递归"></a>2.递归</h2><h3 id="2-1-递归"><a href="#2-1-递归" class="headerlink" title="2.1 递归"></a>2.1 递归</h3><p><strong>递归的介绍</strong></p>
-<p>　　以编程的角度来看，递归指的是方法定义中调用方法本身的现象</p>
-<p>　　把一个复杂的问题层层转化为一个与原问题相似的规模较小的问题来求解</p>
-<p>　　递归策略只需少量的程序就可描述出解题过程所需要的多次重复计算</p>
-<p><strong>递归的注意事项</strong></p>
-<p>　　递归一定要有出口。否则内存溢出 递归虽然有出口，但是递归的次数也不宜过多。否则内存溢出</p>
-<h3 id="2-2-递归遍历目录"><a href="#2-2-递归遍历目录" class="headerlink" title="2.2 递归遍历目录"></a>2.2 递归遍历目录</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.File;</span><br><span class="line"> <span class="number">2</span> </span><br><span class="line"> <span class="number">3</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileTraversal</span> </span>&#123;</span><br><span class="line"> <span class="number">4</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line"> <span class="number">5</span>         File srcFile = <span class="keyword">new</span> File(<span class="string">&quot;F:\\&quot;</span>);</span><br><span class="line"> <span class="number">6</span> </span><br><span class="line"> <span class="number">7</span>         getFilePath(srcFile);</span><br><span class="line"> <span class="number">8</span>     &#125;</span><br><span class="line"> <span class="number">9</span> </span><br><span class="line"><span class="number">10</span>     <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">getFilePath</span><span class="params">(File srcFile)</span> </span>&#123;</span><br><span class="line"><span class="number">11</span>         File[] fileArray = srcFile.listFiles();</span><br><span class="line"><span class="number">12</span>         <span class="keyword">if</span> (fileArray != <span class="keyword">null</span>)&#123;</span><br><span class="line"><span class="number">13</span>             <span class="keyword">for</span> (File file : fileArray)&#123;</span><br><span class="line"><span class="number">14</span>                 <span class="keyword">if</span> (file.isDirectory())&#123;</span><br><span class="line"><span class="number">15</span>                     getFilePath(file);</span><br><span class="line"><span class="number">16</span>                 &#125;<span class="keyword">else</span>&#123;</span><br><span class="line"><span class="number">17</span>                     System.out.println(file.getAbsolutePath());</span><br><span class="line"><span class="number">18</span>                 &#125;</span><br><span class="line"><span class="number">19</span>             &#125;</span><br><span class="line"><span class="number">20</span>         &#125;</span><br><span class="line"><span class="number">21</span>     &#125;</span><br><span class="line"><span class="number">22</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h2 id="3-IO流"><a href="#3-IO流" class="headerlink" title="3.IO流"></a>3.IO流</h2><h3 id="3-1-IO流概述和分类"><a href="#3-1-IO流概述和分类" class="headerlink" title="3.1 IO流概述和分类"></a>3.1 IO流概述和分类</h3><p><strong>IO流介绍</strong></p>
-<p>　　IO：输入/输出(Input/Output)</p>
-<p>　　流：是一种抽象概念，是对数据传输的总称。也就是说数据在设备间的传输称为流，流的本质是数据传输</p>
-<p>　　IO流就是用来处理设备间数据传输问题的。常见的应用：文件复制；文件上传；文件下载</p>
-<p><strong>IO流的分类</strong></p>
-<p>　　按照数据的流向</p>
-<p>　　　　输入流：读数据</p>
-<p>　　　　输出流：写数据</p>
-<p>　　按照数据类型来分</p>
-<p>　　　　字节流</p>
-<p>　　　　　　字节输入流</p>
-<p>　　　　　　字节输出流</p>
-<p>　　　　字符流</p>
-<p>　　　　　　字符输入流</p>
-<p>　　　　　　字符输出流</p>
-<p><strong>IO流的使用场景</strong></p>
-<p>　　如果操作的是纯文本文件，优先使用字符流</p>
-<p>　　如果操作的是图片、视频、音频等二进制文件。优先使用字节流</p>
-<p>　　如果不确定文件类型，优先使用字节流。字节流是万能的流</p>
-<h3 id="3-2-字节流写数据"><a href="#3-2-字节流写数据" class="headerlink" title="3.2 字节流写数据"></a>3.2 字节流写数据</h3><p><strong>字节流抽象基类</strong></p>
-<p>　　InputStream：这个抽象类是表示字节输入流的所有类的超类</p>
-<p>　　OutputStream：这个抽象类是表示字节输出流的所有类的超类</p>
-<p>　　子类名特点：子类名称都是以其父类名作为子类名的后缀</p>
-<p><strong>字节输出流</strong></p>
-<p>　　FileOutputStream(String name)：创建文件输出流以指定的名称写入文件</p>
-<p><strong>使用字节输出流写数据的步骤</strong></p>
-<p>　　创建字节输出流对象(调用系统功能创建了文件，创建字节输出流对象，让字节输出流对象指向文件)</p>
-<p>　　调用字节输出流对象的写数据方法</p>
-<p>　　释放资源(关闭此文件输出流并释放与此流相关联的任何系统资源)</p>
-<h3 id="3-3-字节流写数据的三种方式"><a href="#3-3-字节流写数据的三种方式" class="headerlink" title="3.3 字节流写数据的三种方式"></a>3.3 字节流写数据的三种方式</h3><table>
-<thead>
-<tr>
-<th><strong>方法名</strong></th>
-<th><strong>说明</strong></th>
-</tr>
-</thead>
-<tbody><tr>
-<td>void write(int b)</td>
-<td>将指定的字节写入此文件输出流 一次写一个字节数据</td>
-</tr>
-<tr>
-<td>void write(byte[] b)</td>
-<td>将 b.length字节从指定的字节数组写入此文件输出流 一次写一个字节数组数据</td>
-</tr>
-<tr>
-<td>void write(byte[] b, int off, int len)</td>
-<td>将 len字节从指定的字节数组开始，从偏移量off开始写入此文件输出流 一 次写一个字节数组的部分数据</td>
-</tr>
-</tbody></table>
-<h3 id="3-4-字节流写数据的两个小问题"><a href="#3-4-字节流写数据的两个小问题" class="headerlink" title="3.4 字节流写数据的两个小问题"></a>3.4 字节流写数据的两个小问题</h3><p><strong>字节流写数据如何实现换行</strong></p>
-<p>　　windows:\r\n</p>
-<p>　　linux:\n</p>
-<p>　　mac:\r</p>
-<p><strong>字节流写数据如何实现追加写入</strong></p>
-<p>　　public FileOutputStream(String name,boolean append)</p>
-<p>　　创建文件输出流以指定的名称写入文件。如果第二个参数为true ，则字节将写入文件的末尾而不是开头</p>
-<h3 id="3-5-字节流写数据加异常处理"><a href="#3-5-字节流写数据加异常处理" class="headerlink" title="3.5 字节流写数据加异常处理"></a>3.5 字节流写数据加异常处理</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1</span> <span class="keyword">try</span>&#123;</span><br><span class="line"><span class="number">2</span> 　　可能出现异常的代码;</span><br><span class="line"><span class="number">3</span> &#125;<span class="keyword">catch</span>(异常类名 变量名)&#123;</span><br><span class="line"><span class="number">4</span> 　　异常的处理代码;</span><br><span class="line"><span class="number">5</span> &#125;<span class="keyword">finally</span>&#123;</span><br><span class="line"><span class="number">6</span> 　　执行所有清除操作;</span><br><span class="line"><span class="number">7</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>finally特点</strong></p>
-<p>　　被finally控制的语句一定会执行，除非JVM退出</p>
-<h3 id="3-6-字节流读数据"><a href="#3-6-字节流读数据" class="headerlink" title="3.6 字节流读数据"></a>3.6 字节流读数据</h3><p><strong>字节输入流</strong></p>
-<p>　　FileInputStream(String name)：通过打开与实际文件的连接来创建一个FileInputStream ，该文件由文 件系统中的路径名name命名</p>
-<p><strong>字节输入流读取数据的步骤</strong></p>
-<p>　　创建字节输入流对象</p>
-<p>　　调用字节输入流对象的读数据方法</p>
-<p>　　释放资源</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.File;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.io.IOException;</span><br><span class="line"> <span class="number">4</span> </span><br><span class="line"> <span class="number">5</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileInBuffer</span> </span>&#123;</span><br><span class="line"> <span class="number">6</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"> <span class="number">7</span>         File srcFile = <span class="keyword">new</span> File(<span class="string">&quot;F:\\Fis.txt&quot;</span>);</span><br><span class="line"> <span class="number">8</span>         FileInputStream fis = <span class="keyword">new</span> FileInputStream(srcFile);</span><br><span class="line"> <span class="number">9</span>  </span><br><span class="line"><span class="number">10</span>         <span class="keyword">byte</span>[] Buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4096</span>];</span><br><span class="line"><span class="number">11</span>  </span><br><span class="line"><span class="number">12</span>         <span class="keyword">int</span> by;</span><br><span class="line"><span class="number">13</span>  </span><br><span class="line"><span class="number">14</span>         <span class="keyword">while</span> ((by = fis.read(Buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line"><span class="number">15</span>             System.out.println(<span class="keyword">new</span> String(Buffer, <span class="number">0</span>, by));</span><br><span class="line"><span class="number">16</span>         &#125;</span><br><span class="line"><span class="number">17</span>         fis.close();</span><br><span class="line"><span class="number">18</span>     &#125;</span><br><span class="line"><span class="number">19</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-7-字节流复制图片"><a href="#3-7-字节流复制图片" class="headerlink" title="3.7 字节流复制图片"></a>3.7 字节流复制图片</h3><p><strong>实现步骤</strong></p>
-<p>　　根据数据源创建字节输入流对象</p>
-<p>　　根据目的地创建字节输出流对象</p>
-<p>　　读写数据，复制图片(一次读取一个字节数组，一次写入一个字节数组)</p>
-<p>　　释放资源</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"> <span class="number">1</span> <span class="keyword">import</span> java.io.File;</span><br><span class="line"> <span class="number">2</span> <span class="keyword">import</span> java.io.FileInputStream;</span><br><span class="line"> <span class="number">3</span> <span class="keyword">import</span> java.io.FileOutputStream;</span><br><span class="line"> <span class="number">4</span> <span class="keyword">import</span> java.io.IOException;</span><br><span class="line"> <span class="number">5</span> </span><br><span class="line"> <span class="number">6</span> <span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">FileInBuffer</span> </span>&#123;</span><br><span class="line"> <span class="number">7</span>     <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> <span class="keyword">throws</span> IOException </span>&#123;</span><br><span class="line"> <span class="number">8</span>         File srcFile = <span class="keyword">new</span> File(<span class="string">&quot;F:\\加藤惠.png&quot;</span>);</span><br><span class="line"> <span class="number">9</span>         File destFile = <span class="keyword">new</span> File(<span class="string">&quot;E:\\加藤惠(复制品).png&quot;</span>);</span><br><span class="line"><span class="number">10</span>         FileInputStream fis = <span class="keyword">new</span> FileInputStream(srcFile);</span><br><span class="line"><span class="number">11</span>         FileOutputStream fos = <span class="keyword">new</span> FileOutputStream(destFile);</span><br><span class="line"><span class="number">12</span> </span><br><span class="line"><span class="number">13</span>         <span class="keyword">byte</span>[] Buffer = <span class="keyword">new</span> <span class="keyword">byte</span>[<span class="number">4096</span>];</span><br><span class="line"><span class="number">14</span> </span><br><span class="line"><span class="number">15</span>         <span class="keyword">int</span> by;</span><br><span class="line"><span class="number">16</span> </span><br><span class="line"><span class="number">17</span>         <span class="keyword">while</span> ((by = fis.read(Buffer)) != -<span class="number">1</span>) &#123;</span><br><span class="line"><span class="number">18</span>             fos.write(Buffer,<span class="number">0</span>,by);</span><br><span class="line"><span class="number">19</span>         &#125;</span><br><span class="line"><span class="number">20</span> </span><br><span class="line"><span class="number">21</span>         fis.close();</span><br><span class="line"><span class="number">22</span>         fos.close();</span><br><span class="line"><span class="number">23</span>     &#125;</span><br><span class="line"><span class="number">24</span> &#125;</span><br></pre></td></tr></table></figure>
-
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">JavaSE</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2021/10/08/JavaSE-17-File%E3%80%81%E9%80%92%E5%BD%92%E5%92%8C%E5%AD%97%E8%8A%82%E6%B5%81/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <a class="extend prev" rel="prev" href="/">&amp;laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span><a class="page-number" href="/page/3/">3</a><a class="page-number" href="/page/4/">4</a><a class="page-number" href="/page/5/">5</a><a class="extend next" rel="next" href="/page/3/">Next &amp;raquo;</a>
@@ -2904,11 +3688,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">电与电路</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">HTML</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">JavaScript ECMA</a>
+                <a href="javascript:void(0)" class="js-tag color2">电</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">数据结构</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">C语言</a>
               </li>
             
             <div class="clearfix"></div>
